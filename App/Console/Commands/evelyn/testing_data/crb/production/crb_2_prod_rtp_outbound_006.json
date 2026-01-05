@@ -1,0 +1,23 @@
+{
+    "accountNumber": "338496141171",
+    "amount": 10,
+    "creditor": {
+        "routingNumber": "102301092",
+        "accountNumber": "8471349103",
+        "name": "Andrew and Kelly Carpenter"
+    },
+    "debtor": {
+        "routingNumber": "021214891",
+        "accountNumber": "338496141171",
+        "name": "Andrew Carpenter",
+        "addressStreetName": "E Sheridan St",
+        "addressLine": "1513 E Sheridan St",
+        "addressBuildingNumber": "1513",
+        "addressCity": "Laramie",
+        "addressState": "WY",
+        "addressPostalCode": "82070",
+        "addressCountry": "US"
+    },
+    "remittanceData": "RTP outbound testing ABC01",
+    "purpose": "rtp outbound testing"
+}

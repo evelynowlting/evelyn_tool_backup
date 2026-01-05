@@ -1,0 +1,46 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "addressline1",
+            "city": "Tokyo",
+            "country": "JPN",
+            "postalCode": "100-0001"
+        },
+        "bank": {
+            "accountName": "account name",
+            "accountNumber": "5004969",
+            "accountNumberType": "DEFAULT",
+            "accountType": "2",
+            "bankCode": "0010",
+            "branchCode": "593",
+            "countryCode": "JPN",
+            "currencyCode": "JPY"
+        },
+        "contactNumber": "+819012345678",
+        "contactNumberType": "MOBILE",
+        "firstName": "John",
+        "lastName": "Doe",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "43 E 9th Street second",
+            "city": "WILMINGTON"
+        },
+        "contactEmail": "abc@visa.com",
+        "firstName": "John",
+        "lastName": "Smith",
+        "senderAccountNumber": "4304630005267011",
+        "type": "I"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "FD",
+        "clientReferenceId": "JPN-1006",
+        "initiatingPartyId": "100010",
+        "purposeOfPayment": "EPGIFT",
+        "settlementCurrencyCode": "USD",
+        "transactionAmount": 7296,
+        "transactionCurrencyCode": "JPY"
+    }
+}

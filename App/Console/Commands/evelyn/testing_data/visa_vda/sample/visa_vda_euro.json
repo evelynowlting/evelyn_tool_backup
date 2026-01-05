@@ -1,0 +1,53 @@
+{
+    "recipientDetail": {
+        "bank": {
+            "accountName": "Test1232223",
+            "accountNumber": "ES7615830001159082760987",
+            "accountNumberType": "IBAN",
+            "BIC": "ESPBESMMXXX",
+            "countryCode": "ESP",
+            "currencyCode": "EUR"
+        },
+        "type": "I",
+        "address": {
+            "country": "ESP",
+            "city": "Madrid",
+            "addressLine1": "660 Kelvin Pass"
+        },
+        "firstName": "Elijah",
+        "lastName": "Satterfield"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "country": "EGY",
+            "city": "Brentwood",
+            "addressLine1": "581 Alford Pass"
+        },
+        "firstName": "Bernadette",
+        "lastName": "Gulgowski",
+        "senderReferenceNumber": "3968977"
+    },
+    "payoutMethod": "B",
+    "transactionDetail": {
+        "clientReferenceId": "VMMC-0016",
+        "businessApplicationId": "PP",
+        "initiatingPartyId": "100010",
+        "transactionAmount": 34,
+        "transactionCurrencyCode": "EUR",
+        "purposeOfPayment": "ISCOLL",
+        "settlementCurrencyCode": "USD",
+        "additionalData": [
+            {
+                "name": "INTERMEDIARY_NAME",
+                "value": "Stephane Test Sending"
+            },
+            {
+                "name": "INTERMEDIARY_COUNTRY_CODE",
+                "value": "GBR"
+            }
+        ],
+        "statementNarrative": "Bernadette Gulgowski FAMILY_SUPPORT",
+        "senderSourceOfFunds": "05"
+    }
+}

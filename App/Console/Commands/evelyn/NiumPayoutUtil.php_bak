@@ -1,0 +1,514 @@
+<?php
+
+namespace App\Console\Commands\evelyn;
+
+use App\Models\Application;
+use App\Models\NiumClientInfo;
+use App\Models\NiumRFIDetail;
+use App\Models\NiumWalletInfo;
+use App\Services\Payout\NiumPayoutService;
+use Illuminate\Console\Command;
+
+class NiumPayoutUtil extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'nium:util
+                {--dst_cur=""}
+                {--sell_currency=USD}
+                {--buy_currency=SGD}
+                {--pid=""}
+                {--ref=""}
+                {--rfi_id=""}
+                {--mode=""}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Nium tool for testing API.';
+
+    // 固定值，為OwlPay一個client專用
+    // protected $client_key = '547444Hkf18NT3t779711ryxMyUNp2F';
+    // protected $client_secret = '117d2870-7430-11ec-b7df-5b4999dbcda3';
+    // protected $client_id = '61dfb5da3628921b925eadfe';
+
+    protected $niumPayoutService;
+
+    /**
+     * Create a new command instance.
+     *
+     * @param NiumPayoutRepository $niumRepository
+     *
+     * @return void
+     */
+    public function __construct(NiumPayoutService $niumPayoutService/* , NiumPayoutRepository $niumRepository */)
+    {
+        parent::__construct();
+        $this->niumPayoutService = $niumPayoutService;
+        // $this->niumRepository = $niumRepository;
+    }
+
+    // /**
+    //  * Execute the console command.
+    //  *
+    //  * @return int
+    //  */
+    public function handle()
+    {
+        $modes = [
+            'get_auth_token',
+            'get_balances',
+            'get_accounts',
+            'get_reconcile',
+            'get_cor',
+            'get_fx_rates',
+            'create_payment',
+            'fetch_rfi',
+            'get_payment_id',
+            'get_payment_ref',
+            'update_or_create_balance',
+            'get_balance',
+            'create_book_fx_currency',
+            'create_book_fx_account',
+        ];
+        $mode = strtolower(trim($this->option('mode')));
+
+        if (!in_array($mode, $modes)) {
+            $this->error('Please input correct mode.');
+            $this->info('For get auth token, please enter --mode=get_auth_token');
+            $this->info('For create payment, please enter --mode=create_payment');
+            $this->info('For get the running balance, please enter --mode=get_balances');
+            $this->info('For get account details, please enter --mode=get_accounts');
+            $this->info('For get account reconciliations, please enter --mode=get_reconcile');
+            $this->info('For get corridors, please enter --mode=get_cor');
+            $this->info('For get fx rates, please enter --mode=get_fx_rates');
+            $this->info('For get rfi details, please enter --mode=fetch_rfi');
+            $this->info('For get payment by id, please enter --mode=get_payment_id');
+            $this->info('For get payment by ref, please enter --mode=get_payment_ref');
+            $this->info('For update nium balance, please enter --mode=update_or_create_balance');
+            $this->info('For get nium balance, please enter --mode=get_balance');
+            $this->info('For create book fx currency, please enter --mode=create_book_fx_currency');
+            $this->info('For create book fx account, please enter --mode=create_book_fx_account');
+
+            return;
+        }
+
+        // USD
+        $application_usd = [
+            'name' => 'Application USD',
+            'id' => '1',
+            'destination_currency' => 'USD',
+            'local_conversion_currency' => 'USD',
+            'statement_narrative' => 'Evelyn Cmd Test',
+            'name' => 'OwlTing',
+            'account_type' => 'Company',
+            'address' => 'No. 225, Sec. 3, Beixin Rd., Xindian Dist.',
+            'country_code' => 'TW',
+            'identification_type' => 'Company Registration No',
+            'identification_number' => '53092632',
+            'purpose_code' => 'IR01801',
+            'postcode' => '231633',
+            'city' => 'New Taipei',
+            'source_account' => '313750138724',
+            'state' => 'New York',
+            'uuid' => 'application_usd_uuid',
+        ];
+
+        $vendor_usd = [
+            'id' => '1',
+            'name' => 'Evelyn Lin',
+            'address' => '300 Doheny Dr',
+            'city' => 'Los Angeles',
+            'country_code' => 'US',
+            'account_type' => 'Individual',
+            'state' => 'California',
+            'postcode' => '90048',
+            'account_number' => '71542702',
+        ];
+
+        $remit_usd = [
+            'nium_info' => [
+                'destination_currency' => 'USD',
+                'local_conversion_currency' => 'USD',
+                'statement_narrative' => 'Payout with USD from cmd tool.',
+                'fee_payer' => 'OUR',
+                'routing_code_type' => 'SWIFT',
+                'routing_code_value' => 'ABAAKHPP',
+                'statement_narrative' => 'Evelyn Test Payout USD',
+                'routing_code_type_1' => 'SWIFT',
+                'routing_code_value_1' => 'ABAAKHPP',
+                'routing_code_type_2' => '',
+                'routing_code_value_2' => '',
+            ],
+            'payout_total' => '5',
+        ];
+
+        // SGD
+        $application_sgd = [
+            'id' => '2',
+            'destination_currency' => 'SGD',
+            'name' => 'Application SGD',
+            'uuid' => 'application_sgd_uuid',
+            'account_type' => 'Company',
+            'address' => 'No. 225, Sec. 3, Beixin Rd., Xindian Dist.',
+            'postcode' => '231633',
+            'country_code' => 'TW',
+            'identification_type' => 'Company Registration No',
+            'identification_number' => '53092632',
+            'purpose_code' => 'IR01801',
+            'source_account' => '313751247837',
+        ];
+
+        $vendor_sgd = [
+            'id' => '2',
+            'name' => 'Evelyn Lin',
+            'country_code' => 'SG',
+            'account_type' => 'Individual',
+            'account_number' => '0052312345',
+            'address' => '10 Bayfront Avenue',
+            'city' => 'Singapore',
+        ];
+
+        $remit_sgd = [
+            'nium_info' => [
+                'destination_currency' => 'SGD',
+                'local_conversion_currency' => 'SGD',
+                'statement_narrative' => 'Payout with SGD from cmd tool',
+                'fee_payer' => 'OUR',
+                'routing_code_type' => 'SWIFT',
+                'routing_code_value' => 'DBSSSGSG',
+                'statement_narrative' => 'Evelyn Test Payout SGD',
+                'routing_code_type_1' => 'SWIFT',
+                'routing_code_value_1' => 'DBSSSGSG',
+                'routing_code_type_2' => '',
+                'routing_code_value_2' => '',
+            ],
+            'payout_total' => '50',
+        ];
+
+        // JPY
+        $application_jpy = [
+            'id' => '3',
+            'destination_currency' => 'JPY',
+            'name' => 'Application JPY',
+            'uuid' => 'application_jpy_uuid',
+            'account_type' => 'Company',
+            'address' => 'No. 225, Sec. 3, Beixin Rd., Xindian Dist.',
+            'postcode' => '231633',
+            'country_code' => 'TW',
+            'identification_type' => 'Company Registration No',
+            'identification_number' => '53092632',
+            'purpose_code' => 'IR01801',
+            'source_account' => '313750138724',
+            'city' => 'New Taipei City',
+        ];
+
+        $vendor_jpy = [
+            'id' => '3',
+            'name' => 'Evelyn Lin',
+            'country_code' => 'JP',
+            'bank_account_type' => 'Saving',
+            'account_type' => 'Individual',
+            'account_number' => '71542702',
+            'address' => '1 Chome-17-6 Hakata Ekimae, Hakata Ward',
+            'city' => 'fukuoka',
+        ];
+
+        $remit_jpy = [
+            'nium_info' => [
+                'destination_currency' => 'JPY',
+                'local_conversion_currency' => 'JPY',
+                'fee_payer' => 'OUR',
+                'routing_code_type' => 'SWIFT',
+                'routing_code_value' => 'JPPSJPJKXXX',
+                'statement_narrative' => 'Evelyn Test Payout JPY',
+                'routing_code_type_1' => 'SWIFT',
+                'routing_code_value_1' => 'JPPSJPJKXXX',
+                'routing_code_type_2' => '',
+                'routing_code_value_2' => '',
+            ],
+            'payout_total' => '500',
+        ];
+
+        // MYR
+        $application_myr = [
+            'id' => '4',
+            'destination_currency' => 'MYR',
+            'name' => 'Application MYR',
+            'uuid' => 'application_myr_uuid',
+            'account_type' => 'Company',
+            'address' => 'No. 225, Sec. 3, Beixin Rd., Xindian Dist.',
+            'postcode' => '231633',
+            'country_code' => 'TW',
+            'identification_type' => 'Company Registration No',
+            'identification_number' => '53092632',
+            'purpose_code' => 'IR01801',
+            'source_account' => '313750138724',
+            'city' => 'New Taipei City',
+        ];
+
+        $vendor_myr = [
+            'id' => '4',
+            'name' => 'Evelyn Lin',
+            'country_code' => 'MY',
+            'account_type' => 'Individual',
+            'account_number' => '71542702',
+        ];
+
+        $remit_myr = [
+            'nium_info' => [
+                'destination_currency' => 'MYR',
+                'local_conversion_currency' => 'MYR',
+                'fee_payer' => 'OUR',
+                'routing_code_type' => 'SWIFT',
+                'routing_code_value' => 'PHBMMYKL',
+                'statement_narrative' => 'Evelyn Test Payout MYR',
+                'routing_code_type_1' => 'SWIFT',
+                'routing_code_value_1' => 'PHBMMYKL',
+                'routing_code_type_2' => '',
+                'routing_code_value_2' => '',
+            ],
+            'payout_total' => '5000',
+        ];
+
+        $nium_client_info = NiumClientInfo::first();
+
+        // dd( $nium_client_info->client_secret);
+        if ('get_auth_token' == $mode) {
+            $this->info($this->niumPayoutService->_getAuthToken($nium_client_info));
+        } elseif ('get_balances' == $mode) {
+            $balances = $this->niumPayoutService->fetchAllBalances($nium_client_info);
+            foreach ($balances as $balance) {
+                $this->info(sprintf('%d %s %d', $balance['account_number'], $balance['currency'], $balance['balance']));
+            }
+        } elseif ('get_accounts' == $mode) {
+            $accounts = $this->niumPayoutService->fetchAllAccountsByClientID($nium_client_info);
+            foreach ($accounts as $account) {
+                $this->info(sprintf('%d %s', $account['account_number'], $account['currency']));
+            }
+        } elseif ('get_reconcile' == $mode) {
+            $from_date = '';        // A string containing end date. e.g. 2021-01-30T23:23:23.000Z (If not provided default value will be current date)
+            $to_date = '';          // One of [ADJUSTMENTS, AUTO_BOOK_FX, BOOK_FX, FEES, FUNDING, INVOICING, PAYOUTS, PREFUNDING, RECEIVE, CARD_FUNDING]. If left empty, this field defaults to All.
+            $transaction_type = ''; // One of [ADJUSTMENTS, AUTO_BOOK_FX, BOOK_FX, FEES, FUNDING, INVOICING, PAYOUTS, PREFUNDING, RECEIVE, CARD_FUNDING]. If left empty, this field defaults to All.
+            $account_number = '';   // A number containing account number e.g: 101950173983
+            $page_no = '';          // Page no to be start from. Will start 1 by default.
+            $size = '100';          // Number of records to be limit. Will limit max 100 by default;
+            $reconciles = $this->niumPayoutService->fetchAccountsReconciliations($nium_client_info, $from_date, $to_date, $transaction_type, $account_number, $page_no, $size);
+
+            foreach ($reconciles['data'] as $reconcile) {
+                $this->info(sprintf('%d %s %s %d %d', $reconcile['account'], $reconcile['transaction_id'], $reconcile['type'], $reconcile['amount'], $reconcile['running_balance']));
+            }
+        } elseif ('get_cor' == $mode) {
+            $corridors = $this->niumPayoutService->fetchSupportedCorridors($nium_client_info);
+            // dd($corridors);
+            foreach ($corridors as $cor) {
+                // dd($cor);
+                if (!empty($cor['routing_code_type'])) {
+                    $this->info(sprintf('%s %s %s', $cor['destination_currency'], $cor['payout_method'], $cor['routing_code_type']));
+                }
+
+                if (!empty($cor['destination_country'])) {
+                    $dst_countries = $cor['destination_country'];
+                    foreach ($dst_countries as $country) {
+                        $this->info(sprintf('%s %s %s', $cor['destination_currency'], $country, $cor['payout_method']));
+                    }
+                }
+            }
+        } elseif ('get_fx_rates' == $mode) {
+            $sell_currency = strtoupper(trim($this->option('sell_currency')));
+            $buy_currency = strtoupper(trim($this->option('buy_currency')));
+            $fx_rates = $this->niumPayoutService->fetchFXRates($nium_client_info, $sell_currency, $buy_currency);
+            dd($fx_rates);
+            $this->info(sprintf('sell:%s buy:%s -> fx_nium:%f fx_owl:%f (margin:%0.2f%%), expiry_at %s', $fx_rates['sell_currency'], $fx_rates['buy_currency'], $fx_rates['instarem_fx_rate'], $fx_rates['fx_rate'], $fx_rates['margin'], $fx_rates['expiry_at']));
+        } elseif ('create_payment' == $mode) {
+            $dst_cur = strtoupper(trim($this->ask('Please assign destination currency.For example, USD,SGD,JPY or MYR.')));
+
+            $application = null;
+            $vendor = null;
+            $remit_info = null;
+
+            switch ($dst_cur) {
+                case 'USD':
+                    $application = $application_usd;
+                    $vendor = $vendor_usd;
+                    $remit_info = $remit_usd;
+                    break;
+                case 'SGD':
+                    $application = $application_sgd;
+                    $vendor = $vendor_sgd;
+                    $remit_info = $remit_sgd;
+                    break;
+                case 'MYR':
+                    $application = $application_myr;
+                    $vendor = $vendor_myr;
+                    $remit_info = $remit_myr;
+                    break;
+                case 'JPY':
+                    $application = $application_jpy;
+                    $vendor = $vendor_jpy;
+                    $remit_info = $remit_jpy;
+                    break;
+            }
+
+            // $payout = Payout::with(['application'])->find(1);
+            // NiumPayoutCreateJob::dispatch($application, $vendor, $remit_info, $payout);
+
+            $rst = $this->niumPayoutService->createPayment($nium_client_info, $application, $vendor, $remit_info);
+            dd($rst);
+        } elseif ('get_payment_id' == $mode) {
+            // sandbox: UATPY103576979
+            $payment_id = trim($this->ask('Please give payment id. For example, UATPY103576979...'));
+
+            $rst = $this->niumPayoutService->fetchPaymentById($nium_client_info, $payment_id);
+            dd($rst);
+        } elseif ('get_payment_ref' == $mode) {
+            // sandbox: Evelyn_SGD_20220210114943
+            $payment_ref = trim($this->ask('Please give payment ref number. For example, Evelyn_SGD_20220210114943...'));
+
+            $rst = $this->niumPayoutService->fetchPaymentByRef($nium_client_info, $payment_ref);
+            dd($rst);
+        } elseif ('fetch_rfi' == $mode) {
+            // sandbox: UATPY103576979
+            $payment_id = trim($this->ask('Please give payment id. For example, UATPY103576979...'));
+            $application = Application::find(3);
+
+            // $rfi_details = $this->niumPayoutService->fetchRFIDetailsByPaymentId($nium_client_info, $payment_id);
+            $rfi_details = [
+                'payment_id' => 'DEVPY10262620',
+                'rfi_id' => '6107ab689faa86004db80208',
+                'beneficiary' => [
+                    [
+                        'rfi_entity_id' => '6107abc59faa86004db80213',
+                        'rfi_entity' => 'DATE_OF_BIRTH',
+                        'comment' => 'Date of Birth Required',
+                        'status' => ' received',
+                        'rfi_type' => 'DATE',
+                        'rfi_requested_datetime' => '2021-08-02T08:24:37.256Z',
+                    ],
+                    [
+                        'rfi_entity_id' => '6107abc59faa86004db80215',
+                        'rfi_entity' => 'DRIVING_LICENSE',
+                        'comment' => 'Driving License is Required',
+                        'status' => 'pending',
+                        'rfi_type' => 'FILE',
+                        'rfi_requested_datetime' => '2021-08-02T08:24:37.256Z',
+                    ],
+                ],
+                'remitter' => [
+                    [
+                        'rfi_entity_id' => '6107abc59faa86004db80211',
+                        'status' => ' pending',
+                        'rfi_entity' => 'BANK_STATEMENT',
+                        'comment' => 'Last 6 months bank statement required',
+                        'rfi_type' => 'FILE',
+                        'rfi_requested_datetime' => '2021-08-02T08:24:37.255Z',
+                    ],
+                    [
+                        'rfi_entity_id' => '6107abc59faa86004db80211',
+                        'status' => ' received',
+                        'rfi_entity' => 'FULL_NAME',
+                        'comment' => 'Last 6 months bank statement required',
+                        'rfi_type' => 'TEXT',
+                        'rfi_requested_datetime' => '2021-08-02T08:24:37.255Z',
+                    ],
+                ],
+            ];
+            $this->niumPayoutService->saveRFIDetails($application->id, $rfi_details);
+            $rfiDetails = $this->niumPayoutService->getRFIDetailsByRFIID($rfi_details['rfi_id']);
+            $rst = NiumRFIDetail::where('rfi_id', '6107ab689faa86004db80208')->pluck('beneficiary')->pluck('beneficiary')->first();
+            dd($rst);
+        } elseif ('upadate_rfi' == $mode) {
+            // sandbox: UATPY103576979
+            $rfi_id = trim($this->option('rfi_id'));
+            if (empty($payment_id)) {
+                $this->error('Please input payment id.');
+
+                return;
+            }
+            $rst = $this->niumPayoutService->submitRFIDetails($nium_client_info, $rfi_id);
+            dd($rst);
+        } elseif ('update_or_create_balance' == $mode) {
+            $nium_balance = [
+                'client_id' => 'nium_test_client_id',
+                'account_number' => '123456789123',
+                'label' => 'Test USD account',
+                'currency' => 'USD',
+                'auto_bookfx_sequence' => '0',
+                'balance' => 888,
+                'active' => true,
+                'default' => true,
+            ];
+            $rst = $this->niumPayoutService->updateOrCreateBalance($nium_balance);
+        } elseif ('get_balance' == $mode) {
+            $client_id = $nium_client_info['client_id'];
+            $nium_account_info = NiumWalletInfo::first();
+            $account_number = $nium_account_info['account_number'];
+            $rst = $this->niumPayoutService->getBalanceByAccount($client_id, $account_number);
+            dd($rst[0]['balance']);
+        } elseif ('create_book_fx_currency' == $mode) {
+            $buy_amount = 1;
+            // $sell_amount
+            $description = 'Create book fx currency';
+            $buy_currency = 'JPY';
+            $sell_currency = 'USD';
+
+            $rst = $this->niumPayoutService->createBookFxByCurrency($nium_client_info, $buy_amount, $sell_amount, $description, $buy_currency, $sell_currency);
+            dd($rst);
+        } elseif ('create_book_fx_account' == $mode) {
+        }
+    }
+
+    // 應該在前面on boarding的時候在UI就先過濾
+    // private function isUSDFieldValid($fields, $valid_fields)
+    // {
+    //     $valid = true;
+    //     foreach ($fields as $field) {
+    //         if (!array_key_exits($field, $valid_fields)) {
+    //             $valid = false;
+    //             break;
+    //         }
+    //     }
+
+    //     return $valid;
+    // }
+
+    // private function getValidFieldList($destination_currency, $fields)
+    // {
+    //     switch ($destination_currency) {
+    //         case 'transaction_number':
+    //             if (preg_match('^[a-zA-Z0-9-_]+$', $field) && strlen($field) < 60) {
+    //                 $rst = true;
+    //             }
+    //             break;
+    //         case 'statement_narrative':
+    //             if (preg_match('^[a-zA-Z0-9_\.,\-\s]+$', $field) && strlen($field) < 255) {
+    //                 $rst = true;
+    //             }
+    //         break;
+    //     }
+    // }
+
+    // private function isSGDFieldValid($field)
+    // {
+    //     $rst = false;
+    //     switch ($field) {
+    //         case 'transaction_number':
+    //             if (preg_match('^[a-zA-Z0-9-_]+$', $field) && strlen($field) < 60) {
+    //                 $rst = true;
+    //             }
+    //             break;
+    //         case 'statement_narrative':
+    //             if (preg_match('^[a-zA-Z0-9_\s]+$', $field) && strlen($field) < 200) {
+    //                 $rst = true;
+    //             }
+    //             break;
+    //     }
+
+    //     return $rst;
+    // }
+}

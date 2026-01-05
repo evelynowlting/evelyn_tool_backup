@@ -1,0 +1,44 @@
+{
+    "payoutMethod": "B",
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "city": "ACCORD",
+            "state": "NY",
+            "country": "USA",
+            "postalCode": "000000",
+            "addressLine1": "123 Main st"
+        },
+        "lastName": "Sender",
+        "firstName": "DailyPay",
+        "senderAccountNumber": "2389855192"
+    },
+    "recipientDetail": {
+        "bank": {
+            "bankName": "JPMorgan Chase Bank, N.A.",
+            "accountName": "Test HKG",
+            "countryCode": "HKG",
+            "currencyCode": "HKD",
+            "bankCode": "012",
+            "branchCode": "875",
+            "accountNumber": "014027004324234008",
+            "accountNumberType": "DEFAULT"
+        },
+        "address": {
+            "city": "ACCORD",
+            "country": "HKG",
+            "addressLine1": "123 Main st"
+        },
+        "type": "I",
+        "lastName": "Hong Kong",
+        "firstName": "Test"
+    },
+    "transactionDetail": {
+        "initiatingPartyId": 100010,
+        "clientReferenceId": "34544654654",
+        "transactionAmount": 273.98,
+        "businessApplicationId": "PP",
+        "settlementCurrencyCode": "USD",
+        "transactionCurrencyCode": "HKD"
+    }
+}

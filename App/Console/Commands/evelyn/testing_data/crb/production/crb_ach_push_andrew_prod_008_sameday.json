@@ -1,0 +1,22 @@
+{
+    "transactionType": "Push",
+    "amount": 500,
+    "originator": {
+        "accountNumber": "338496141171"
+    },
+    "receiver": {
+        "routingNumber": "102301092",
+        "accountNumber": "8471349103",
+        "accountType": "Checking",
+        "accountName": "Carpenter, Andrew & Ke",
+        "identification": "Carpenter, Andr"
+    },
+    "secCode": "WEB",
+    "description": "ach push5m",
+    "serviceType": "SameDay",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach push testing with sameday service type",
+    "clientIdentifier": "TC-PROD-ACH-PUSH-008-sameday-0001"
+}

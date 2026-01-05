@@ -1,0 +1,7 @@
+AUTHCODE+ F - Fee_Debit
+AUTHCODE+ R - Reversal (CARD)
+AUTHCODE+ FW - Fee_Waiver
+AUTHCODE+ FR - Fee_Reversal
+AUTHCODE+ RA - Reversal_Advice (CARD)
+AUTHCODE+ SR - Settlement_Reversal (CARD)
+AUTHCODE+ C - Customer_Wallet_Credit_Intra_Region

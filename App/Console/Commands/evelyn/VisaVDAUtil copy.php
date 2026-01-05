@@ -1,0 +1,1433 @@
+<?php
+
+namespace App\Console\Commands\evelyn;
+
+use Domain\VISA_VDA\Enums\VisaDirectAccountEnum;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\AccountBalance\AccountBalanceRequest;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\ForeignExchange\ForeignExchangeRequest;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Bank;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Detail\TransactionDetail;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Recipient\IndividualRecipientDetail;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Recipient\PayoutMetaDataDetail;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Sender\IndividualSenderDetail;
+use Infrastructure\VISA_VDA\ValueObjects\Requests\PostingCalendar\PostingCalendarRequest;
+use Infrastructure\VISA_VDA\VisaDirectAccountPayoutClient;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
+use Money\Formatter\DecimalMoneyFormatter;
+use Money\Money;
+use ReflectionClass;
+
+class VisaVDAUtil extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'visa:vda-util
+        {mode : The modes to process}
+        {--country= : The specific country}
+        ';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    protected $visaDirectAccountPayoutClient;
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct(VisaDirectAccountPayoutClient $visaDirectAccountPayoutClient)
+    {
+        parent::__construct();
+        $this->visaDirectAccountPayoutClient = $visaDirectAccountPayoutClient;
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $mode = strtolower(trim($this->argument('mode')));
+        $country = strtolower(trim($this->option('country')));
+
+        $validModes = [
+            'fetch_fx_rates_with_source_amount' => 'Retrieve fx rate with source amount.',
+            'fetch_fx_rates_with_destination_amount' => 'Retrieve fx rate with destination amount.',
+            'fetch_fx_rates_with_quote_id_required' => 'Retrieve fx rate with quote ID',
+            'fetch_account_balance' => ' Retrieve account balance of account.',
+            'fetch_posting_calendar' => 'Retrieve posting calendar.',
+            'validate_payout' => 'Validate payout details.',
+            'send_payout' => 'Create payout.',
+            'query_payout_by_cid' => 'Retrieve payout by client reference id.',
+            'query_payout_by_pid' => 'Retrieve payout by payout id.',
+            'cancel_payout_by_cid' => 'Cancel payout by client reference id',
+            'cancel_payout_by_pid' => 'Cancel payout by payout id',
+            'get_meta_data' => 'Get metadata',
+        ];
+
+        if (!array_key_exists($mode, $validModes)) {
+            $this->error('[VDA] Please use the correct mode.');
+
+            foreach ($validModes as $key => $description) {
+                $this->info("    {$key}: {$description}");
+            }
+        }
+
+        if (in_array($mode, ['validate_payout', 'send_payout']) && \_isEmpty($country)) {
+            $this->error('Please provide a country name. --country=');
+            if (!in_array($country, ['argentina', 'colombia', 'india', 'mexico', 'peru'])) {
+                $this->error('Currently, the supported countries are: argentina, colombia, india, mexico, peru');
+                // $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                //         ledgerId: 111,
+                //         senderDetail: $IndividualSenderDetailGBP,
+                //         recipientDetail: $IndividualRecipientDetailGBP,
+                //         transactionDetail: $transactionDetailGBP,
+                //     );
+                return 0;
+            }
+
+            return 0;
+        }
+
+        // currency code mapping
+        $mapping = [
+            'argentina' => 'ARG',
+            'mexico' => 'MXN',
+            'colombia' => 'COP',
+            'india' => 'INR',
+            'peru' => 'PEN',
+            'japan' => 'JPN',
+            'spain' => 'ESP',
+            'canada' => 'CAD',
+            'korea' => 'KOR',
+        ];
+
+        // ===================================================ARG==============================================================
+        // $IndividualSenderDetailARG = IndividualSenderDetail::new([
+        //     'type' => 'C',
+        //     'address' => [
+        //         'addressLine1' => 'addressline1',
+        //         'addressLine2' => 'addressline2',
+        //         'city' => 'Washington',
+        //         'postalCode' => '111222',
+        //         'state' => 'CF',
+        //         'country' => 'USA',
+        //     ],
+        //     'senderAccountNumber' => 'senderAccountNumber',
+        //     'countryOfBirth' => 'USA',
+        //     'cityOfBirth' => 'SenderCity',
+        //     'contactNumber' => '+447911123456',
+        //     'contactNumberType' => 'MOBILE',
+        //     'contactEmail' => 'abc@visa.com',
+        //     'name' => 'Ben',
+        //     'dateOfBirth' => '1999-09-09',
+        // ]
+        // );
+
+        // $IndividualRecipientDetailARG = IndividualRecipientDetail::new([
+        //     'type' => 'I',
+        //     'address' => [
+        //         'addressLine1' => '123 Main St',
+        //         'addressLine2' => 'Lane 1',
+        //         'city' => 'London',
+        //         'postalCode' => '675456',
+        //         'state' => 'CF',
+        //         'country' => 'GBR',
+        //     ],
+        //     'bank' => [
+        //         'accountName' => 'Money Market',
+        //         'bankName' => 'Hang Seng Bank',
+        //         'accountNumberType' => 'DEFAULT',
+        //         'accountNumber' => '0070096230004026844520',
+        //         'countryCode' => 'ARG',
+        //         'currencyCode' => 'ARS',
+        //     ],
+        //     'additionalData' => [
+        //         [
+        //             'name' => 'CUIL',
+        //             'value' => '12345678912',
+        //         ],
+        //     ],
+        //     // 'firstName' => 'Jessica',
+        //     // 'lastName' => 'smith',
+        //     'firstName' => 'Osama Terror',
+        //     'lastName' => 'Bin Laden',
+        //     'countryOfBirth' => 'GBR',
+        //     'cityOfBirth' => 'optional',
+        //     'contactNumber' => '+447911123456',
+        //     'contactEmail' => 'jessica@visa.com',
+        //     'dateOfBirth' => '2001-01-01',
+        // ]);
+
+        // $transactionDetailARG = TransactionDetail::new([
+        //     'clientReferenceId' => Redis::get('ars-txn-uuid') ?? '550e8400-e29b-41d4-a716-4466554400',            // 'EVELYN-TEST-ARG-0012'
+        //     'businessApplicationId' => 'FD',
+        //     'transactionAmount' => new Money(1238034, currency: new Currency('ARS')),
+        //     'transactionCurrencyCode' => 'ARS',
+        //     'endToEndId' => 'abcd-1234-fab-578',
+        //     'senderSourceOfFunds' => '01',
+        //     'senderBeneficiaryRelationship' => 'senderBeneficiaryRelationship',
+        //     'statementNarrative' => 'advancepayment',
+        //     'purposeOfPayment' => '0210000001',
+        //     'payoutSpeed' => 'standard',
+        //     'settlementCurrencyCode' => 'USD',
+        // ]);
+
+        $IndividualSenderDetailARG = IndividualSenderDetail::new([
+            'type' => 'I',
+            'address' => [
+                'country' => 'USA',
+                'city' => 'Mai',
+                'addressLine1' => 'Man',
+                'addressLine2' => null,
+                'postalCode' => '112037',
+                'state' => 'AL',
+            ],
+            'firstName' => 'Mai',
+            'lastName' => 'Jake',
+            'name' => null,
+            'senderAccountNumber' => '396886468919',
+            'identificationList' => null,
+            'countryOfBirth' => null,
+            'cityOfBirth' => null,
+            'contactNumber' => null,
+            'contactNumberType' => null,
+            'contactEmail' => null,
+            'dateOfBirth' => null,
+            'additionalData' => null,
+            ]
+        );
+
+        $IndividualRecipientDetailARG = IndividualRecipientDetail::new([
+            'type' => 'I',
+            'address' => [
+              'state' => null,
+              'country' => null,
+              'city' => null,
+              'postalCode' => null,
+              'addressLine1' => null,
+              'addressLine2' => null,
+
+                // 'addressLine1' => '123 Main St',
+                // 'city' => 'London',
+                // 'country' => 'GBR',
+            ],
+            'bank' => [
+              'accountName' => 'Mai',
+            //   'accountNumber' => '1332211111233122222445',
+              'accountNumber' => '0070096230004026844520',
+              'accountNumberType' => 'DEFAULT',
+              'bankName' => 'Mai',
+            //   'bankCodeType' => null,
+              'accountType' => null,
+              'branchCode' => null,
+              'countryCode' => 'ARG',
+              'currencyCode' => 'ARS',
+            ],
+            'additionalData' => [
+                [
+                    'name' => 'CUIL',
+                    'value' => '13221111115',
+                ],
+            ],
+            'firstName' => 'jdjjd',
+            'lastName' => 'N/A',
+            'countryOfBirth' => null,
+            'cityOfBirth' => null,
+            'contactNumber' => null,
+            'contactEmail' => null,
+            'dateOfBirth' => null,
+            'identificationList' => null,
+        ]);
+
+        $transactionDetailARG = TransactionDetail::new([
+          'businessApplicationId' => 'PP',
+          'initiatingPartyId' => 1002,
+          'transactionAmount' => new Money(1238034, new Currency('ARS')),
+          'transactionCurrencyCode' => 'ARS',
+          'statementNarrative' => 'mksksk',
+          'settlementCurrencyCode' => 'USD',
+          'senderSourceOfFunds' => '05',
+          'quoteId' => null,
+          'endToEndId' => null,
+          'senderBeneficiaryRelationship' => null,
+          'purposeOfPayment' => null,
+          'payoutSpeed' => 'STANDARD',
+          'clientReferenceId' => Redis::get('ars-txn-uuid') ?? 'test-0000000001',
+        ]);
+
+        // ===================================================MXN==============================================================
+        $IndividualSenderDetailMXN = IndividualSenderDetail::new([
+            'type' => 'I',
+            'address' => [
+                'addressLine1' => 'addressline1',
+                'addressLine2' => 'addressline2',
+                'city' => 'Washington',
+                // 'postalCode' => '111222',
+                // 'state' => 'CF',
+                // 'country' => 'USA',
+            ],
+            'identificationList' => [
+                [
+                    'idType' => 'P',
+                    'idNumber' => '20101605421',
+                    'idIssueCountry' => 'USA',
+                ],
+            ],
+            'senderAccountNumber' => 'senderAccountNumber',
+            'countryOfBirth' => 'USA',
+            'cityOfBirth' => 'SenderCity',
+            'contactNumber' => '+447911123456',
+            'contactNumberType' => 'MOBILE',
+            'contactEmail' => 'abc@visa.com',
+            'firstName' => 'YAQOOB',
+            'lastName' => 'HALU M',
+            'dateOfBirth' => '1999-09-09',
+        ]);
+
+        $IndividualRecipientDetailMXN = IndividualRecipientDetail::new(
+            [
+                'type' => 'I',
+                'address' => [
+                    // 'addressLine1' => 'Testing St. 2732',
+                    // 'city' => 'Mexico City',
+                    // 'country' => 'MEX',
+                ],
+                'bank' => [
+                    'accountName' => 'Matt Tester',
+                    'accountNumber' => '014027000000000008',
+                    'accountNumberType' => 'DEFAULT',
+                    'bankName' => 'Banamex',
+                    'countryCode' => 'MEX',
+                    'currencyCode' => 'MXN',
+                ],
+                'firstName' => 'Matt',
+                'lastName' => 'Tester',
+            ]
+        );
+
+        $transactionDetailMXN = TransactionDetail::new([
+            'clientReferenceId' => Redis::get('mxn-txn-uuid') ?? 'EVELYN-TEST-MXN-0027',
+            'businessApplicationId' => 'FD',
+            // 'quoteId' => '457500',
+            // 'quoteId' => null,
+            'transactionAmount' => new Money(46338, new Currency('MXN')),
+            'transactionCurrencyCode' => 'MXN',
+            'endToEndId' => 'abcd-1234-fab-578',
+            'senderSourceOfFunds' => '01',
+            'senderBeneficiaryRelationship' => 'SON',
+            'statementNarrative' => 'advancepayment',
+            'payoutSpeed' => 'standard',
+            'settlementCurrencyCode' => 'USD',
+            'purposeOfPayment' => 'EPFAMT',
+        ]);
+
+        // ===================================================COP=============================================================
+        $IndividualSenderDetailCOP = IndividualSenderDetail::new([
+            'type' => 'I',
+            'address' => [
+                'addressLine1' => 'addressline1',
+                'addressLine2' => 'addressline2',
+                'city' => 'Washington',
+                'postalCode' => '111222',
+                'state' => 'CF',
+                'country' => 'USA',
+            ],
+            'identificationList' => [
+                [
+                    'idType' => 'P',
+                    'idNumber' => '20101605421',
+                    'idIssueCountry' => 'USA',
+                ],
+            ],
+            'senderAccountNumber' => 'senderAccountNumber',
+            'countryOfBirth' => 'USA',
+            'cityOfBirth' => 'SenderCity',
+            'contactNumber' => '+447911123456',
+            'contactNumberType' => 'MOBILE',
+            'contactEmail' => 'abc@visa.com',
+            'firstName' => 'YAQOOB',
+            'lastName' => 'HALU MESRU JOHN KUVVETI',
+            'dateOfBirth' => '1999-09-09',
+        ]);
+
+        $IndividualRecipientDetailCOP = IndividualRecipientDetail::new(
+            [
+                'type' => 'I',
+                'address' => [
+                    // 'addressLine1' => '123 Main St',
+                    'addressLine2' => 'Lane 1',
+                    // 'city' => 'London',
+                    'postalCode' => '675456',
+                    'state' => 'CF',
+                    // 'country' => 'GBR',
+                ],
+                'bank' => [
+                    'bankName' => 'Banco de la República',
+                    'accountName' => 'account name',
+                    'accountNumberType' => 'DEFAULT',
+                    'accountNumber' => '050401050100003172',
+                    'bankCodeType' => 'DEFAULT',
+                    'bankCode' => '012',
+                    'accountType' => '1',
+                    'countryCode' => 'COL',
+                    'currencyCode' => 'COP',
+                ],
+                'identificationList' => [
+                    [
+                        'idType' => 'N',
+                        'idNumber' => '1077650154',
+                        'idIssueCountry' => 'COL',
+                    ],
+                ],
+                'firstName' => 'YAQOOB',
+                'lastName' => 'HALU MESRU JOHN KUVVETI',
+                'countryOfBirth' => 'GBR',
+                'cityOfBirth' => 'optional',
+                'contactNumber' => '+447911123456',
+                'contactEmail' => 'jessica@visa.com',
+                'dateOfBirth' => '2001-01-01',
+            ]
+        );
+
+        $transactionDetailCOP = TransactionDetail::new([
+            'clientReferenceId' => Redis::get('cop-txn-uuid') ?? 'EVELYN-TEST-COP-0003',
+            'businessApplicationId' => 'FD',
+            'transactionAmount' => new Money(6021154, new Currency(code: 'COP')),
+            'transactionCurrencyCode' => 'COP',
+            'endToEndId' => 'abcd-1234-fab-578',
+            'senderSourceOfFunds' => '01',
+            'senderBeneficiaryRelationship' => 'SON',
+            'statementNarrative' => 'advancepayment',
+            'purposeOfPayment' => 'EPFAMT',
+            'payoutSpeed' => 'standard',
+            'settlementCurrencyCode' => 'USD',
+        ]);
+
+        // ===================================================INR=============================================================
+        $IndividualSenderDetailINR = IndividualSenderDetail::new([
+            'type' => 'I',
+            'address' => [
+                'addressLine1' => '7688 Orlando Av',
+                'city' => 'ACCORD',
+                'state' => 'NY',
+                'postalCode' => '30003',
+                'country' => 'USA',
+            ],
+            'firstName' => 'Visa',
+            'lastName' => 'AW',
+            'senderReferenceNumber' => 'd86778dc3eb84373bebe489a99d39053',
+        ]);
+
+        $IndividualRecipientDetailINR = IndividualRecipientDetail::new([
+            'type' => 'I',
+            'address' => [
+                // 'addressLine1' => 'Jacinto Vera',
+                // 'city' => 'London',
+                // 'country' => 'IND',
+            ],
+            'bank' => [
+                'accountNumberType' => 'DEFAULT',
+                'accountName' => 'Oleg Usachev',
+                'countryCode' => 'IND',
+                'accountNumber' => '1234567890',
+                'currencyCode' => 'INR',
+                'bankName' => 'ABHYUDAYA COOPERATIVE BANK',
+                'bankCode' => 'ABHY0065002',
+                'accountType' => '1',
+            ],
+            'firstName' => 'Oleg',
+            'lastName' => 'Usachev',
+        ]);
+
+        $transactionDetailINR = TransactionDetail::new([
+            'clientReferenceId' => Redis::get('inr-txn-uuid') ?? 'EVELYN-TEST-INR-0003',
+            'businessApplicationId' => 'PP',
+            'settlementCurrencyCode' => 'USD',
+            // 'quoteId' => '2345',
+            'transactionAmount' => new Money(172381, new Currency('INR')),
+            'transactionCurrencyCode' => 'INR',
+
+            'purposeOfPayment' => 'P1301',
+            'senderBeneficiaryRelationship' => 'SISTERS_HUSBAND',
+        ]);
+
+        // ===================================================PEN=============================================================
+        $IndividualSenderDetailPEN = IndividualSenderDetail::new([
+            'type' => 'I',
+            'address' => [
+                'addressLine1' => 'addressline1',
+                'addressLine2' => 'addressline2',
+                'city' => 'Washington',
+                'postalCode' => '111222',
+                'state' => 'CF',
+                'country' => 'USA',
+            ],
+            'identificationList' => [
+                [
+                    'idType' => 'P',
+                    'idNumber' => '20101605421',
+                    'idIssueCountry' => 'USA',
+                ],
+            ],
+            'senderAccountNumber' => 'senderAccountNumber',
+            'countryOfBirth' => 'USA',
+            'cityOfBirth' => 'SenderCity',
+            'contactNumber' => '+447911123456',
+            'contactNumberType' => 'MOBILE',
+            'contactEmail' => 'abc@visa.com',
+            'firstName' => 'Jessica',
+            'lastName' => 'Smith',
+            'dateOfBirth' => '1999-09-09',
+        ]);
+
+        $IndividualRecipientDetailPEN = IndividualRecipientDetail::new(
+            [
+                'type' => 'I',
+                'address' => [
+                    // 'addressLine1' => '123 Main St',
+                    // 'addressLine2' => 'Lane 1',
+                    // 'city' => 'London',
+                    // 'postalCode' => '675456',
+                    // 'state' => 'CF',
+                    // 'country' => 'GBR',
+                ],
+                'bank' => [
+                    'bankName' => 'Banco de Credito del Peru',
+                    'accountName' => 'Money Market',
+                    'accountNumberType' => 'DEFAULT',
+                    'accountNumber' => '00219119761816710656',
+                    'accountType' => '1',
+                    'branchCode' => '714',
+                    'countryCode' => 'PER',
+                    'currencyCode' => 'PEN',
+                ],
+                'identificationList' => [
+                    [
+                        'idType' => 'P',
+                        'idNumber' => '20101605421',
+                        'idIssueCountry' => 'GBR',
+                    ],
+                ],
+                // 'firstName' => 'Jessica',
+                // 'lastName' => 'Smith',
+                'firstName' => 'Osama Terror',
+                'lastName' => 'Bin Laden',
+                'countryOfBirth' => 'GBR',
+                'cityOfBirth' => 'optional',
+                'contactNumber' => '+447911123456',
+                'contactEmail' => 'jessica@visa.com',
+                'dateOfBirth' => '2001-01-01',
+            ]
+        );
+
+        $transactionDetailPEN = TransactionDetail::new([
+            'clientReferenceId' => Redis::get('peru-txn-uuid') ?? 'EVELYN-TEST-PEN-0003',
+            'businessApplicationId' => 'FD',
+            // 'quoteId' => '12345',
+            'transactionAmount' => new Money(10530, new Currency('PEN')),
+            'transactionCurrencyCode' => 'PEN',
+            'endToEndId' => 'abcd-1234-fab-578',
+            'senderSourceOfFunds' => '01',
+            'senderBeneficiaryRelationship' => 'senderBeneficiaryRelationship',
+            'statementNarrative' => 'advancepayment',
+            'purposeOfPayment' => '0210000001',
+            'payoutSpeed' => 'standard',
+            'settlementCurrencyCode' => 'USD',
+        ]);
+
+        // ===================================================GBP=============================================================
+        $IndividualSenderDetailGBP = IndividualSenderDetail::new([
+            // 'lastName' => 'Evelyn',
+            // 'firstName' => 'Lin',
+            'address' => [
+                'country' => 'USA',
+                'city' => 'Washington',
+                'addressLine1' => 'addressline1',
+            ],
+            'name' => 'Ben',
+            'type' => 'I',
+            'senderAccountNumber' => '12341234',
+        ]);
+
+        $IndividualRecipientDetailGBP = IndividualRecipientDetail::new([
+            'lastName' => 'smith',
+            'firstName' => 'Jessica',
+            'contactNumber' => '+819012345678',
+            'contactNumberType' => 'MOBILE',
+            'bank' => [
+                'bankCode' => '800554',
+                'bankCodeType' => 'SORT_CODE',
+                'accountNumberType' => 'DEFAULT',
+                'accountName' => 'Money Market',
+                'countryCode' => 'GBR',
+                'bankName' => 'Barclays',
+                'accountNumber' => '6970093',
+                'currencyCode' => 'GBP',
+            ],
+            'address' => [
+                'country' => 'GBR',
+                'city' => 'London',
+                'postalCode' => '675456',
+                'addressLine1' => '123 Main St',
+                'state' => 'CF',
+            ],
+            'type' => 'I',
+        ]);
+
+        $transactionDetailGBP = TransactionDetail::new(
+            [
+                'businessApplicationId' => 'PP',
+                'clientReferenceId' => 'EVELYN-TEST-GBP-0001',
+                'transactionAmount' => new Money(1000, new Currency('GBP')),
+                'transactionCurrencyCode' => 'GBP', // Required.
+                'statementNarrative' => 'EE test money transfer',
+                'settlementCurrencyCode' => 'GBP', // Required.
+         ]);
+
+        // ===================================================ESP=============================================================
+        $IndividualSenderDetailESP = IndividualSenderDetail::new([
+                'type' => 'I',
+                'address' => [
+                    'country' => 'EGY',
+                    'city' => 'Brentwood',
+                    'addressLine1' => '581 Alford Pass',
+                ],
+                'firstName' => 'Bernadette',
+                'lastName' => 'Gulgowski',
+                'senderReferenceNumber' => '3968977',
+            ]);
+        $IndividualRecipientDetailESP = IndividualRecipientDetail::new([
+                'bank' => [
+                    'accountName' => 'Test1232223',
+                    'accountNumber' => 'ES7615830001159082760987',
+                    'accountNumberType' => 'IBAN',
+                    'BIC' => 'ESPBESMMXXX',
+                    'countryCode' => 'ESP',
+                    'currencyCode' => 'EUR',
+                ],
+                'type' => 'I',
+                'address' => [
+                    'country' => 'ESP',
+                    'city' => 'Madrid',
+                    'addressLine1' => '660 Kelvin Pass',
+                ],
+                'firstName' => 'Elijah',
+                'lastName' => 'Satterfield',
+            ]);
+        $transactionDetailESP = TransactionDetail::new([
+                'clientReferenceId' => 'VMMC-0016',
+                'businessApplicationId' => 'PP',
+                'initiatingPartyId' => '100010',
+                'transactionAmount' => new Money(3400, new Currency('EUR')),
+                'transactionCurrencyCode' => 'EUR',
+                'purposeOfPayment' => 'ISCOLL',
+                'settlementCurrencyCode' => 'USD',
+                'additionalData' => [
+                    [
+                        'name' => 'INTERMEDIARY_NAME',
+                        'value' => 'Stephane Test Sending',
+                    ],
+                    [
+                        'name' => 'INTERMEDIARY_COUNTRY_CODE',
+                        'value' => 'GBR',
+                    ],
+                ],
+                'statementNarrative' => 'Bernadette Gulgowski FAMILY_SUPPORT',
+                'senderSourceOfFunds' => '05',
+            ]);
+        // // ===================================================KOR=============================================================
+        $IndividualSenderDetailKOR = IndividualSenderDetail::new([
+               'senderAccountNumber' => 'GB10GSLD04296240000447',
+                'type' => 'C',
+                'address' => [
+                    'addressLine1' => '43 E 9th Street second',
+                    'city' => 'WILMINGTON',
+                    'postalCode' => '19808',
+                    'state' => 'DE',
+                    'country' => 'USA',
+                ],
+                'name' => 'VISA Direct test client',
+        ]);
+
+        $IndividualRecipientDetailKOR = IndividualRecipientDetail::new(
+            [
+                'bank' => [
+                    'bankName' => 'AGRICULTURAL BANK OF CHINA SEOUL BRANCH',
+                    'accountName' => 'Joe Bloggs',
+                    'accountNumber' => '123458658',
+                    'accountNumberType' => 'DEFAULT',
+                    'accountType' => '1',
+                    'countryCode' => 'KOR',
+                    'bankCode' => '020',
+                    'bankCodeType' => 'DEFAULT',
+                    'currencyCode' => 'KRW',
+                ],
+                'type' => 'I',
+                'address' => [
+                    'addressLine1' => 'OPZQAEWQ BPLZJFC 1',
+                    'city' => 'Seoul',
+                    'postalCode' => 'C1038ACC',
+                    'country' => 'KOR',
+                ],
+                'firstName' => 'Joe Bloggs',
+                'lastName' => 'last joe',
+                'contactNumber' => '+4407111111111',
+                'contactEmail' => 'someone@visa.com',
+            ]
+        );
+        $transactionDetailKOR = TransactionDetail::new([
+                'businessApplicationId' => 'FD',
+                'senderSourceOfFunds' => '05',
+                'purposeOfPayment' => 'ISOTHR',
+                'clientReferenceId' => Redis::get('kr-txn-uuid') ?? 'VMMC-0016',
+                'transactionAmount' => new Money(61634, new Currency('KRW')),
+                'transactionCurrencyCode' => 'KRW',
+                'settlementCurrencyCode' => 'USD',
+                'endToEndId' => 'GSKHPIWUTY5U3BMCXGNV',
+        ]);
+        // // ===================================================JPN=============================================================
+        $IndividualSenderDetailJPN = IndividualSenderDetail::new([
+                'type' => 'I',
+                'address' => [
+                    'addressLine1' => 'addressline1',
+                    'addressLine2' => 'addressline2',
+                    'city' => 'Washington',
+                    'postalCode' => '111222',
+                    'state' => 'CF',
+                    'country' => 'USA',
+                ],
+                'identificationList' => [
+                    [
+                        'idType' => 'P',
+                        'idNumber' => 'P128766Z',
+                        'idIssueCountry' => 'USA',
+                    ],
+                ],
+                'senderReferenceNumber' => '4304630005267011',
+                'contactNumber' => '+447911123456',
+                'contactNumberType' => 'MOBILE',
+                'contactEmail' => 'abc@visa.com',
+                'firstName' => 'John',
+                'lastName' => 'Smith',
+                'dateOfBirth' => '1999-09-09',
+                'additionalData' => [
+                    [
+                        'name' => 'GoodsName',
+                        'value' => 'iPhone 16',
+                    ],
+                    [
+                        'name' => 'GoodsOriginCountry',
+                        'value' => 'USA',
+                    ],
+                    [
+                        'name' => 'GoodsShippingCountry',
+                        'value' => 'Japan',
+                    ],
+                ],
+        ]);
+        $IndividualRecipientDetailJPN = IndividualRecipientDetail::new([
+                'type' => 'I',
+                'address' => [
+                    'addressLine1' => 'addressline1',
+                    'addressLine2' => 'addressline2',
+                    'city' => 'Tokyo',
+                    'postalCode' => '100-0001',
+                    'country' => 'JPN',
+                ],
+                'bank' => [
+                    'bankName' => 'The Bank of Tokoyo-Mitsubishi UFJ',
+                    'accountName' => 'account name',
+                    'accountNumber' => '5004969',
+                    'accountNumberType' => 'DEFAULT',
+                    'bankCode' => '0010',
+                    'accountType' => '2',
+                    'branchCode' => '593',
+                    'countryCode' => 'JPN',
+                    'currencyCode' => 'JPY',
+                ],
+                'identificationList' => [
+                    [
+                        'idType' => 'P',
+                        'idNumber' => 'ID89098',
+                        'idIssueCountry' => 'JPN',
+                    ],
+                ],
+                // 'firstName' => 'John',
+                // 'lastName' => 'Doe',
+                'firstName' => 'Osama Terror',
+                'lastName' => 'Bin Laden',
+                'contactNumber' => '+819012345678',
+                'contactNumberType' => 'MOBILE',
+                'contactEmail' => 'abc@visa.com',
+                'dateOfBirth' => '2001-01-01',
+        ]);
+        $transactionDetailJPN = TransactionDetail::new(
+            [
+                'businessApplicationId' => 'FD',
+                'transactionAmount' => new Money(7296, new Currency('JPY')),
+                'transactionCurrencyCode' => 'JPY',
+                'endToEndId' => 'abcd-1234-fab-578',
+                'senderSourceOfFunds' => '01',
+                'senderBeneficiaryRelationship' => 'partner',
+                'statementNarrative' => 'advancepayment',
+                'payoutSpeed' => 'standard',
+                'purposeOfPayment' => 'ISGDDS',
+                'settlementCurrencyCode' => 'USD',
+                'clientReferenceId' => Redis::get('jp-txn-uuid') ?? 'JPN-1006',
+         ]);
+        // // ===================================================CAD=============================================================
+        $IndividualSenderDetailCAD = IndividualSenderDetail::new([
+                'senderAccountNumber' => '633406',
+                'type' => 'I',
+                'address' => [ // Oculus Plaza
+                    'addressLine1' => 'Fulton St & Church St Oculus Plaza',
+                    'city' => 'New York',
+                    'postalCode' => '10006',
+                    'state' => 'NY',
+                    'country' => 'USA',
+                ],
+                // 'address' => [ // Library of Parliament
+                //     'addressLine1' => '111 Wellington St',
+                //     'city' => 'Ottawa',
+                //     'postalCode' => 'K1A 0A4',
+                //     'state' => 'ON',
+                //     'country' => 'CAN'
+                // ],
+                'identificationList' => [
+                    [
+                        'idType' => 'P',
+                        'idNumber' => '20101605421',
+                        'idIssueCountry' => 'GBR',
+                    ],
+                ],
+                'firstName' => 'Osama',
+                'lastName' => 'Bin Laden',
+            ]);
+        $IndividualRecipientDetailCAD = IndividualRecipientDetail::new([
+                'bank' => [
+                    'bankName' => 'NOTPROVIDED',
+                    'accountName' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCD',
+                    'accountNumber' => '1022573',
+                    'accountNumberType' => 'DEFAULT',
+                    'accountType' => '1',
+                    'countryCode' => 'CAN',
+                    'bankCode' => '003',
+                    'bankCodeType' => 'DEFAULT',
+                    'branchCode' => '09591',
+                    'currencyCode' => 'CAD',
+                ],
+                'identificationList' => [
+                    [
+                        'idType' => 'P',
+                        'idNumber' => '20101605421',
+                        'idIssueCountry' => 'CAN',
+                    ],
+                ],
+                'type' => 'I',
+                'address' => [
+                    'addressLine1' => 'ITALY',
+                    'addressLine2' => 'Italy',
+                    'city' => 'Italy',
+                    'country' => 'ITA',
+                ],
+                'firstName' => 'OsamaT',
+                'lastName' => 'Bin LadenT',
+            ]);
+
+        $transactionDetailCAD = TransactionDetail::new([
+                'businessApplicationId' => 'FD',
+                'senderSourceOfFunds' => '05',
+                'statementNarrative' => 'PSP Flows Testing',
+                'purposeOfPayment' => '450',
+                'transactionAmount' => new Money(7445, new Currency('CAD')),
+                // 'transactionAmount' => new Money(8445, new Currency('CAD')),
+                'transactionCurrencyCode' => 'CAD',
+                'settlementCurrencyCode' => 'USD',
+                'endToEndId' => 'GSWLNT06C5FJVMBP1FMI',
+                'clientReferenceId' => Redis::get('cad-txn-uuid') ?? '{{crefid}}',
+            ]);
+
+        switch ($mode) {
+            case 'fetch_account_balance':  // OK
+                $accountBalanceRequest = AccountBalanceRequest::new([
+                    // 'currencyCode' => 'USD', // 註解可測全部幣別
+                ]);
+
+                $rst = $this->visaDirectAccountPayoutClient->fetchAccountBalanceV3($accountBalanceRequest);
+
+                dd($rst);
+
+                foreach ($rst as $r) {
+                    $this->info('==== currency '.$r['balance']['currencyCode'].' ====');
+                    $this->info('account id: '.$r['accountId']);
+                    $this->info('account  '.$r['balance']['amount']);
+                    $this->info('timestamp: '.$r['balanceTimestamp']);
+                    $this->info('last transaction timestamp: '.$r['lastTransactionTimestamp']);
+                }
+                break;
+            case 'fetch_posting_calendar':  // OK
+                $postingCalendarRequest = PostingCalendarRequest::new(
+                    [
+                        'recipientBankCountryCode' => 'ARG',
+                    ]
+                );
+                $rst = $this->visaDirectAccountPayoutClient->fetchPostingCalendarV3($postingCalendarRequest);
+
+                dd($rst);
+                // $this->info('cutOffDateTime: '.$rst['postingCalendar'][0]['cutOffDateTime']);
+                // $this->info('expectedPostingDate: '.$rst['postingCalendar'][0]['expectedPostingDate']);
+
+                break;
+            case 'fetch_fx_rates_with_source_amount': // OK
+                // TODO: 'TWD' 可以測試 sourceCurrency TWD 可以測出4
+                $sourceCurrencyCode = trim($this->ask('Please provide the source currency code'));
+                $destinationCurrencyCode = trim($this->ask('Please provide the destination currency code'));
+                $sourceAmount = trim($this->ask('Please provide the source amount'));
+
+                $foreignExchange = ForeignExchangeRequest::new(
+                    [
+                        'sourceCurrencyCode' => $sourceCurrencyCode, // Required. Destination amount 3-alpha currency code in ISO 4217. Example: "GBP"
+                        // 'sourceCurrencyCode' => 'TWD', // Required. Destination amount 3-alpha currency code in ISO 4217. Example: "GBP"
+                        'rateProductCode' => 'BANK',         // Required. Indicates which rate source is to be used. Enum: "BANK" or "WALLET"
+                        'destinationCurrencyCode' => $destinationCurrencyCode,      // Required. Source amount 3-alpha currency code in ISO 4217. Example: "USD"
+                        'sourceAmount' => new Money($sourceAmount, new Currency($sourceCurrencyCode)),
+                        'quoteIdRequired' => true,
+                    ]
+                );
+
+                $rst = $this->visaDirectAccountPayoutClient->fetchForeignExchangeRatesWithSourceAmountV2($foreignExchange);
+                // Initialize ISOCurrencies to get currency subunits dynamically
+                $currencies = new ISOCurrencies();
+
+                // Use DecimalMoneyFormatter for correct formatting based on currency subunit
+                $formatter = new DecimalMoneyFormatter($currencies);
+                $this->info('destinationAmount: '.$formatter->format($rst->destinationAmount));
+                $this->info('sourceAmount: '.$formatter->format($rst->sourceAmount));
+                $this->info('rateProductCode: '.$rst->rateProductCode);
+                $this->info('sourceCurrencyCode: '.$rst->sourceCurrencyCode);
+                $this->info('destinationCurrencyCode: '.$rst->destinationCurrencyCode);
+                $exchange = $rst->conversionRate;
+                $sourceCurrencyCode = $rst->sourceCurrencyCode;
+                $destinationCurrencyCode = $rst->destinationCurrencyCode;
+                $reflection = new ReflectionClass($exchange);
+                $property = $reflection->getProperty('list');
+                $property->setAccessible(true);
+                $list = $property->getValue($exchange);
+                $this->info('conversionRate: '.$list[$sourceCurrencyCode][$destinationCurrencyCode]);
+                break;
+            case 'fetch_fx_rates_with_destination_amount': // OK
+                $sourceCurrencyCode = trim($this->ask('Please provide the source currency code'));
+                $destinationCurrencyCode = trim($this->ask('Please provide the destination currency code'));
+                $destinationAmount = trim($this->ask('Please provide the destination amount'));
+
+                $foreignExchange = ForeignExchangeRequest::new(
+                    [
+                        'sourceCurrencyCode' => $sourceCurrencyCode, // Required. Destination amount 3-alpha currency code in ISO 4217. Example: "GBP"
+                        // 'sourceCurrencyCode' => 'TWD', // Required. Destination amount 3-alpha currency code in ISO 4217. Example: "GBP"
+                        'rateProductCode' => 'BANK',         // Required. Indicates which rate source is to be used. Enum: "BANK" or "WALLET"
+                        'destinationCurrencyCode' => $destinationCurrencyCode,      // Required. Source amount 3-alpha currency code in ISO 4217. Example: "USD"
+                        'destinationAmount' => new Money($destinationAmount, new Currency($destinationCurrencyCode)),
+                        // [VDA] Client error 400 for fetchForeignExchangeRatesWithDestinationAmountV2. Reason: 3003. Message: Invalid Schema. Details: [{"location":"destinationAmount","message":"destinationAmount is invalid"}].
+                    ]
+                );
+
+                $rst = $this->visaDirectAccountPayoutClient->fetchForeignExchangeRatesWithDestinationAmountV2($foreignExchange);
+
+                // Initialize ISOCurrencies to get currency subunits dynamically
+                $currencies = new ISOCurrencies();
+
+                // Use DecimalMoneyFormatter for correct formatting based on currency subunit
+                $formatter = new DecimalMoneyFormatter($currencies);
+
+                $this->info('destinationAmount: '.$formatter->format($rst->destinationAmount));
+                $this->info('sourceAmount: '.$formatter->format($rst->sourceAmount));
+                $this->info('rateProductCode: '.$rst->rateProductCode);
+                $this->info('sourceCurrencyCode: '.$rst->sourceCurrencyCode);
+                $this->info('destinationCurrencyCode: '.$rst->destinationCurrencyCode);
+                $exchange = $rst->conversionRate;
+                $sourceCurrencyCode = $rst->sourceCurrencyCode;
+                $destinationCurrencyCode = $rst->destinationCurrencyCode;
+                $reflection = new ReflectionClass($exchange);
+                $property = $reflection->getProperty('list');
+                $property->setAccessible(true);
+                $list = $property->getValue($exchange);
+                $this->info('conversionRate: '.$list[$sourceCurrencyCode][$destinationCurrencyCode]);
+                break;
+            case 'fetch_fx_rates_with_quote_id_required': // OK
+                $sourceCurrencyCode = trim($this->ask('Please provide the source currency code: '));
+                $destinationCurrencyCode = trim($this->ask('Please provide the destination currency code: '));
+
+                $foreignExchange = ForeignExchangeRequest::new(
+                    [
+                        'sourceCurrencyCode' => $sourceCurrencyCode, // Required. Destination amount 3-alpha currency code in ISO 4217. Example: "GBP"
+                        'rateProductCode' => 'BANK',         // Required. Indicates which rate source is to be used. Enum: "BANK" or "WALLET"
+                        'destinationCurrencyCode' => $destinationCurrencyCode,      // Required. Source amount 3-alpha currency code in ISO 4217. Example: "USD"
+                        // 'destinationAmount' => new Money('10000', new Currency('MXN')),
+                    ]
+                );
+
+                $rst = $this->visaDirectAccountPayoutClient->fetchForeignExchangeRatesWithQuoteIdRequiredV2($foreignExchange, true);
+
+                $this->info('rateProductCode: '.$rst->rateProductCode);
+                $this->info('sourceCurrencyCode: '.$rst->sourceCurrencyCode);
+                $this->info('destinationCurrencyCode: '.$rst->destinationCurrencyCode);
+                $exchange = $rst->conversionRate;
+                $sourceCurrencyCode = $rst->sourceCurrencyCode;
+                $sourceCurrencyCode = $rst->sourceCurrencyCode;
+                $destinationCurrencyCode = $rst->destinationCurrencyCode;
+                $reflection = new ReflectionClass($exchange);
+                $property = $reflection->getProperty('list');
+                $property->setAccessible(true);
+                $list = $property->getValue($exchange);
+                $this->info('conversionRate: '.$list[$sourceCurrencyCode][$destinationCurrencyCode]);
+                $this->info('quoteId: '.$rst->quoteId);
+                $this->info('quoteIdExpiryDateTime: '.$rst->quoteIdExpiryDateTime);
+                break;
+            case 'send_payout':
+                // Argentina
+                // Colombia
+                // India
+                // Mexico
+                // Peru
+                $settlementCurrencyCode = trim($this->ask('Please provide the settlement currency code'));
+                $clientReferenceId = trim($this->ask('Please provide the client reference id'));
+                $quoteId = trim($this->ask('Please provide the quote id'));
+
+                if ('argentina' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailARG->quoteId = (int) $quoteId;
+                    $transactionDetailARG->clientReferenceId = $clientReferenceId;
+                    $transactionDetailARG->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('ars-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1234,
+                        senderDetail: $IndividualSenderDetailARG,
+                        recipientDetail: $IndividualRecipientDetailARG,
+                        transactionDetail: $transactionDetailARG,
+                    );
+                } elseif ('mexico' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailMXN->quoteId = (int) $quoteId;
+                    $transactionDetailMXN->clientReferenceId = $clientReferenceId;
+                    $transactionDetailMXN->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('mxn-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1111,
+                        senderDetail: $IndividualSenderDetailMXN,
+                        recipientDetail: $IndividualRecipientDetailMXN,
+                        transactionDetail: $transactionDetailMXN,
+                    );
+                } elseif ('colombia' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailCOP->quoteId = (int) $quoteId;
+                    $transactionDetailCOP->clientReferenceId = $clientReferenceId;
+                    $transactionDetailCOP->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('cop-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1234,
+                        senderDetail: $IndividualSenderDetailCOP,
+                        recipientDetail: $IndividualRecipientDetailCOP,
+                        transactionDetail: $transactionDetailCOP,
+                    );
+                } elseif ('india' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailINR->quoteId = (int) $quoteId;
+                    $transactionDetailINR->clientReferenceId = $clientReferenceId;
+                    $transactionDetailINR->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('inr-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1234,
+                        senderDetail: $IndividualSenderDetailINR,
+                        recipientDetail: $IndividualRecipientDetailINR,
+                        transactionDetail: $transactionDetailINR,
+                    );
+                } elseif ('peru' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailPEN->quoteId = (int) $quoteId;
+                    $transactionDetailPEN->clientReferenceId = $clientReferenceId;
+                    $transactionDetailPEN->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('peru-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1111,
+                        senderDetail: $IndividualSenderDetailPEN,
+                        recipientDetail: $IndividualRecipientDetailPEN,
+                        transactionDetail: $transactionDetailPEN,
+                    );
+                } elseif ('japan' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailJPN->quoteId = (int) $quoteId;
+                    $transactionDetailJPN->clientReferenceId = $clientReferenceId;
+                    $transactionDetailJPN->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('jpn-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1111,
+                        senderDetail: $IndividualSenderDetailJPN,
+                        recipientDetail: $IndividualRecipientDetailJPN,
+                        transactionDetail: $transactionDetailJPN,
+                    );
+                } elseif ('korea' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailKOR->quoteId = (int) $quoteId;
+                    $transactionDetailKOR->clientReferenceId = $clientReferenceId;
+                    $transactionDetailKOR->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('kr-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1111,
+                        senderDetail: $IndividualSenderDetailKOR,
+                        recipientDetail: $IndividualRecipientDetailKOR,
+                        transactionDetail: $transactionDetailKOR,
+                    );
+                } elseif ('spain' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailESP->quoteId = (int) $quoteId;
+                    $transactionDetailESP->clientReferenceId = $clientReferenceId;
+                    $transactionDetailESP->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('spain-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1111,
+                        senderDetail: $IndividualSenderDetailESP,
+                        recipientDetail: $IndividualRecipientDetailESP,
+                        transactionDetail: $transactionDetailESP,
+                    );
+                } elseif ('canada' == $country) {
+                    $transaction = ${'transactionDetail'.$mapping[$country]};
+                    $this->info('Last client reference id: '.$transaction->clientReferenceId);
+
+                    $transactionDetailCAD->quoteId = (int) $quoteId;
+                    $transactionDetailCAD->clientReferenceId = $clientReferenceId;
+                    $transactionDetailCAD->settlementCurrencyCode = !empty($settlementCurrencyCode) ? $settlementCurrencyCode : 'USD';
+
+                    Redis::set('peru-txn-uuid', $clientReferenceId);
+                    $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                        ledgerId: 1111,
+                        senderDetail: $IndividualSenderDetailCAD,
+                        recipientDetail: $IndividualRecipientDetailCAD,
+                        transactionDetail: $transactionDetailCAD,
+                    );
+                } else {
+                    $this->info('Currently, the supported countries are: Argentina, Colombia, India, Mexico, Peru');
+                    // $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                    //         ledgerId: 111,
+                    //         senderDetail: $IndividualSenderDetailGBP,
+                    //         recipientDetail: $IndividualRecipientDetailGBP,
+                    //         transactionDetail: $transactionDetailGBP,
+                    //     );
+                    break;
+                }
+
+                $this->info('============ transaction result ============');
+                dd($response);
+
+                break;
+            case 'validate_payout':
+                if ('argentina' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailARG,
+                        $IndividualRecipientDetailARG,
+                        $transactionDetailARG
+                    );
+                    dd($response);
+                } elseif ('colombia' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailCOP,
+                        $IndividualRecipientDetailCOP,
+                        $transactionDetailCOP
+                    );
+                    dd($response);
+                } elseif ('india' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailINR,
+                        $IndividualRecipientDetailINR,
+                        $transactionDetailINR
+                    );
+                    dd($response);
+                } elseif ('mexico' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailMXN,
+                        $IndividualRecipientDetailMXN,
+                        $transactionDetailMXN
+                    );
+                    dd($response);
+                } elseif ('peru' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailPEN,
+                        $IndividualRecipientDetailPEN,
+                        $transactionDetailPEN
+                    );
+                    dd($response);
+                } elseif ('canada' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailCAD,
+                        $IndividualRecipientDetailCAD,
+                        $transactionDetailCAD
+                    );
+                    dd($response);
+                } elseif ('japan' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailJPN,
+                        $IndividualRecipientDetailJPN,
+                        $transactionDetailJPN
+                    );
+                    dd($response);
+                } elseif ('korea' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailKOR,
+                        $IndividualRecipientDetailKOR,
+                        $transactionDetailKOR
+                    );
+                    dd($response);
+                } elseif ('spain' == $country) {
+                    $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
+                        $IndividualSenderDetailESP,
+                        $IndividualRecipientDetailESP,
+                        $transactionDetailESP
+                    );
+                    dd($response);
+                } else {
+                    // $this->error('Currently, only the supported countries: Argentina, Colombia, India, Mexico, Peru');
+                    $this->error('Currently, country is not supported.');
+
+                    // $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
+                    //         ledgerId: 111,
+                    //         senderDetail: $IndividualSenderDetailGBP,
+                    //         recipientDetail: $IndividualRecipientDetailGBP,
+                    //         transactionDetail: $transactionDetailGBP,
+                    //     );
+                    break;
+                }
+
+                // if ('INVALID' == $response->validationResultCode) {
+                //     $this->info('============ validation result ============');
+                //     $this->info('validationResultCode: '.$response->validationResultCode);
+                //     $this->info('validationDetails: '.json_encode($response->validationDetails));
+                // } else {
+                //     $this->info('============ validation result ============');
+                //     $this->info('validationResultCode: '.$response->validationResultCode);
+                //     $this->info('expectedPostingDate: '.$response->expectedPostingDate);
+                // }
+
+                // {
+                //     "validationResultCode": "VALID",
+                //     "expectedPostingDate": "2022-11-28"
+                // }
+
+                // no break
+            case 'query_payout_by_cid':
+                $clientReferenceId = trim($this->ask('Please provide the client reference id'));
+                $rst = $this->visaDirectAccountPayoutClient->fetchPayoutByClientReferenceIdV3($clientReferenceId);
+
+                dd($rst);
+
+                // {
+                //     "transactionDetail": {
+                //         "initiatingPartyId": 1002,
+                //         "payoutId": "172293713063281",
+                //         "clientReferenceId": "1722937128566",
+                //         "expectedPostingDate": "2022-11-16",
+                //         "transactionDateTime": "2024-08-06T09:38:50.000Z",
+                //         "status": "PAYMENT_RECEIVED",
+                //         "transactionAmount": 1.5,
+                //         "transactionCurrencyCode": "GBP",
+                //         "destinationAmount": 1557,
+                //         "destinationCurrencyCode": "GBP",
+                //         "settlementAmount": 1557,
+                //         "settlementCurrencyCode": "GBP",
+                //         "fxConversionRate": 1,
+                //         "payoutSpeed": "STANDARD"
+                //     }
+                // }
+                break;
+            case 'query_payout_by_pid':
+                // clientReferenceId:, 1722936221570
+                // payoutSpeed:, STANDARD
+                // expectedPostingDate:, 2022-11-16
+                // transactionAmount:, 1.5
+                // transactionCurrencyCode:, GBP
+                // destinationAmount:, 1557
+                // destinationCurrencyCode:, GBP
+                // fxConversionRate:, 1
+                // initiatingPartyId:, 1002
+                // payoutId:, 172293622302364
+                // settlementAmount:, 1557
+                // settlementCurrencyCode:, GBP
+                // transactionDateTime:, 2022-11-16T10:36:07.000Z
+                // status:, PAYMENT_RECEIVED
+
+                $payoutId = '173476963945797';
+                $payoutId = trim($this->ask('Please provide the client payoutId id'));
+                $rst = $this->visaDirectAccountPayoutClient->fetchPayoutByPayoutIdV3($payoutId);
+
+                dd($rst);
+
+                break;
+            case 'cancel_payout_by_cid':
+                $clientReferenceId = 'EVELYN-TEST--0012';
+                $clientReferenceId = trim($this->ask('Please provide the client reference id'));
+
+                $rst = $this->visaDirectAccountPayoutClient->cancelPayoutByClientReferenceIdV3('1111', $clientReferenceId);
+                dd($rst);
+                break;
+            case 'cancel_payout_by_pid':
+                $payoutId = '281474989427295';
+                $payoutId = trim($this->ask('Please provide the payout id: '));
+
+                $rst = $this->visaDirectAccountPayoutClient->cancelPayoutByPayoutIdV3('2222', $payoutId);
+
+                dd($rst);
+
+                break;
+
+            case 'get_meta_data':
+                $recipientCountryCode = trim($this->ask('Please provide the recipient country code'));
+                $recipientCurrencyCode = trim($this->ask('Please provide the recipient currency code'));
+                $detail = PayoutMetaDataDetail::new([
+                    'payoutMethod' => VisaDirectAccountEnum::PAYOUT_METHOD_VDA,
+                    'recipientCountryCode' => $recipientCountryCode,
+                    'recipientCurrencyCode' => $recipientCurrencyCode,
+                ]);
+
+                $rst = $this->visaDirectAccountPayoutClient->fetchPayoutMetaData($detail);
+
+                dd($rst);
+                break;
+
+            default:
+                $this->error("Unexpected mode: $mode");
+                break;
+        }
+
+        return 0;
+    }
+}
+
+// ============ transactionDetail ============
+// clientReferenceId: 1730378227427
+// payoutSpeed: STANDARD
+// expectedPostingDate: 2022-11-16-
+// transactionAmount: 1.5
+// transactionCurrencyCode: GBP
+// destinationAmount: 1557
+// destinationCurrencyCode: GBP
+// fxConversionRate: 1
+// initiatingPartyId: 1002
+// payoutId: 173037822876747
+// settlementAmount: 1557
+// settlementCurrencyCode: GBP
+// transactionDateTime: 2022-11-16T10:36:07.000Z
+// status: PAYMENT_RECEIVED
+
+//     "transactionDetail": {
+//         "clientReferenceId": "1722935892258",
+//         "payoutSpeed": "STANDARD",
+//         "expectedPostingDate": "2022-11-16",
+//         "transactionAmount": 1.5,
+//         "transactionCurrencyCode": "GBP",
+//         "destinationAmount": 1557,
+//         "destinationCurrencyCode": "GBP",
+//         "fxConversionRate": 1,
+//         "initiatingPartyId": 1002,
+//         "payoutId": "172293589424950",
+//         "settlementAmount": 1557,
+//         "settlementCurrencyCode": "GBP",
+//         "transactionDateTime": "2022-11-16T10:36:07.000Z",
+//         "status": "PAYMENT_RECEIVED"
+
+// clientReferenceId: 1730378227427
+// payoutSpeed: STANDARD
+// expectedPostingDate: 2022-11-16
+// transactionAmount: 1.5
+// transactionCurrencyCode: GBP
+// destinationAmount: 1557
+// destinationCurrencyCode: GBP
+// fxConversionRate: 1
+// initiatingPartyId: 1002
+// payoutId: 173037822876747
+// settlementAmount: 1557
+// settlementCurrencyCode: GBP
+// transactionDateTime: 2022-11-16T10:36:07.000Z
+// status: PAYMENT_RECEIVED
+
+// ============ transactionDetail ============
+// clientReferenceId: 1730533799938
+// payoutSpeed: STANDARD
+// expectedPostingDate: 2022-11-16
+// transactionAmount: 1.5
+// transactionCurrencyCode: GBP
+// destinationAmount: 1557
+// destinationCurrencyCode: GBP
+// fxConversionRate: 1
+// initiatingPartyId: 1002
+// payoutId: 173053380150222
+// settlementAmount: 1557
+// settlementCurrencyCode: GBP
+// transactionDateTime: 2022-11-16T10:36:07.000Z
+// status: PAYMENT_RECEIVED
+
+// ============ transactionDetail ============
+// clientReferenceId: 20241102083846
+// payoutSpeed: STANDARD
+// expectedPostingDate: 2022-11-16
+// transactionAmount: 100
+// transactionCurrencyCode: GBP
+// destinationAmount: 1557
+// destinationCurrencyCode: GBP
+// fxConversionRate: 1
+// initiatingPartyId: 1002
+// payoutId: 173053672770791
+// settlementAmount: 1557
+// settlementCurrencyCode: GBP
+// transactionDateTime: 2022-11-16T10:36:07.000Z
+// status: PAYMENT_RECEIVED
+
+// ============ transactionDetail ============
+// clientReferenceId: 20241102092634
+// payoutSpeed: STANDARD
+// expectedPostingDate: 2022-11-16
+// transactionAmount: 100
+// transactionCurrencyCode: GBP
+// destinationAmount: 1557
+// destinationCurrencyCode: GBP
+// fxConversionRate: 1
+// initiatingPartyId: 1002
+// payoutId: 173053959652775
+// settlementAmount: 1557
+// settlementCurrencyCode: GBP
+// transactionDateTime: 2022-11-16T10:36:07.000Z
+// status: PAYMENT_RECEIVED

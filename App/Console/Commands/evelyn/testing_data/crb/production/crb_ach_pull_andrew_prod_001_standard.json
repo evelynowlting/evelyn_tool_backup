@@ -1,0 +1,19 @@
+{
+    "transactionType": "Pull",
+    "amount": 500,
+    "accountNumber": "338496141171",
+    "receiver": {
+        "routingNumber": "102301092",
+        "accountNumber": "8471349103",
+        "accountType": "Checking",
+        "accountName": "Andrew Carpenter"
+    },
+    "secCode": "WEB",
+    "description": "ach pull5s",
+    "serviceType": "Standard",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach pull testing with standard service type",
+    "clientIdentifier": "TC-PROD-ACH-PULL-001-standard-001"
+}

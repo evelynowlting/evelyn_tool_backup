@@ -1,0 +1,34 @@
+{
+    "transactionDetail": {
+        "clientReferenceId": "SGVCMS-0002",
+        "initiatingPartyId": "100010",
+        "businessApplicationId": "FD",
+        "transactionAmount": 89.12,
+        "transactionCurrencyCode": "SGD",
+        "settlementCurrencyCode": "USD"
+    },
+    "recipientDetail": {
+        "type": "I",
+        "bank": {
+            "accountName": "Money Market",
+            "accountNumberType": "DEFAULT",
+            "accountNumber": "101745664",
+            "countryCode": "SGP",
+            "currencyCode": "SGD"
+        },
+        "firstName": "MUJIB",
+        "lastName": "FAISAL"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressline1",
+            "city": "Washington",
+            "country": "USA"
+        },
+        "senderAccountNumber": "senderAccountNumber",
+        "firstName": "Jhon",
+        "lastName": "Wick"
+    },
+    "payoutMethod": "B"
+}

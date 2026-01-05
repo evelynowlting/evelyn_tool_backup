@@ -1,0 +1,65 @@
+{
+    "transactionDetail": {
+        "businessApplicationId": "FD",
+        "senderSourceOfFunds": "05",
+        "clientReferenceId": "{{crefid}}",
+        "initiatingPartyId": 100010,
+        "statementNarrative": "PSP Flows Testing",
+        "purposeOfPayment": "450",
+        "transactionAmount": 74.45,
+        "transactionCurrencyCode": "CAD",
+        "settlementCurrencyCode": "USD",
+        "endToEndId": "GSWLNT06C5FJVMBP1FMI"
+    },
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "bank": {
+            "bankName": "NOTPROVIDED",
+            "accountName": "ABCDEFGHIJKLMNOPQRSTUVWXYZABCD",
+            "accountNumber": "1022573",
+            "accountNumberType": "DEFAULT",
+            "accountType": "1",
+            "countryCode": "CAN",
+            "bankCode": "003",
+            "bankCodeType": "DEFAULT",
+            "branchCode": "09591",
+            "currencyCode": "CAD"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "20101605421",
+                "idIssueCountry": "CAN"
+            }
+        ],
+        "type": "I",
+        "address": {
+            "addressLine1": "ITALY",
+            "addressLine2": "Italy",
+            "city": "Italy",
+            "country": "ITA"
+        },
+        "firstName": "OsamaT",
+        "lastName": "Bin LadenT"
+    },
+    "senderDetail": {
+        "senderAccountNumber": "633406",
+        "type": "I",
+        "address": {
+            "addressLine1": "Fulton St & Church St Oculus Plaza",
+            "city": "New York",
+            "postalCode": "10006",
+            "state": "NY",
+            "country": "USA"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "20101605421",
+                "idIssueCountry": "GBR"
+            }
+        ],
+        "firstName": "Osama",
+        "lastName": "Bin Laden"
+    }
+}

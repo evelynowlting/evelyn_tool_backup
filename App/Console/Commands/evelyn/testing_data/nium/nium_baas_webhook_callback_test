@@ -1,0 +1,62 @@
+callback
+
+Onboarding RFI callback 目前會更新到 nium_baas_customer_onboarding_rfi_details => 2 設定好之後，要看nium_baas_customer_onboarding_rfi_details是否有更新
+測試方法：
+找一筆已存在release的onboarding info然後把資訊給沙西米 請他幫忙設定
+customer_id: e42adc56-d5a5-4a1a-9420-60106424d237
+nium_client_id: NIM1682495420975
+case_id: 0561954f-abb0-4c5e-96cd-6769b9277655
+region: SG
+
+nium_baas_customer_onboarding_info 看狀態
+nium_baas_customer_onboarding_rfi_details 看有沒有record
+收到信 NiumBaaSOnboardingRFIEvent
+
+
+Transaction RFI callback 已經有存到 nium_baas_transaction_details => 3 設定好之後，要檢查nium_baas_transaction_details是否有更新
+測試方法：
+RT7020066810
+nium_baas_transaction_details 看有沒有record
+收到信 NiumBaaSTransactionRFIEvent
+
+{
+    "message": "Transfer Initiated",
+    "payment_id": null,
+    "system_reference_number": "RT0314492794"
+}
+
+result:
+log有收到
+db 沒寫
+
+測試方法二
+release
+已確認中 acut_000472023051805279003288
+SGD 222.00 2023-05-18 18:07:56 RT8010720069
+
+43dd0a1d6a75e8522fdb9ae22bda645122c1d8a7
+5/12
+Hi @Sakthivel Ingusamy
+
+I am currently testing callbacks on OwlPay release(<->Nium BaaS sandbox).
+Could you please help to set up with below information? Thank you.
+
+Onboarding RFI:
+    customer_id: e42adc56-d5a5-4a1a-9420-60106424d237
+    nium_client_id: NIM1682495420975
+    case_id: 0561954f-abb0-4c5e-96cd-6769b9277655
+    region: SG
+Trasaction RFI:
+    system_reference_number: RT0314492794
+
+
+5/29
+Onboarding RFI:
+    customer_id: e42adc56-d5a5-4a1a-9420-60106424d237
+    nium_client_id: NIM1682495420975
+    case_id: 0561954f-abb0-4c5e-96cd-6769b9277655
+    region: SG
+Transaction RFI:
+    system_reference_number: RT9420633944
+沒有transaction_details 因為sandbox是空的
+沒有webhook

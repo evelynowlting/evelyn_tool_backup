@@ -1,0 +1,21 @@
+{
+    "accountNumber": "323040457976",
+    "receiverRoutingNumber": "021000021",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "77777777701",
+        "name": "ee external"
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "77777777701",
+        "name": "ee external"
+    },
+    "amount": 1000,
+    "originatorToBeneficiary1": "ee",
+    "originatorToBeneficiary2": "testing",
+    "originatorToBeneficiary3": "for",
+    "originatorToBeneficiary4": "narrative",
+    "purpose": "20250409 $100 payout"
+}

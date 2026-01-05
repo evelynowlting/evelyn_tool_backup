@@ -1,0 +1,21 @@
+{
+    "accountNumber": "151190090879",
+    "receiverRoutingNumber": "031302971",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "7200435",
+        "name": "Coinbase, Inc. FBO its Customers"
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "151190090879",
+        "name": "OwlTing USA Inc."
+    },
+    "amount": 1000,
+    "purpose": "testing wire transfer 20",
+    "originatorToBeneficiary1": "PRIBM7JBCXE",
+    "originatorToBeneficiary2": "owlting usa",
+    "originatorToBeneficiary3": "to",
+    "originatorToBeneficiary4": "coinbase"
+}

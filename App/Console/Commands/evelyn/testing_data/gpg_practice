@@ -1,0 +1,49 @@
+Documents → evelyn $ gpg --full-generate-key
+gpg (GnuPG) 2.2.41; Copyright (C) 2022 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+請選擇你要使用的金鑰種類:
+   (1) RSA 和 RSA (預設)
+   (2) DSA 和 Elgamal
+   (3) DSA (僅能用於簽署)
+   (4) RSA (僅能用於簽署)
+  (14) Existing key from card
+你要選哪一個? 1
+RSA 金鑰的長度可能介於 1024 位元和 4096 位元之間.
+你想要用多大的金鑰尺寸? (3072) 1024
+你所要求的金鑰尺寸是 1024 位元
+請指定這把金鑰的有效期限是多久.
+         0 = 金鑰不會過期
+      <n>  = 金鑰在 n 天後會到期
+      <n>w = 金鑰在 n 週後會到期
+      <n>m = 金鑰在 n 月後會到期
+      <n>y = 金鑰在 n 年後會到期
+金鑰的有效期限是多久? (0) 0
+金鑰完全不會過期
+以上正確嗎? (y/N) y
+
+GnuPG 需要建構使用者 ID 以識別你的金鑰.
+
+真實姓名: Evelyn Lin
+電子郵件地址: evelyn_lin@owlting.com
+註釋: GPG key gen
+你選擇了這個使用者 ID:
+    "Evelyn Lin (GPG key gen) <evelyn_lin@owlting.com>"
+
+變更姓名(N), 註釋(C), 電子郵件地址(E)或確定(O)/退出(Q)? O
+我們需要產生大量的隨機位元組. 這個時候你可以多做一些事情
+(像是敲打鍵盤, 移動滑鼠, 讀寫硬碟之類的)
+這會讓隨機數字產生器有更多的機會獲得夠多的亂數.
+我們需要產生大量的隨機位元組. 這個時候你可以多做一些事情  密碼test12345
+(像是敲打鍵盤, 移動滑鼠, 讀寫硬碟之類的)
+這會讓隨機數字產生器有更多的機會獲得夠多的亂數.
+gpg: 目錄 '/Users/evelyn/.gnupg/openpgp-revocs.d' 已建立
+gpg: revocation certificate stored as '/Users/evelyn/.gnupg/openpgp-revocs.d/03BAEFC9A550711D931D3411FE2A686E8DC53E55.rev'
+公鑰和私鑰已建立及簽署.
+
+pub   rsa1024 2023-06-13 [SC]
+      03BAEFC9A550711D931D3411FE2A686E8DC53E55
+uid                      Evelyn Lin (GPG key gen) <evelyn_lin@owlting.com>
+sub   rsa1024 2023-06-13 [E]
+

@@ -1,0 +1,42 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "Testing St. 2732",
+            "city": "Mexico City",
+            "country": "MEX"
+        },
+        "bank": {
+            "accountName": "Matt Tester",
+            "accountNumber": "014027000000000008",
+            "accountNumberType": "DEFAULT",
+            "bankName": "Banamex",
+            "countryCode": "MEX",
+            "currencyCode": "MXN"
+        },
+        "firstName": "María José de Dios",
+        "lastName": "Pérez-Campos Cruz",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "123 Main st",
+            "city": "ACCORD",
+            "country": "USA",
+            "postalCode": "00000",
+            "state": "NY"
+        },
+        "firstName": "DailyPay",
+        "lastName": "Sender",
+        "senderReferenceNumber": "1c85e1964e5e47c294c48804712aa9c4",
+        "type": "I"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "PP",
+        "clientReferenceId": "115818903205",
+        "initiatingPartyId": 100010,
+        "settlementCurrencyCode": "USD",
+        "transactionAmount": 463.38,
+        "transactionCurrencyCode": "MXN"
+    }
+}

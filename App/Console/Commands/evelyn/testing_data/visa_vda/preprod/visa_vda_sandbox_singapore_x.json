@@ -1,0 +1,77 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "123 Main St",
+      "addressLine2": "Lane 1",
+      "city": "London",
+      "country": "GBR",
+      "postalCode": "675456",
+      "state": "CF"
+    },
+    "bank": {
+      "BIC": "ANZBSGSXXXX",
+      "accountName": "Money Market",
+      "accountNumber": "101745664",
+      "accountNumberType": "DEFAULT",
+      "bankName": "Barclays",
+      "countryCode": "SGP",
+      "currencyCode": "SGD"
+    },
+    "cityOfBirth": "optional",
+    "contactEmail": "jessica@visa.com",
+    "contactNumber": "+447911123456",
+    "countryOfBirth": "GBR",
+    "dateOfBirth": "2001-01-01",
+    "firstName": "MUJIB",
+    "identificationList": [
+      {
+        "idIssueCountry": "GBR",
+        "idNumber": "20101605421",
+        "idType": "P"
+      }
+    ],
+    "lastName": "FAISAL",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "addressline1",
+      "addressLine2": "addressline2",
+      "city": "Washington",
+      "country": "USA",
+      "postalCode": "111222",
+      "state": "CF"
+    },
+    "cityOfBirth": "SenderCity",
+    "contactEmail": "abc@visa.com",
+    "contactNumber": "+447911123456",
+    "contactNumberType": "MOBILE",
+    "countryOfBirth": "USA",
+    "dateOfBirth": "1999-09-09",
+    "firstName": "Jhon",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "20101605421",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Wick",
+    "senderAccountNumber": "senderAccountNumber",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "FD",
+    "clientReferenceId": "SGVCMS-0002",
+    "endToEndId": "abcd-1234-fab-578",
+    "initiatingPartyId": "100010",
+    "payoutSpeed": "standard",
+    "senderBeneficiaryRelationship": "senderBeneficiaryRelationship",
+    "senderSourceOfFunds": "01",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "advancepayment",
+    "transactionAmount": 89.12,
+    "transactionCurrencyCode": "SGD"
+  }
+}

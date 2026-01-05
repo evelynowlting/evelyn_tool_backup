@@ -1,0 +1,28 @@
+現在：
+Route::post('/nium/baas/webhook', 'NiumBaaSWebhookController@statusUpdate')->name('v1.payout.api.nium.baas.status.webhook');
+Route::post('/nium/baas/callback/kyc', 'NiumBaaSCallbackController@onboardingKYCStatusCallBack')->name('v1.payout.api.nium.baas.onboarding.kyb.status.callback');
+Route::post('/nium/baas/callback/transaction', 'NiumBaaSCallbackController@transactionStatusCallback')->name('v1.payout.api.nium.baas.transaction.rfi.status.callback');
+
+
+改：
+Route::post('/nium/baas/webhook', 'NiumBaaSWebhookController@statusUpdate')->name('v1.payout.api.nium.baas.status.webhook');
+Route::post('/nium/baas/callback/Compliance', 'NiumBaaSCallbackController@onboardingKYCStatusCallBack')->name('v1.payout.api.nium.baas.onboarding.kyb.status.callback');
+Route::post('/nium/baas/callback/transaction', 'NiumBaaSCallbackController@transactionStatusCallback')->name('v1.payout.api.nium.baas.transaction.rfi.status.callback');
+
+
+實際上：
+Compliance Status Callback Url :
+    https://api-release.owlpay.com/api/v1/payout/nium/baas/callback/compliance?customerHashId={customerHashId}
+Transaction Compliance Callback Url :
+    https://api-release.owlpay.com/api/v1/payout/nium/baas/callback/transaction?type={nudgeType}&value={nudgeValue}
+Notification webhook :
+    https://api-release.owlpay.com/api/v1/payout/nium/baas/webhook
+
+最後給出去
+Compliance Status Callback Url :
+    https://api-release.owlpay.com/api/v1/payout/nium/baas
+Transaction Compliance Callback Url :
+    https://api-release.owlpay.com/api/v1/payout/nium/baas/callback/transaction
+Webhook :
+    https://api-release.owlpay.com/api/v1/payout/nium/baas
+

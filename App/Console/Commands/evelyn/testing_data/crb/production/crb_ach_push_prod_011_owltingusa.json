@@ -1,0 +1,21 @@
+{
+    "transactionType": "Push",
+    "amount": 1000,
+    "originator": {
+        "accountNumber": "399851645982"
+    },
+    "receiver": {
+        "routingNumber": "026013356",
+        "accountNumber": "1099007801",
+        "accountType": "Checking",
+        "accountName": "OWLTING USA INC"
+    },
+    "secCode": "WEB",
+    "description": "ach push10",
+    "serviceType": "Standard",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach push testing with standard service type",
+    "clientIdentifier": "TC-PROD-ACH-PUSH-011-001"
+}

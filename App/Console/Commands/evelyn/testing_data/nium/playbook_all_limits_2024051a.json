@@ -1,0 +1,149 @@
+[
+    {
+        "india(IN)": {
+            "Bank Account (ACH)": {
+                "currency": "INR",
+                "B2B": [
+                    "Max:No limits#"
+                ],
+                "B2C": [
+                    "Max:No limits#"
+                ],
+                "P2P": [
+                    "Max:No limits#"
+                ]
+            },
+            "Proxy (UPI)": {
+                "currency": "INR",
+                "B2C": [
+                    "Max:INR 200,000"
+                ],
+                "P2P": [
+                    "Max:INR 200,000"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "INR",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Local Currency Wire Transfer": {
+                "currency": "INR",
+                "B2B": [
+                    "Min:1500000 INR",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:1500000 INR",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:1500000 INR",
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "vietnam(VN)": {
+            "Bank Account (ACH)": {
+                "currency": "VND",
+                "B2B": [
+                    "Min:2000 VND",
+                    "Max:VND 500 Mn* per transaction. (*Documents may be asked by bank for transaction amount > 250 Mn VND)"
+                ],
+                "B2C": [
+                    "Min:2000 VND",
+                    "Max:VND 500 Mn* per transaction. (*Documents may be asked by bank for transaction amount > 250 Mn VND)"
+                ],
+                "P2P": [
+                    "Min:2000 VND",
+                    "Max:VND 500 Mn* per transaction. (*Documents may be asked by bank for transaction amount > 250 Mn VND)"
+                ]
+            },
+            "Local Currency Wire Transfer": {
+                "currency": "VND",
+                "B2B": [
+                    "Max:Equivalent to 3 Mn USD"
+                ],
+                "B2C": [
+                    "Max:Equivalent to 3 Mn USD"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "VND",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "peru(PE)": {
+            "Bank Account (ACH)": {
+                "currency": "PEN",
+                "B2B": [
+                    "Min:PEN 1.00",
+                    "Max:PEN 10.0 Mn"
+                ],
+                "B2C": [
+                    "Min:PEN 1.00",
+                    "Max:PEN 10.0 Mn"
+                ],
+                "P2P": [
+                    "Min:PEN 1.00",
+                    "Max:PEN 10.0 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    }
+]

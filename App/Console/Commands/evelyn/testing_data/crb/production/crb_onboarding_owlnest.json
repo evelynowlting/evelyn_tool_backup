@@ -1,0 +1,31 @@
+{
+    "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+    "name": {
+        "entityName": "OwlNest Inc."
+    },
+    "classification": "Business",
+    "profile": {
+        "taxIdType": "Ein",
+        "taxId": "922489927",
+        "dateFormed": "2023-02-16",
+        "riskRating": "Low"
+    },
+    "clientIdentifier": "TC-PROD-CM-004",
+    "primaryAddress": {
+        "addressType": "Work",
+        "classification": "Business",
+        "isPrimary": true,
+        "street1": "1513 E Sheridan St., Laramie, WY 82070",
+        "countryCode": "US"
+    },
+    "primaryPhone": {
+        "isPrimary": true,
+        "phoneType": "Work",
+        "phoneNumber": "8008560182"
+    },
+    "primaryEmail": {
+        "isPrimary": true,
+        "emailType": "Work",
+        "emailAddress": "owlpay-partnership@owlting.com"
+    }
+}

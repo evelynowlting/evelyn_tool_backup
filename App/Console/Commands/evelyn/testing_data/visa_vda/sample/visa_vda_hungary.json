@@ -1,0 +1,92 @@
+{
+    "transactionDetail": {
+        "clientReferenceId": "HUF01",
+        "initiatingPartyId": "1001",
+        "businessApplicationId": "FD",
+        "transactionAmount": 25339.47,
+        "transactionCurrencyCode": "HUF",
+        "endToEndId": "330016463808",
+        "senderSourceOfFunds": "01",
+        "senderBeneficiaryRelationship": "senderBeneficiary",
+        "statementNarrative": "advancepayment",
+        "purposeOfPayment": "ANN",
+        "payoutSpeed": "STANDARD",
+        "additionalData": [
+            {
+                "name": "NATIONALITY",
+                "value": "23456"
+            }
+        ],
+        "settlementCurrencyCode": "USD"
+    },
+    "recipientDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressline1",
+            "addressLine2": "addressline2",
+            "city": "Fremont Perter ",
+            "state": "CF",
+            "postalCode": "ACT 22601",
+            "country": "USA"
+        },
+        "bank": {
+            "bankName": "Bank Of Hungary",
+            "accountName": "Money Market",
+            "accountNumber": "117730161111101800000000",
+            "accountNumberType": "DEFAULT",
+            "accountType": "1",
+            "countryCode": "HUN",
+            "bankCode": "11773016",
+            "currencyCode": "HUF"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "P128766Z",
+                "idIssueCountry": "HUN"
+            }
+        ],
+        "countryOfBirth": "USA",
+        "cityOfBirth": "Washington",
+        "contactNumber": "+123456789",
+        "contactNumberType": "MOBILE",
+        "contactEmail": "abc@visa.com",
+        "firstName": "test",
+        "lastName": "lastname",
+        "dateOfBirth": "1999-09-09"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressLine1",
+            "addressLine2": "addressLine2",
+            "city": "Washington",
+            "postalCode": "111222",
+            "state": "CF",
+            "country": "USA"
+        },
+        "identificationList": [
+            {
+                "idType": "D",
+                "idNumber": "2023071123",
+                "idIssueCountry": "USA"
+            }
+        ],
+        "additionalData": [
+            {
+                "name": "TAX_ID",
+                "value": "12345"
+            }
+        ],
+        "senderReferenceNumber": "4304630005267011",
+        "countryOfBirth": "USA",
+        "cityOfBirth": "SenderCity",
+        "contactNumber": "+123456789",
+        "contactNumberType": "MOBILE",
+        "contactEmail": "abc@visa.com",
+        "firstName": "Sender Name",
+        "lastName": "last name",
+        "dateOfBirth": "1999-09-09"
+    },
+    "payoutMethod": "B"
+}

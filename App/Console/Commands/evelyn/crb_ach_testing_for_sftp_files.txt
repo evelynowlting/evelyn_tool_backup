@@ -1,0 +1,326 @@
+ACH Push x2
+ ~/owlting_projects/laravel_owlpay  on   bugfix/Evely…37_crb_issue = *3 !1 ?87  php artisan crb:util create_ach_push                                                                                                              ✔  took 9s   at 18:41:16  
+
+ Given the account number.329870033282:
+ > 329870033282
+
+ Given the originator user uuid. org-r5-TC-ACH-RF-011-API:
+ > evelyn-ach-testing-0001
+
+ Given the external user uuid. ben-r4-TC-ACH-RF-011-API:
+ > ext-ach-testing-0001
+
+ Given the client identifier(idempotency key). txn-r4-TC-ACH-RF-002-API:
+ > ach-testing-0001
+
+ Given the purpose. same idp key.:
+ >
+
+ Given the debtor name. R5User911Au OwlPayCash:
+ > R5User911Au OwlPayCash
+
+ Given the amount:
+ > 1000
+
+Infrastructure\CRB\ValueObjects\Responses\ACH\AchResponse^ {#20038 // app/Console/Commands/evelyn/CrossRiverBankUtil.php:746
+  +id: "2f34a3dd-dcec-4601-aead-b36900b14b97"
+  +accountNumber: "329870033282"
+  +referenceId: "A274F1235536"
+  +paymentType: "Origination"
+  +direction: "Outbound"
+  +status: "Created"
+  +source: "Api"
+  +postingType: "Aggregate"
+  +coreTransactionId: null
+  +memoPostId: null
+  +postingCode: "OK"
+  +posting: "Authorized"
+  +originator: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginatorResponse^ {#20032
+    +routingNumber: "021214891"
+    +accountNumber: "329870033282"
+    +accountType: "Checking"
+    +name: "ACH originator"
+    +identification: "9999912457"
+  }
+  +receiver: Infrastructure\CRB\ValueObjects\Responses\ACH\ReceiverResponse^ {#20021
+    +routingNumber: "021200339"
+    +accountNumber: "2151546989"
+    +accountType: "Checking"
+    +name: "Test Name"
+    +identification: null
+  }
+  +secCode: "WEB"
+  +description: "ACH push"
+  +transactionType: "Push"
+  +amount: Money\Money^ {#20011
+    -amount: "1000"
+    -currency: Money\Currency^ {#20018
+      -code: "USD"
+    }
+  }
+  +serviceType: "Standard"
+  +extendedDetails: Infrastructure\CRB\ValueObjects\Responses\ACH\ExtendedDetailsResponse^ {#20030
+    +paymentType: "S"
+  }
+  +effectiveDate: "251002"
+  +traceNumber: "021214895006847"
+  +wasReturned: false
+  +wasCorrected: false
+  +holdDays: 0
+  +original: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginalResponse^ {#20056
+    +paymentId: "2f34a3dd-dcec-4601-aead-b36900b14b97"
+  }
+  +createdAt: "2025-10-01T06:45:30.7407533-04:00"
+  +canceledAt: null
+  +partnerId: "5c6c5cf4-0e6f-44b1-893f-b01200fc8570"
+  +productId: "01f6a709-7afb-4117-b217-b01200fc8bdb"
+  +lastModifiedAt: "2025-10-01T06:45:30.7407533-04:00"
+  +purpose: ""
+  +clientIdentifier: "ach-testing-0001"
+}
+
+    ~/owlting_projects/laravel_owlpay  on   bugfix/Evely…37_crb_issue = *3 !1 ?87  php artisan crb:util create_ach_push                                                                                                         1 ✘  took 1m 0s   at 18:45:30  
+
+ Given the account number.329870033282:
+ > 329870033282
+
+ Given the originator user uuid. org-r5-TC-ACH-RF-011-API:
+ > evelyn-ach-testing-0002
+
+ Given the external user uuid. ben-r4-TC-ACH-RF-011-API:
+ > ext-ach-testing-0002
+
+ext-evelyn-ach-pull-testing-0001
+
+ Given the client identifier(idempotency key). txn-r4-TC-ACH-RF-002-API:
+ > ach-testing-0002
+
+ Given the purpose. same idp key.:
+ >
+
+ Given the debtor name. R5User911Au OwlPayCash:
+ > R5User911Au OwlPayCash
+
+ Given the amount:
+ > 2000
+
+Infrastructure\CRB\ValueObjects\Responses\ACH\AchResponse^ {#20008 // app/Console/Commands/evelyn/CrossRiverBankUtil.php:746
+  +id: "2cb37117-a783-460f-abd4-b36900b1795d"
+  +accountNumber: "329870033282"
+  +referenceId: "A27420L123HU"
+  +paymentType: "Origination"
+  +direction: "Outbound"
+  +status: "Created"
+  +source: "Api"
+  +postingType: "Aggregate"
+  +coreTransactionId: null
+  +memoPostId: null
+  +postingCode: "OK"
+  +posting: "Authorized"
+  +originator: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginatorResponse^ {#20009
+    +routingNumber: "021214891"
+    +accountNumber: "329870033282"
+    +accountType: "Checking"
+    +name: "ACH originator"
+    +identification: "9999912457"
+  }
+  +receiver: Infrastructure\CRB\ValueObjects\Responses\ACH\ReceiverResponse^ {#20022
+    +routingNumber: "021200339"
+    +accountNumber: "2151546989"
+    +accountType: "Checking"
+    +name: "Test Name"
+    +identification: null
+  }
+  +secCode: "WEB"
+  +description: "ACH push"
+  +transactionType: "Push"
+  +amount: Money\Money^ {#20002
+    -amount: "2000"
+    -currency: Money\Currency^ {#20010
+      -code: "USD"
+    }
+  }
+  +serviceType: "Standard"
+  +extendedDetails: Infrastructure\CRB\ValueObjects\Responses\ACH\ExtendedDetailsResponse^ {#20035
+    +paymentType: "S"
+  }
+  +effectiveDate: "251002"
+  +traceNumber: "021214890268963"
+  +wasReturned: false
+  +wasCorrected: false
+  +holdDays: 0
+  +original: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginalResponse^ {#20036
+    +paymentId: "2cb37117-a783-460f-abd4-b36900b1795d"
+  }
+  +createdAt: "2025-10-01T06:46:09.7994845-04:00"
+  +canceledAt: null
+  +partnerId: "5c6c5cf4-0e6f-44b1-893f-b01200fc8570"
+  +productId: "01f6a709-7afb-4117-b217-b01200fc8bdb"
+  +lastModifiedAt: "2025-10-01T06:46:09.7994845-04:00"
+  +purpose: ""
+  +clientIdentifier: "ach-testing-0002"
+}
+
+
+
+ACH pull x2
+
+    ~/owlting_projects/laravel_owlpay  on   bugfix/Evely…37_crb_issue = *3 !1 ?87  php artisan crb:util create_ach_pull                                                                                                           1 ✘  took 16s   at 18:46:56  
+
+ Given the account number.329870033282:
+ > 329870033282
+
+ Given the debtor name. R5User911Au OwlPayCash:
+ > R5User911Au OwlPayCash
+
+ Given the originator user uuid. org-r5-TC-ACH-RF-011-API:
+ > evelyn-ach-pull-testing-0001
+
+ Given the external user uuid. ben-r4-TC-ACH-RF-011-API:
+ > ext-evelyn-ach-pull-testing-0001
+
+ Given the client identifier(idempotency key). txn-r4-TC-ACH-RF-002-API:
+ > ach-pull-testing-0001
+
+ Given the purpose. same idp key.:
+ >
+
+ Given the amount:
+ > 3000
+
+Infrastructure\CRB\ValueObjects\Responses\ACH\AchResponse^ {#20008 // app/Console/Commands/evelyn/CrossRiverBankUtil.php:713
+  +id: "78820cac-da7d-4f4d-bd1b-b36900b2a3dd"
+  +accountNumber: "329870033282"
+  +referenceId: "A27418Z7C15O"
+  +paymentType: "Origination"
+  +direction: "Outbound"
+  +status: "Created"
+  +source: "Api"
+  +postingType: "Aggregate"
+  +coreTransactionId: null
+  +memoPostId: null
+  +postingCode: "OK"
+  +posting: "Authorized"
+  +originator: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginatorResponse^ {#20009
+    +routingNumber: "021214891"
+    +accountNumber: "329870033282"
+    +accountType: "Checking"
+    +name: "Cross River Bank"
+    +identification: "021214891"
+  }
+  +receiver: Infrastructure\CRB\ValueObjects\Responses\ACH\ReceiverResponse^ {#20022
+    +routingNumber: "021200339"
+    +accountNumber: "123412341234"
+    +accountType: "Checking"
+    +name: "Run5Ext001 OwlPayCash"
+    +identification: null
+  }
+  +secCode: "WEB"
+  +description: "ACH pull"
+  +transactionType: "Pull"
+  +amount: Money\Money^ {#20002
+    -amount: "3000"
+    -currency: Money\Currency^ {#20010
+      -code: "USD"
+    }
+  }
+  +serviceType: "SameDay"
+  +extendedDetails: Infrastructure\CRB\ValueObjects\Responses\ACH\ExtendedDetailsResponse^ {#20035
+    +paymentType: "S"
+  }
+  +effectiveDate: "251001"
+  +traceNumber: "021214891910096"
+  +wasReturned: false
+  +wasCorrected: false
+  +holdDays: 0
+  +original: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginalResponse^ {#20036
+    +paymentId: "78820cac-da7d-4f4d-bd1b-b36900b2a3dd"
+  }
+  +createdAt: "2025-10-01T06:50:24.5208761-04:00"
+  +canceledAt: null
+  +partnerId: "5c6c5cf4-0e6f-44b1-893f-b01200fc8570"
+  +productId: "01f6a709-7afb-4117-b217-b01200fc8bdb"
+  +lastModifiedAt: "2025-10-01T06:50:24.5208761-04:00"
+  +purpose: ""
+  +clientIdentifier: "ach-pull-testing-0001"
+}
+
+    ~/owlting_projects/laravel_owlpay  on   bugfix/Evely…37_crb_issue = *3 !1 ?87  php artisan crb:util create_ach_pull                                                                                                        1 ✘  took 1m 32s   at 18:50:24  
+
+ Given the account number.329870033282:
+ > 329870033282
+
+ Given the debtor name. R5User911Au OwlPayCash:
+ > R5User911Au OwlPayCash
+
+ Given the originator user uuid. org-r5-TC-ACH-RF-011-API:
+ > evelyn-ach-pull-testing-0002
+
+ Given the external user uuid. ben-r4-TC-ACH-RF-011-API:
+ > ext-evelyn-ach-pull-testing-0002
+
+ Given the client identifier(idempotency key). txn-r4-TC-ACH-RF-002-API:
+ > ach-pull-testing-0002
+
+ Given the purpose. same idp key.:
+ >
+
+ Given the amount:
+ > 4000
+
+Infrastructure\CRB\ValueObjects\Responses\ACH\AchResponse^ {#20008 // app/Console/Commands/evelyn/CrossRiverBankUtil.php:713
+  +id: "0947ddbb-bf19-4132-9e27-b36900b2d38b"
+  +accountNumber: "329870033282"
+  +referenceId: "A27451Q20M79"
+  +paymentType: "Origination"
+  +direction: "Outbound"
+  +status: "Created"
+  +source: "Api"
+  +postingType: "Aggregate"
+  +coreTransactionId: null
+  +memoPostId: null
+  +postingCode: "OK"
+  +posting: "Authorized"
+  +originator: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginatorResponse^ {#20009
+    +routingNumber: "021214891"
+    +accountNumber: "329870033282"
+    +accountType: "Checking"
+    +name: "Cross River Bank"
+    +identification: "021214891"
+  }
+  +receiver: Infrastructure\CRB\ValueObjects\Responses\ACH\ReceiverResponse^ {#20022
+    +routingNumber: "021200339"
+    +accountNumber: "123412341234"
+    +accountType: "Checking"
+    +name: "Run5Ext001 OwlPayCash"
+    +identification: null
+  }
+  +secCode: "WEB"
+  +description: "ACH pull"
+  +transactionType: "Pull"
+  +amount: Money\Money^ {#20002
+    -amount: "4000"
+    -currency: Money\Currency^ {#20010
+      -code: "USD"
+    }
+  }
+  +serviceType: "SameDay"
+  +extendedDetails: Infrastructure\CRB\ValueObjects\Responses\ACH\ExtendedDetailsResponse^ {#20035
+    +paymentType: "S"
+  }
+  +effectiveDate: "251001"
+  +traceNumber: "021214899297423"
+  +wasReturned: false
+  +wasCorrected: false
+  +holdDays: 0
+  +original: Infrastructure\CRB\ValueObjects\Responses\ACH\OriginalResponse^ {#20036
+    +paymentId: "0947ddbb-bf19-4132-9e27-b36900b2d38b"
+  }
+  +createdAt: "2025-10-01T06:51:05.2068193-04:00"
+  +canceledAt: null
+  +partnerId: "5c6c5cf4-0e6f-44b1-893f-b01200fc8570"
+  +productId: "01f6a709-7afb-4117-b217-b01200fc8bdb"
+  +lastModifiedAt: "2025-10-01T06:51:05.2068193-04:00"
+  +purpose: ""
+  +clientIdentifier: "ach-pull-testing-0002"
+}

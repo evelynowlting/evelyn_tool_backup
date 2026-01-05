@@ -1,0 +1,110 @@
+Flow:
+Account Binding:
+    Instant:
+        call adding funding instrument
+            * adding funding instrument API implementation
+        ...
+        store funding instrument to database
+            * funding instrument model
+            * 1 to m mapping with BaaS customer
+            * repository implementation
+        receive webhook and store to database update the status
+            * custom API to handle webhook DIRECT_DEBIT_FUNDING_INSTRUMENT_APPROVED
+            * database field update
+
+    Micro-deposit:
+        adding funding instrument
+        ...
+        store funding instrument to database
+        webhook notification while the OTP is sent to customer
+            * custom API to handle webhook DIRECT_DEBIT_MICRODEPOSIT_SUCCESSFUL
+        customer get 3-digit OPT and go back to OwlPay and input the 3 digit
+            * custom API for UI
+            * BaaS confirm instrument API implementation
+            * repository to save confirm instrument response
+        receive webhook and store to database update the status
+            * custom API to handle webhook DIRECT_DEBIT_FUNDING_INSTRUMENT_APPROVED
+            * database field update
+
+    ACH Transaction:
+        Get instrument list display on OwlPay
+            * custom API 1~2, get 1 or m instrument details
+            * get instrument details or list with status ok
+        ACH fund wallet
+            * Fund Wallet API implementation to execute ACH prefund
+            * save result to database
+
+OwlPay Wallet UI:
+        * add ACH transaction type in transaction details
+        * ACH Fund wallet initiation should be also add to transaction details
+            可做可不做，看UX/UI怎麼設計
+            如果要顯示的話，就要自行實作存入database，目前Nium沒有特別提供這個在transaction details?
+        * ACH Fund wallet finish 因為會被列在入金類型內，應該不需要特別處理，但要檢查一下 transaction type
+
+Error Handling:
+    Funding Instrument Management
+        rebind
+        delete
+            * soft delete
+            * Fund Wallet API implementation
+        add
+            * reveal to user while only status is Successful or pending is also reveal?
+
+    webhook
+        https://docs.nium.com/apis/reference/webhooks-overview#payin-events
+            * Direct Debit Funding Instrument Cancelled implementation
+            * Direct Debit Funding Instrument Failed implementation
+            * Direct Debit Transaction Return implementation
+            * Direct Debit Transaction Chargeback implementation（Nium Compliance team disapproval ??)
+
+Email Notification:
+    * Direct Debit Funding Instrument Approved event
+    * Direct Debit Funding Instrument Cancelled event
+    * Direct Debit Funding Instrument Failed event
+    * Direct Debit Micro-Deposit Successful event
+    * Direct Debit Transaction Return event （當customer反悔時，消費者通知Nium BaaS)
+        This template is triggered when a return/reversal request is received for a Direct Debit transaction.
+    * Direct Debit Transaction Chargeback （當不正當授權時，消費者通知銀行)
+        This template is triggered when Nium claims the amount back from the customer’s wallet after a chargeback is raised.
+    https://www.adyen.com/knowledge-hub/understanding-chargebacks
+    *(V) Wallet Funding event
+
+
+JIRA ticket:
+Account Binding
+    add funding instrument
+    nium baas funding instrument model
+    webhook
+Fund Wallet
+
+
+    // 綁定
+    // QA
+        funding instrument:
+            pending的時候還沒入金成功 transaction detail會顯示嗎？
+            如果綁定後 兩天內 打delete會有問題嗎 還是failed的時候才能打delete
+            有沒有expiration time
+            webhook cancelled / failed
+
+        Transaction
+            How to raise Direct Debit Transaction Chargeback (WEBHOOK Direct Debit Transaction Chargeback)
+            webhook what is the difference between
+
+
+
+
+    // 按下 controller  打進來 1. calling add funding instrument  + 2. save record to database(should bind customer id)  return URL redirect 到plaid
+    // webhook binding complete
+    // update ACH details in database to customer and send email to customer
+    // 可能會失敗
+
+    //  入金
+    // get funding instrument
+    // controller: funding instrument id and amount
+    // fund wallet API sent
+    // save fund wallet record if needed
+    // receive webhook ACH and should be reflected to owlpay wallet page (新增ACH transaction type)
+    // 入金成功會被算是一種transaction type
+    // 但入金初始的時候要另外紀錄
+
+    // 爭議款 處理

@@ -1,0 +1,28 @@
+{
+    "accountNumber": "323040457976",
+    "amount": 1,
+    "creditor": {
+        "routingNumber": "011000138",
+        "accountNumber": "456789000",
+        "name": "Corey Hendly",
+        "addressStreetName": "Spooner St",
+        "addressBuildingNumber": "34",
+        "addressCity": "Quahog",
+        "addressState": "RI",
+        "addressPostalCode": "00093",
+        "addressCountry": "US"
+    },
+    "debtor": {
+        "routingNumber": "011000138",
+        "accountNumber": "323040457976",
+        "name": "OwlTing USA",
+        "addressStreetName": "Spooner St",
+        "addressLine": "Suite 1201, 12th Floor",
+        "addressBuildingNumber": "34",
+        "addressCity": "Quahog",
+        "addressState": "RI",
+        "addressPostalCode": "00093",
+        "addressCountry": "US"
+    },
+    "purpose": "gift money"
+}

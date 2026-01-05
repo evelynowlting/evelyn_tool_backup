@@ -1,0 +1,78 @@
+{
+    "transactionDetail": {
+        "clientReferenceId": "TESTVCMSPLN-09",
+        "initiatingPartyId": "100010",
+        "businessApplicationId": "FD",
+        "transactionAmount": 216.31,
+        "transactionCurrencyCode": "PLN",
+        "endToEndId": "abcd-1234-fab-578",
+        "senderSourceOfFunds": "01",
+        "senderBeneficiaryRelationship": "senderBeneficiaryRelationship",
+        "statementNarrative": "advancepayment",
+        "purposeOfPayment": "0210000001",
+        "payoutSpeed": "standard",
+        "settlementCurrencyCode": "USD"
+    },
+    "recipientDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "123 Main St",
+            "addressLine2": "Lane 1",
+            "city": "London",
+            "postalCode": "675456",
+            "state": "CF",
+            "country": "GBR"
+        },
+        "bank": {
+            "bankName": "BOS Bank SA",
+            "accountName": "Money Market",
+            "accountNumberType": "DEFAULT",
+            "accountNumber": "78154000172001390003910001",
+            "branchCode": "15400017",
+            "countryCode": "POL",
+            "currencyCode": "PLN"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "20101605421",
+                "idIssueCountry": "GBR"
+            }
+        ],
+        "firstName": "Jessica",
+        "lastName": "smith",
+        "countryOfBirth": "GBR",
+        "cityOfBirth": "optional",
+        "contactNumber": "+447911123456",
+        "contactEmail": "jessica@visa.com",
+        "dateOfBirth": "2001-01-01"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressline1",
+            "addressLine2": "addressline2",
+            "city": "Washington",
+            "postalCode": "111222",
+            "state": "CF",
+            "country": "USA"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "20101605421",
+                "idIssueCountry": "USA"
+            }
+        ],
+        "senderAccountNumber": "senderAccountNumber",
+        "countryOfBirth": "USA",
+        "cityOfBirth": "SenderCity",
+        "contactNumber": "+447911123456",
+        "contactNumberType": "MOBILE",
+        "contactEmail": "abc@visa.com",
+        "firstName": "Jessica",
+        "lastName": "smith",
+        "dateOfBirth": "1999-09-09"
+    },
+    "payoutMethod": "B"
+}

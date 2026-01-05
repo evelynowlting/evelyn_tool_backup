@@ -1,0 +1,21 @@
+// Gnupg
+// Encrypt
+// $file_content = file_get_contents('test_xxxxx.csv');
+
+// $this->line("Org content:\n" . $file_content);
+
+// $fingerprint = config('payoutchannel.niumBaaS.gpg_fingerprint');
+
+// $gpg = new gnupg();
+// $gpg->addencryptkey($fingerprint);
+// $r = $gpg->encrypt($file_content);
+
+// file_put_contents('test2_encrypt.csv', $r);
+// $this->line("Encrypted content:\n" . $r);
+
+// Decrypt
+// $gpg2 = new gnupg();
+// $gpg2->adddecryptkey($fingerprint, 'test12345');
+// $decrypted_file = $gpg2->decrypt($file_content);
+// $this->line("Decrypted content:\n" . $decrypted_file);
+// dd();

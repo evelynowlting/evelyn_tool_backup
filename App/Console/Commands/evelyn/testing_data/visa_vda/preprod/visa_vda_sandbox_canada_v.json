@@ -1,0 +1,50 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "123 Maple Street",
+            "city": "Toronto",
+            "country": "CAN",
+            "postalCode": "M5V 3A8",
+            "state": "ON"
+        },
+        "bank": {
+            "accountName": "ABCDEFGHIJKLMNOPQRSTUVWXYZABCD",
+            "accountNumber": "1022573",
+            "accountNumberType": "DEFAULT",
+            "bankCode": "003",
+            "bankCodeType": "DEFAULT",
+            "bankName": "NOTPROVIDED",
+            "branchCode": "09591",
+            "countryCode": "CAN",
+            "currencyCode": "CAD"
+        },
+        "firstName": "OsamaT",
+        "lastName": "Bin LadenT",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "Fulton St & Church St Oculus Plaza",
+            "city": "New York",
+            "postalCode": "10006",
+            "state": "NY"
+        },
+        "firstName": "Osama",
+        "lastName": "Bin Laden",
+        "senderAccountNumber": "633406",
+        "type": "I"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "FD",
+        "clientReferenceId": "{{crefid}}",
+        "endToEndId": "GSWLNT06C5FJVMBP1FMI",
+        "initiatingPartyId": 100010,
+        "purposeOfPayment": "450",
+        "senderSourceOfFunds": "05",
+        "settlementCurrencyCode": "USD",
+        "statementNarrative": "PSP Flows Testing",
+        "transactionAmount": 74.45,
+        "transactionCurrencyCode": "CAD"
+    }
+}

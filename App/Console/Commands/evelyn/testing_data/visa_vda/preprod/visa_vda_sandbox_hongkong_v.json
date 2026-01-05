@@ -1,0 +1,43 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "123 Main st",
+            "city": "ACCORD",
+            "country": "HKG"
+        },
+        "bank": {
+            "accountName": "Money Market",
+            "accountNumber": "014027004324234008",
+            "accountNumberType": "DEFAULT",
+            "bankCode": "250",
+            "branchCode": "390",
+            "countryCode": "HKG",
+            "currencyCode": "HKD"
+        },
+        "firstName": "Test",
+        "lastName": "Hong Kong",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "123 Main st",
+            "city": "ACCORD",
+            "country": "USA"
+        },
+        "firstName": "DailyPay",
+        "lastName": "Sender",
+        "senderAccountNumber": "2389855192",
+        "type": "I"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "PP",
+        "clientReferenceId": "34544654654",
+        "initiatingPartyId": 100010,
+        "purposeOfPayment": "ISCASH",
+        "settlementCurrencyCode": "USD",
+        "statementNarrative": "test hkd payout",
+        "transactionAmount": 273.98,
+        "transactionCurrencyCode": "HKD"
+    }
+}

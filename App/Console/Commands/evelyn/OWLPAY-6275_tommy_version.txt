@@ -1,0 +1,32 @@
+<?php
+
+public function assignVanDetailsByConfig($niumBaaSCustomerInfo, $country)
+    {
+        $niumBaasClientInfo = $niumBaaSCustomerInfo->nium_baas_client_info;
+        $customerId = $niumBaaSCustomerInfo->customer_id;
+        $walletId = $niumBaaSCustomerInfo->wallet_id;
+        $exists_van_details = $this->fetchVANDetails($niumBaasClientInfo, $customerId, $walletId);
+        $vanIdx = [];
+        foreach ($exists_van_details['content'] as $ve) {
+            $vanIdx[$ve['bankName'] . '-' . $ve['currencyCode']] = true;
+        }
+
+        $allowFundCurrencyBanks = config('payoutchannel.niumBaaS.allow_fund_currency_bank')[$country] ?? [];
+        foreach ($allowFundCurrencyBanks as $vanSrc) {
+            $bank = $vanSrc['bank_name'];
+            foreach ($vanSrc['currencies'] as $currency) {
+                if (array_key_exists($bank . '-' . $currency, $vanIdx)) {
+                    continue;
+                }
+
+                try {
+                    // may add log like 'assigning $bank-$currency to customer xxx`
+                    $van_details = $this->assignVANtoCustomer($niumBaasClientInfo, $customerId, $walletId, $currency, $bank);
+                    _owlPayLog('nium_baas_assign_van_to_customer', compact('van_details'), 'nium_baas', 'info');
+                } catch (NiumBaasVANDetailException $e) {
+                    $attributes = $e->getAttributes();
+                    _owlPayLog('nium_baas_assign_van_to_customer_failed', compact('attributes'), 'nium_baas', 'error');
+                }
+            }
+        }
+    }

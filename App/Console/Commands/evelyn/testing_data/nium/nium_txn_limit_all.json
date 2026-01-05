@@ -1,0 +1,1455 @@
+[
+    {
+        "india(IN)": {
+            "Bank Account (ACH)": {
+                "currency": "INR",
+                "B2B": [
+                    "Max:No limits#"
+                ],
+                "B2C": [
+                    "Max:No limits#"
+                ],
+                "P2P": [
+                    "Max:No limits#"
+                ]
+            },
+            "Proxy (UPI)": {
+                "currency": "INR",
+                "B2C": [
+                    "Max:INR 100,000"
+                ],
+                "P2P": [
+                    "Max:INR 100,000"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "INR",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Local Currency Wire Transfer": {
+                "currency": "INR",
+                "B2B": [
+                    "Min:1500000 INR",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:1500000 INR",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:1500000 INR",
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "united-states-of-america(US)": {
+            "Bank Account (ACH)": {
+                "currency": "USD",
+                "B2B": [
+                    "Max:USD 1.00 Mn"
+                ],
+                "B2C": [
+                    "Max:USD 1.00 Mn"
+                ],
+                "P2P": [
+                    "Max:USD 1.00 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "mexico(MX)": {
+            "Bank Account (ACH)": {
+                "currency": "MXN",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "argentina(AR)": {
+            "Bank Account (ACH)": {
+                "currency": "ARS",
+                "B2B": [
+                    "Max:ARS 10.0 Mn"
+                ],
+                "B2C": [
+                    "Max:ARS 10.0 Mn"
+                ],
+                "P2P": [
+                    "Max:ARS 10.0 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "australia(AU)": {
+            "Bank Account (ACH)": {
+                "currency": "AUD",
+                "B2B": [
+                    "Min:1 AUD",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:1 AUD",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:1 AUD",
+                    "Max:No limit"
+                ]
+            },
+            "Proxy (Bank account)": {
+                "currency": "AUD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "bangladesh(BD)": {
+            "Bank Account (ACH)": {
+                "currency": "BDT",
+                "P2P": [
+                    "Min:1 BDT",
+                    "Max:No limit"
+                ]
+            },
+            "Wallet": {
+                "currency": "BDT",
+                "P2P": [
+                    "Min:50 BDT",
+                    "Max:50,000 BDT"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "BDT",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "brazil(BR)": {
+            "Bank Account (ACH)": {
+                "currency": "BRL",
+                "B2B": [
+                    "Min:0.06 BRL",
+                    "Max:No Limits*"
+                ],
+                "B2C": [
+                    "Min:0.06 BRL",
+                    "Max:No Limits*"
+                ],
+                "P2P": [
+                    "Min:0.06 BRL",
+                    "Max:No Limits*"
+                ]
+            },
+            "Proxy (PIX)": {
+                "currency": "BRL",
+                "B2B": [
+                    "Min:0.06 BRL",
+                    "Max:No Limits*"
+                ],
+                "B2C": [
+                    "Min:0.06 BRL",
+                    "Max:No Limits*"
+                ],
+                "P2P": [
+                    "Min:0.06 BRL",
+                    "Max:No Limits*"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "canada(CA)": {
+            "Bank Account (ACH)": {
+                "currency": "CAD",
+                "B2B": [
+                    "Max:CAD 99 Mn"
+                ],
+                "B2C": [
+                    "Max:CAD 99 Mn"
+                ],
+                "P2P": [
+                    "Max:CAD 99 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "chile(CL)": {
+            "Bank Account (ACH)": {
+                "currency": "CLP",
+                "B2B": [
+                    "Max:CLP 7.0 Mn"
+                ],
+                "B2C": [
+                    "Max:CLP 7.0 Mn"
+                ],
+                "P2P": [
+                    "Max:CLP 7.0 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "china(CN)": {
+            "Union Pay Card": {
+                "currency": "CNY",
+                "B2C": [
+                    "Max:3,000 USD per transaction 10,000 USD per day 50,000 USD per year"
+                ],
+                "P2P": [
+                    "Max:3,000 USD per transaction 10,000 USD per day 50,000 USD per year"
+                ]
+            },
+            "Wallet": {
+                "currency": "CNY",
+                "P2P": [
+                    "Max:50,000 CNY"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "CNY",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Local Currency Wire Transfer": {
+                "currency": "CNY",
+                "B2B": [
+                    "Min:No limit",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:No limit",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:No limit",
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "colombia(CO)": {
+            "Bank Account (ACH)": {
+                "currency": "COP",
+                "B2B": [
+                    "Max:COP 999.99 Mn"
+                ],
+                "B2C": [
+                    "Max:COP 999.99 Mn"
+                ],
+                "P2P": [
+                    "Max:COP 999.99 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "costa-rica(CR)": {
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "denmark(DK)": {
+            "Bank Account (ACH)": {
+                "currency": "DKK",
+                "B2B": [
+                    "Max:DKK 500,000*"
+                ],
+                "B2C": [
+                    "Max:DKK 500,000*"
+                ],
+                "P2P": [
+                    "Max:DKK 500,000*"
+                ]
+            },
+            "Bank Account (SEPA)": {
+                "currency": "EUR",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "ghana(GH)": {
+            "Visa Direct": {
+                "currency": "GHS",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "indonesia(ID)": {
+            "Bank Account (ACH)": {
+                "currency": "IDR",
+                "B2B": [
+                    "Max:No limit#"
+                ],
+                "B2C": [
+                    "Max:No limit#"
+                ],
+                "P2P": [
+                    "Max:No limit#"
+                ]
+            },
+            "Wallet": {
+                "currency": "IDR",
+                "B2C": [
+                    "Max:IDR 10 Mn"
+                ],
+                "P2P": [
+                    "Max:IDR 10 Mn"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "IDR",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "israel(IL)": {
+            "Visa Direct": {
+                "currency": "ILS",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Bank Account (ACH)": {
+                "currency": "ILS",
+                "B2B": [
+                    "Min:No limit",
+                    "Max:100.000 USD"
+                ],
+                "B2C": [
+                    "Min:No limit",
+                    "Max:25.000 USD"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "japan(JP)": {
+            "Local Currency Wire Transfer": {
+                "currency": "JPY",
+                "B2B": [
+                    "Max:Equivalent to 5 Mn USD"
+                ],
+                "B2C": [
+                    "Max:Equivalent to 5 Mn USD"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "kenya(KE)": {
+            "Bank Account (ACH)": {
+                "currency": "KES",
+                "B2B": [
+                    "Min:10 KES",
+                    "Max:999,999 KES"
+                ],
+                "B2C": [
+                    "Min:10 KES",
+                    "Max:999,999 KES"
+                ],
+                "P2P": [
+                    "Min:10 KES",
+                    "Max:999,999 KES"
+                ]
+            },
+            "Wallet": {
+                "currency": "KES",
+                "B2C": [
+                    "Min:1 KES",
+                    "Max:150,000 KES"
+                ],
+                "P2P": [
+                    "Min:1 KES",
+                    "Max:150,000 KES"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "KES",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "malaysia(MY)": {
+            "Bank Account (ACH)": {
+                "currency": "MYR",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "MYR",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Proxy (DuItNow)": {
+                "currency": "MYR",
+                "B2B": [
+                    "Max:10M MYR"
+                ],
+                "B2C": [
+                    "Max:10M MYR"
+                ],
+                "P2P": [
+                    "Max:10M MYR"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "nepal(NP)": {
+            "Bank Account (ACH)": {
+                "currency": "NPR",
+                "B2B": [
+                    "Min:100 NPR",
+                    "Max:2,000,000 NPR"
+                ],
+                "B2C": [
+                    "Min:100 NPR",
+                    "Max:2,000,000 NPR"
+                ],
+                "P2P": [
+                    "Min:100 NPR",
+                    "Max:2,000,000 NPR"
+                ]
+            },
+            "Wallet": {
+                "currency": "NPR",
+                "B2C": [
+                    "Min:100 NPR",
+                    "Max:50,000 NPR"
+                ],
+                "P2P": [
+                    "Min:100 NPR",
+                    "Max:50,000 NPR"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "new-zealand(NZ)": {
+            "Bank Account (ACH)": {
+                "currency": "NZD",
+                "B2B": [
+                    "Min:No limit",
+                    "Max:100,000 USD"
+                ],
+                "B2C": [
+                    "Min:No limit",
+                    "Max:25,000 USD"
+                ],
+                "P2P": [
+                    "Min:No limit",
+                    "Max:25,000 USD"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "nigeria(NG)": {
+            "Bank Account (ACH)": {
+                "currency": "NGN",
+                "B2C": [
+                    "Min:2000 NGN",
+                    "Max:2,000,000 NGN"
+                ],
+                "P2P": [
+                    "Min:2000 NGN",
+                    "Max:2,000,000 NGN"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "peru(PE)": {
+            "Bank Account (ACH)": {
+                "currency": "PEN",
+                "B2B": [
+                    "Min:PEN 1.00",
+                    "Max:PEN 10.0 Mn"
+                ],
+                "B2C": [
+                    "Min:PEN 1.00",
+                    "Max:PEN 10.0 Mn"
+                ],
+                "P2P": [
+                    "Min:PEN 1.00",
+                    "Max:PEN 10.0 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "philippines(PH)": {
+            "Bank Account (ACH)": {
+                "currency": "PHP",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Wallet": {
+                "currency": "PHP",
+                "B2C": [
+                    "Max:50,000 PHP"
+                ],
+                "P2P": [
+                    "Max:50,000 PHP"
+                ]
+            },
+            "Cash Payout": {
+                "currency": "PHP",
+                "B2C": [
+                    "Max:50,000 PHP"
+                ],
+                "P2P": [
+                    "Max:50,000 PHP"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "PHP",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "saudi-arabia(SA)": {
+            "Local Currency Wire Transfer": {
+                "currency": "SAR",
+                "B2B": [
+                    "Max:Equivalent to 3 Mn USD"
+                ],
+                "B2C": [
+                    "Max:Equivalent to 3 Mn USD"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "singapore(SG)": {
+            "Bank Account (ACH)": {
+                "currency": "SGD",
+                "B2B": [
+                    "Min:1 SGD",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:1 SGD",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:1 SGD",
+                    "Max:No limit"
+                ]
+            },
+            "Proxy (Bank account)": {
+                "currency": "SGD",
+                "B2B": [
+                    "Min:1 SGD",
+                    "Max:200,000 SGD"
+                ],
+                "B2C": [
+                    "Min:1 SGD",
+                    "Max:200,000 SGD"
+                ],
+                "P2P": [
+                    "Min:1 SGD",
+                    "Max:200,000 SGD"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "south-africa(ZA)": {
+            "Bank Account (ACH)": {
+                "currency": "ZAR",
+                "B2B": [
+                    "Min:10 ZAR",
+                    "Max:5,000,000 ZAR"
+                ],
+                "B2C": [
+                    "Min:10 ZAR",
+                    "Max:5,000,000 ZAR"
+                ],
+                "P2P": [
+                    "Min:15 ZAR",
+                    "Max:100,000 ZAR"
+                ]
+            },
+            "Local Currency Wire Transfer": {
+                "currency": "ZAR",
+                "B2B": [
+                    "Min:ZAR 100000",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:ZAR 100000",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:ZAR 100000",
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "south-korea(KR)": {
+            "Bank Account (ACH)": {
+                "currency": "KRW",
+                "B2B": [
+                    "Max:No Limits*"
+                ],
+                "B2C": [
+                    "Max:No Limits*"
+                ],
+                "P2P": [
+                    "Max:USD 5000 per transfer, USD 50,000 per year per Beneficiary"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "sri-lanka(LK)": {
+            "Bank Account (ACH)": {
+                "currency": "LKR",
+                "B2B": [
+                    "Min:1 LKR",
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Min:1 LKR",
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Min:1 LKR",
+                    "Max:No limit"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "LKR",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "sweden(SE)": {
+            "Bank Account (ACH)": {
+                "currency": "SEK",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Bank Account (SEPA)": {
+                "currency": "EUR",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "switzerland(CH)": {
+            "Local Currency Wire Transfer": {
+                "currency": "CHF",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Bank Account (SEPA)": {
+                "currency": "EUR",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "taiwan(TW)": {
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "tanzania(TZ)": {
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "thailand(TH)": {
+            "Bank Account (ACH)": {
+                "currency": "THB",
+                "B2B": [
+                    "Max:"
+                ],
+                "B2C": [
+                    "Max:"
+                ],
+                "P2P": [
+                    "Max:"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "THB",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "turkey(TR)": {
+            "Bank Account (ACH)": {
+                "currency": "TRY",
+                "B2B": [
+                    "Max:TRY 200,000"
+                ],
+                "B2C": [
+                    "Max:TRY 200,000"
+                ],
+                "P2P": [
+                    "Max:TRY 200,000"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "TRY",
+                "B2B": [
+                    "Max:TRY 200,000"
+                ],
+                "B2C": [
+                    "Max:TRY 200,000"
+                ],
+                "P2P": [
+                    "Max:TRY 200,000"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "united-arab-emirates(AE)": {
+            "Local Currency Wire Transfer": {
+                "currency": "AED",
+                "B2B": [
+                    "Max:Equivalent to 3 Mn USD"
+                ],
+                "B2C": [
+                    "Max:Equivalent to 3 Mn USD"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "AED",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "united-kingdom(GB)": {
+            "Bank Account (ACH)": {
+                "currency": "GBP",
+                "B2B": [
+                    "Min:GBP 1",
+                    "Max:No Limit"
+                ],
+                "B2C": [
+                    "Min:GBP 1",
+                    "Max:No Limit"
+                ],
+                "P2P": [
+                    "Min:GBP 1",
+                    "Max:No Limit"
+                ]
+            },
+            "Bank Account (SEPA)": {
+                "currency": "EUR",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "uruguay(UY)": {
+            "Local Currency Wire Transfer": {
+                "currency": "UYU",
+                "B2B": [
+                    "Max:UYU 5.0 Mn"
+                ],
+                "B2C": [
+                    "Max:UYU 5.0 Mn"
+                ],
+                "P2P": [
+                    "Max:UYU 5.0 Mn"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    },
+    {
+        "vietnam(VN)": {
+            "Bank Account (ACH)": {
+                "currency": "VND",
+                "B2B": [
+                    "Min:2000 VND",
+                    "Max:VND 500 Mn* per transaction. (*Documents may be asked by bank for transaction amount > 250 Mn VND)"
+                ],
+                "B2C": [
+                    "Min:2000 VND",
+                    "Max:VND 500 Mn* per transaction. (*Documents may be asked by bank for transaction amount > 250 Mn VND)"
+                ],
+                "P2P": [
+                    "Min:2000 VND",
+                    "Max:VND 500 Mn* per transaction. (*Documents may be asked by bank for transaction amount > 250 Mn VND)"
+                ]
+            },
+            "Local Currency Wire Transfer": {
+                "currency": "VND",
+                "B2B": [
+                    "Max:Equivalent to 3 Mn USD"
+                ],
+                "B2C": [
+                    "Max:Equivalent to 3 Mn USD"
+                ]
+            },
+            "Visa Direct": {
+                "currency": "VND",
+                "B2B": [
+                    "Max:USD 50,000"
+                ],
+                "B2C": [
+                    "Max:USD 50,000"
+                ],
+                "P2P": [
+                    "Max:USD 2,500"
+                ]
+            },
+            "Foreign Currency Wire Transfer": {
+                "currency": "USD, GBP, EUR, AUD, CAD, CHF, HKD, JPY, NZD, SGD",
+                "B2B": [
+                    "Max:No limit"
+                ],
+                "B2C": [
+                    "Max:No limit"
+                ],
+                "P2P": [
+                    "Max:No limit"
+                ]
+            }
+        }
+    }
+]

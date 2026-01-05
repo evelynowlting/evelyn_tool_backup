@@ -1,0 +1,23 @@
+{
+    "accountNumber": "310959120034",
+    "amount": 50,
+    "creditor": {
+        "routingNumber": "325070760",
+        "accountNumber": "126862300",
+        "name": "Ying Lu"
+    },
+    "debtor": {
+        "routingNumber": "021214891",
+        "accountNumber": "310959120034",
+        "name": "Ying Lu",
+        "addressStreetName": "Tysons Ridgeline Rd",
+        "addressLine": "",
+        "addressBuildingNumber": "2133",
+        "addressCity": "Falls Church",
+        "addressState": "VA",
+        "addressPostalCode": "22203",
+        "addressCountry": "US"
+    },
+    "remittanceData": "RTP outbound testing EVE05",
+    "purpose": "rtp outbound testing"
+}

@@ -1,0 +1,37 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "bank": {
+      "accountName": "Money Market",
+      "accountNumber": "117730161111101800000000",
+      "accountNumberType": "DEFAULT",
+      "accountType": "1",
+      "bankName": "Bank Of Hungary",
+      "countryCode": "HUN",
+      "currencyCode": "HUF"
+    },
+    "firstName": "test",
+    "lastName": "lastname",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "addressLine1",
+      "city": "Washington",
+      "country": "USA"
+    },
+    "firstName": "Sender Name",
+    "lastName": "last name",
+    "senderAccountNumber": "4304630005267011",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "FD",
+    "clientReferenceId": "HUF01",
+    "initiatingPartyId": "1001",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "advancepayment",
+    "transactionAmount": 25339.47,
+    "transactionCurrencyCode": "HUF"
+  }
+}

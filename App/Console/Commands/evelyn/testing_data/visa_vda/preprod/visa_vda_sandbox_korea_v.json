@@ -1,0 +1,50 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "OPZQAEWQ BPLZJFC 1",
+            "city": "Seoul",
+            "country": "KOR"
+        },
+        "bank": {
+            "accountName": "Joe Bloggs",
+            "accountNumber": "123458658",
+            "accountNumberType": "DEFAULT",
+            "accountType": "1",
+            "bankCode": "020",
+            "bankCodeType": "DEFAULT",
+            "bankName": "AGRICULTURAL BANK OF CHINA SEOUL BRANCH",
+            "countryCode": "KOR",
+            "currencyCode": "KRW"
+        },
+        "cityOfBirth": "1988-03-22",
+        "contactNumber": "+4407111111111",
+        "contactNumberType": "MOBILE",
+        "countryOfBirth": "KOR",
+        "firstName": "Joe Bloggs",
+        "lastName": "last joe",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "43 E 9th Street second",
+            "city": "WILMINGTON",
+            "country": "USA",
+            "postalCode": "19808",
+            "state": "DE"
+        },
+        "name": "VISA Direct test client",
+        "senderAccountNumber": "GB10GSLD04296240000447",
+        "type": "C"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "FD",
+        "endToEndId": "GSKHPIWUTY5U3BMCXGNV",
+        "initiatingPartyId": 100010,
+        "purposeOfPayment": "ISOTHR",
+        "senderSourceOfFunds": "05",
+        "settlementCurrencyCode": "USD",
+        "transactionAmount": 61634,
+        "transactionCurrencyCode": "KRW"
+    }
+}

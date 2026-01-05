@@ -1,0 +1,90 @@
+{
+    "transactionDetail": {
+        "initiatingPartyId": "100010",
+        "clientReferenceId": "JPN-1006",
+        "businessApplicationId": "FD",
+        "transactionAmount": 7296,
+        "transactionCurrencyCode": "JPY",
+        "endToEndId": "abcd-1234-fab-578",
+        "senderSourceOfFunds": "01",
+        "senderBeneficiaryRelationship": "partner",
+        "statementNarrative": "advancepayment",
+        "payoutSpeed": "standard",
+        "purposeOfPayment": "ISGDDS",
+        "settlementCurrencyCode": "USD"
+    },
+    "recipientDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressline1",
+            "addressLine2": "addressline2",
+            "city": "Tokyo",
+            "postalCode": "100-0001",
+            "country": "JPN"
+        },
+        "bank": {
+            "bankName": "The Bank of Tokoyo-Mitsubishi UFJ",
+            "accountName": "account name",
+            "accountNumber": "5004969",
+            "accountNumberType": "DEFAULT",
+            "bankCode": "0010",
+            "accountType": "2",
+            "branchCode": "593",
+            "countryCode": "JPN",
+            "currencyCode": "JPY"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "ID89098",
+                "idIssueCountry": "JPN"
+            }
+        ],
+        "firstName": "John",
+        "lastName": "Doe",
+        "contactNumber": "+819012345678",
+        "contactNumberType": "MOBILE",
+        "contactEmail": "abc@visa.com",
+        "dateOfBirth": "2001-01-01"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressline1",
+            "addressLine2": "addressline2",
+            "city": "Washington",
+            "postalCode": "111222",
+            "state": "CF",
+            "country": "USA"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "P128766Z",
+                "idIssueCountry": "USA"
+            }
+        ],
+        "senderReferenceNumber": "4304630005267011",
+        "contactNumber": "+447911123456",
+        "contactNumberType": "MOBILE",
+        "contactEmail": "abc@visa.com",
+        "firstName": "John",
+        "lastName": "Smith",
+        "dateOfBirth": "1999-09-09",
+        "additionalData": [
+            {
+                "name": "GoodsName",
+                "value": "iPhone 16"
+            },
+            {
+                "name": "GoodsOriginCountry",
+                "value": "USA"
+            },
+            {
+                "name": "GoodsShippingCountry",
+                "value": "Japan"
+            }
+        ]
+    },
+    "payoutMethod": "B"
+}

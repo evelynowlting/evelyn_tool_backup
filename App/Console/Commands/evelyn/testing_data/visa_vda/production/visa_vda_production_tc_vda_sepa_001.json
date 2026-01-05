@@ -1,0 +1,73 @@
+{
+    "transactionDetail": {
+        "clientReferenceId": null,
+        "initiatingPartyId": null,
+        "businessApplicationId": "FD",
+        "transactionAmount": 60211.54,
+        "transactionCurrencyCode": "COP",
+        "endToEndId": "abcd-1234-fab-578",
+        "senderSourceOfFunds": "01",
+        "senderBeneficiaryRelationship": "SON",
+        "statementNarrative": "advancepayment",
+        "payoutSpeed": "standard",
+        "settlementCurrencyCode": "USD",
+        "purposeOfPayment": "EPFAMT"
+    },
+    "recipientDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "123 Main St",
+            "addressLine2": "Lane 1",
+            "city": "London",
+            "postalCode": "675456",
+            "state": "CF",
+            "country": "ITA"
+        },
+        "bank": {
+            "bankName": "",
+            "accountName": "",
+            "accountNumberType": "DEFAULT",
+            "accountNumber": "asdf",
+            "bankCodeType": "fgg",
+            "bankCode": "fff",
+            "accountType": "aa",
+            "countryCode": "xxx",
+            "currencyCode": "xxx"
+        },
+        "identificationList": [
+            {
+                "idType": "",
+                "idNumber": "",
+                "idIssueCountry": ""
+            }
+        ],
+        "firstName": "Luigi",
+        "lastName": "Pierri",
+        "countryOfBirth": "xxx",
+        "cityOfBirth": "xxx",
+        "contactNumber": "+xxx",
+        "contactEmail": "xxxx",
+        "dateOfBirth": "xxxx"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "Dean Court",
+            "state": "MN",
+            "country": "USA"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "680046743",
+                "idIssueCountry": "USA"
+            }
+        ],
+        "senderAccountNumber": "",
+        "countryOfBirth": "USA",
+        "contactEmail": "",
+        "firstName": "Samuel",
+        "lastName": "Flavin"
+    },
+    "payoutMethod": "B"
+}

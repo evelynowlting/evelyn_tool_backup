@@ -1,0 +1,21 @@
+{
+    "accountNumber": "346387757286",
+    "receiverRoutingNumber": "091311229",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "202345293946",
+        "name": "OwlNest, Inc."
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "346387757286",
+        "name": "OwlNest Inc."
+    },
+    "amount": 2000,
+    "purpose": "testing wire transfer 20",
+    "originatorToBeneficiary1": "owlnest",
+    "originatorToBeneficiary2": "wire",
+    "originatorToBeneficiary3": "transfer",
+    "originatorToBeneficiary4": "outbound"
+}

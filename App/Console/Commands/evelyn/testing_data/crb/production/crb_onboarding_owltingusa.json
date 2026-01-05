@@ -1,0 +1,31 @@
+{
+    "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+    "name": {
+        "entityName": "OwlTing USA, Inc."
+    },
+    "classification": "Business",
+    "profile": {
+        "taxIdType": "Ein",
+        "taxId": "822169329",
+        "dateFormed": "2017-07-11",
+        "riskRating": "Medium"
+    },
+    "clientIdentifier": "TC-PROD-CM-003",
+    "primaryAddress": {
+        "addressType": "Work",
+        "classification": "Business",
+        "isPrimary": true,
+        "street1": "4250 North Fairfax Drive Suite 600 Arlington, VA",
+        "countryCode": "US"
+    },
+    "primaryPhone": {
+        "isPrimary": true,
+        "phoneType": "Work",
+        "phoneNumber": "8008560182"
+    },
+    "primaryEmail": {
+        "isPrimary": true,
+        "emailType": "Work",
+        "emailAddress": "owlpay-partnership@owlting.com"
+    }
+}

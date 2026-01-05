@@ -1,0 +1,26 @@
+應該要更新在wiki
+Nium_BaaS_Transaction_Type
+AUTHCODE+F- Fee_Debit
+AUTHCODE+R- Reversal (CARD)
+AUTHCODE+FW - Fee_Waiver
+AUTHCODE+ FR - Fee_Reversal
+AUTHCODE+ RA - Reversal_Advice (CARD)
+AUTHCODE+ SR - Settlement_Reversal (CARD)
+AUTHCODE+ C - Customer_Wallet_Credit_Intra_Region
+RT3464123341 - Remittance_Debit
+RT3464123341F - Fee_Debit
+RT3464123341FW - Fee_Waiver
+193672 - Debit (Card Txn)
+193672F - Fee_Debit
+193672FR - Fee_Reversal
+Remittance :
+RT6990378745 - Remittance_Debit_External
+RT6990378745F - Fee_Debit
+Card Transactions
+XQQNXQ - Debit (Card Txn)
+XQQNXQRA - Reversal_Advice
+L7R0C6 - Debit
+L7R0C6SR - Settlement_Reversal
+Balance Transfer With In Wallet
+FT2115369432 - Customer_Wallet_Debit_Intra_Region
+FT2115369432C - Customer_Wallet_Credit_Intra_Region

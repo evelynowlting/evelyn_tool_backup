@@ -1,0 +1,6 @@
+Nium BaaS Onboarding Q&A:
+
+business-> registeredDetails-> city
+    optional but required in real API post
+
+State for SG is not required in excel but it's required when sending the request to sandbox

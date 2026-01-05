@@ -1,0 +1,62 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "123 Main St",
+            "addressLine2": "Lane 1",
+            "city": "London",
+            "country": "GBR",
+            "postalCode": "675456",
+            "state": "CF"
+        },
+        "bank": {
+            "accountName": "Money Market",
+            "accountNumber": "78154000172001390003910001",
+            "accountNumberType": "DEFAULT",
+            "bankName": "BOS Bank SA",
+            "countryCode": "POL",
+            "currencyCode": "PLN"
+        },
+        "firstName": "Jessica",
+        "identificationList": [
+            {
+                "idIssueCountry": "GBR",
+                "idNumber": "20101605421",
+                "idType": "P"
+            }
+        ],
+        "lastName": "smith",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "addressline1",
+            "city": "Washington",
+            "country": "USA"
+        },
+        "firstName": "Jessica",
+        "identificationList": [
+            {
+                "idIssueCountry": "USA",
+                "idNumber": "20101605421",
+                "idType": "P"
+            }
+        ],
+        "lastName": "smith",
+        "senderAccountNumber": "senderAccountNumber",
+        "type": "I"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "FD",
+        "clientReferenceId": "TESTVCMSPLN-09",
+        "initiatingPartyId": "100010",
+        "payoutSpeed": "standard",
+        "purposeOfPayment": "0210000001",
+        "senderBeneficiaryRelationship": "senderBeneficiaryRelationship",
+        "senderSourceOfFunds": "05",
+        "settlementCurrencyCode": "USD",
+        "statementNarrative": "advancepayment",
+        "transactionAmount": 216.31,
+        "transactionCurrencyCode": "PLN"
+    }
+}

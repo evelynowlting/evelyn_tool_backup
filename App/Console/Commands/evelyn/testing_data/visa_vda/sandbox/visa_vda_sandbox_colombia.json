@@ -1,0 +1,81 @@
+{
+    "transactionDetail": {
+
+        "initiatingPartyId": "100010",
+        "businessApplicationId": "FD",
+"quoteId" : "12345",
+        "transactionAmount": "11.57",
+        "transactionCurrencyCode": "USD",
+        "endToEndId": "abcd-1234-fab-578",
+        "senderSourceOfFunds": "01",
+        "senderBeneficiaryRelationship": "SON",
+        "statementNarrative": "advancepayment",
+        "payoutSpeed": "standard",
+        "settlementCurrencyCode": "USD",
+        "purposeOfPayment":"EPFAMT"
+    },
+    "recipientDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "123 Main St",
+            "addressLine2": "Lane 1",
+            "city": "London",
+            "postalCode": "675456",
+            "state": "CF",
+            "country": "GBR"
+        },
+        "bank": {
+            "bankName": "Banco de la República",
+            "accountName": "account name",
+            "accountNumberType": "DEFAULT",
+            "accountNumber": "050401050100003172",
+            "bankCodeType": "DEFAULT",
+            "bankCode": "012",
+            "accountType": "1",
+            "countryCode": "COL",
+            "currencyCode": "COP"
+        },
+        "identificationList": [
+            {
+                "idType": "N",
+                "idNumber": "1077650154",
+                "idIssueCountry": "COL"
+            }
+        ],
+        "firstName": "YAQOOB",
+        "lastName": "HALU MESRU JOHN KUVVETI",
+        "countryOfBirth": "GBR",
+        "cityOfBirth": "optional",
+        "contactNumber": "+447911123456",
+        "contactEmail": "jessica@visa.com",
+        "dateOfBirth": "2001-01-01"
+    },
+    "senderDetail": {
+        "type": "I",
+        "address": {
+            "addressLine1": "addressline1",
+            "addressLine2": "addressline2",
+            "city": "Washington",
+            "postalCode": "111222",
+            "state": "CF",
+            "country": "USA"
+        },
+        "identificationList": [
+            {
+                "idType": "P",
+                "idNumber": "20101605421",
+                "idIssueCountry": "USA"
+            }
+        ],
+        "senderAccountNumber": "senderAccountNumber",
+        "countryOfBirth": "USA",
+        "cityOfBirth": "SenderCity",
+        "contactNumber": "+447911123456",
+        "contactNumberType": "MOBILE",
+        "contactEmail": "abc@visa.com",
+        "firstName": "YAQOOB",
+        "lastName": "HALU MESRU JOHN KUVVETI",
+        "dateOfBirth": "1999-09-09"
+    },
+    "payoutMethod": "B"
+}

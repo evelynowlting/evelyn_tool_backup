@@ -1,0 +1,15 @@
+{
+    "masterAccountNumber": "151190090879",
+    "title": "Ying Lu",
+    "customerId": "3c4bf738-25c8-4bfd-8e17-b39a002f01fa",
+    "clientIdentifier": "TC-PROD-SM-002-API",
+    "beneficiary": {
+        "firstName": "Ying",
+        "lastName": "Lu",
+        "city": "Falls Church",
+        "state": "VA",
+        "postalCode": "22043",
+        "countryCode": "US",
+        "streetAddress1": "2133 Tysons Ridgeline Rd, Falls Church"
+    }
+}

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="big5"?>
+<MYB2B>
+    <HEADER>
+        <RETURN_CODE>0000</RETURN_CODE>
+        <RETURN_DESC>查詢成功</RETURN_DESC>
+    </HEADER>
+    <BODY>
+        <DATAS>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>6300.0000</Amount>
+                <Beneficiary_BankCode>8220222</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>222540370353</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>陳文鴻</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＡ：ＯＷＪ２４０７：在一方溪杉勝境民宿</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697804</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073842</Tr_Time>
+                <Tr_Amt>6300.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>1251.0000</Amount>
+                <Beneficiary_BankCode>8080071</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>0071940027326</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>夏天旅宿蔡鍵勳</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＢ：ＯＷＪ２４０７：夏天旅宿</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697815</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073843</Tr_Time>
+                <Tr_Amt>1251.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>899.0000</Amount>
+                <Beneficiary_BankCode>8080152</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>0152979215120</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>楊秉翰</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＥ：ＯＷＪ２４０７：１０８巷會館</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697828</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073844</Tr_Time>
+                <Tr_Amt>899.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>585.0000</Amount>
+                <Beneficiary_BankCode>8223245</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>245540182117</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>柳亭如</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＦ：ＯＷＪ２４０７：太陽慢慢走</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697843</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073845</Tr_Time>
+                <Tr_Amt>585.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>792.0000</Amount>
+                <Beneficiary_BankCode>0060648</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>0640717076256</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>嘉冠大飯店股份有限公司</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＧ：ＯＷＪ２４０７：嘉冠大飯店</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697861</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073846</Tr_Time>
+                <Tr_Amt>792.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>4049.0000</Amount>
+                <Beneficiary_BankCode>0065584</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>5584872001212</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>葉明宗</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＨ：ＯＷＪ２４０７：尚緹會館</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697871</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073847</Tr_Time>
+                <Tr_Amt>4049.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>2502.0000</Amount>
+                <Beneficiary_BankCode>0530190</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>052201069063</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>王美娜</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＭ：ＯＷＪ２４０７：一瓢食宿</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697886</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073848</Tr_Time>
+                <Tr_Amt>2502.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+            <DATA>
+                <Identification_Code>4</Identification_Code>
+                <TxDate>20240726</TxDate>
+                <PayDate>20240729</PayDate>
+                <Tx_Type>SPU</Tx_Type>
+                <SerialNo />
+                <BankCode>0130039</BankCode>
+                <AccountNo>263035081799</AccountNo>
+                <ID>53092632</ID>
+                <Name_of_Remitter>奧丁丁旅行社股份有限公司</Name_of_Remitter>
+                <Currency>TWD</Currency>
+                <Sign>+</Sign>
+                <Amount>2340.0000</Amount>
+                <Beneficiary_BankCode>0110107</Beneficiary_BankCode>
+                <Beneficiary_AccountNo>10203000510211</Beneficiary_AccountNo>
+                <Beneficiary_ID />
+                <Beneficiary_Name>李勃</Beneficiary_Name>
+                <Notify_the_Remitter>0</Notify_the_Remitter>
+                <Email_or_Phone />
+                <Service_Charge>15</Service_Charge>
+                <Numbers_of_Invoce>0</Numbers_of_Invoce>
+                <Remark>００ｌｇＲ：ＯＷＪ２４０７：町屋　日木</Remark>
+                <Trasfer_Status>1</Trasfer_Status>
+                <Rtn_Code>0000</Rtn_Code>
+                <FISC_RefundmentReason />
+                <FISE_SerialNo>5697897</FISE_SerialNo>
+                <Tr_Date>20240729</Tr_Date>
+                <Tr_Time>073848</Tr_Time>
+                <Tr_Amt>2340.0000</Tr_Amt>
+                <Fee>10</Fee>
+                <Error_Code />
+                <Error_Msg>匯出成功</Error_Msg>
+            </DATA>
+        </DATAS>
+    </BODY>
+</MYB2B>
