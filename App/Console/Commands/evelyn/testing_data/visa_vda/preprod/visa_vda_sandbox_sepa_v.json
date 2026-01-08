@@ -1,13 +1,7 @@
 {
   "payoutMethod": "B",
   "recipientDetail": {
-    "address": {
-      "addressLine1": "660 Kelvin Pass",
-      "city": "Madrid",
-      "country": "ESP"
-    },
     "bank": {
-      "BIC": "ESPBESMMXXX",
       "accountName": "Test1232223",
       "accountNumber": "ES7615830001159082760987",
       "accountNumberType": "IBAN",

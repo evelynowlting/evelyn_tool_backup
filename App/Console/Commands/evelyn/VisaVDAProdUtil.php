@@ -3,6 +3,7 @@
 namespace App\Console\Commands\evelyn;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Detail\TransactionDetail;
@@ -11,7 +12,6 @@ use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Sender\IndividualSender
 use Infrastructure\VISA_VDA\VisaDirectAccountPayoutClient;
 use InvalidArgumentException;
 use Money\Currencies\ISOCurrencies;
-use Money\Currency;
 use Money\Money;
 use Money\Parser\DecimalMoneyParser;
 use RuntimeException;
@@ -33,6 +33,7 @@ class VisaVDAProdUtil extends Command
      */
     protected $signature = 'visa:vda-prod-util
         {mode : The modes to process}
+        {--dryRun: Check request payload instead of sending payout}
         ';
 
     /**
@@ -43,6 +44,10 @@ class VisaVDAProdUtil extends Command
     protected $description = 'This tool is used to validate and send Visa Direct Account payout in production environment.';
 
     protected VisaDirectAccountPayoutClient $visaDirectAccountPayoutClient;
+
+    protected $baseDir;
+
+    protected $isDryRun;
 
     /**
      * Create a new command instance.
@@ -62,7 +67,9 @@ class VisaVDAProdUtil extends Command
      */
     public function handle()
     {
+        // $isDryRun = $this->option('dryRun') ;
         $mode = $this->normalizeMode($this->argument('mode'));
+        $this->baseDir = __DIR__.self::PAYLOAD_RELATIVE_PATH;
 
         if (!$this->isValidMode($mode)) {
             $this->displayModeHelp();
@@ -94,18 +101,18 @@ class VisaVDAProdUtil extends Command
 
     private function processPayout(string $mode): int
     {
-        $this->listExistingFiles();
-        $file = trim($this->ask('Given file name: visa_vda_sandbox_argentina.json'));
-        $payload = $this->loadPayloadFromFile($file);
-
+        $payload = $this->promptAndLoadPayload();
         if (!is_array($payload)) {
             $this->error('Failed to load payload file.');
 
             return 1;
         }
 
-        $settlementCurrencyCode = trim($this->ask('Please provide the settlement currency code', 'USD'));
-        $quoteId = trim($this->ask('Please provide the quote id'));
+        if ($this->isDryRun) {
+            $this->info('File content: '.$payload);
+
+            return 1;
+        }
 
         $senderDetail = $payload['senderDetail'];
         $recipientDetail = $payload['recipientDetail'];
@@ -115,19 +122,18 @@ class VisaVDAProdUtil extends Command
         $this->info('Last client reference id: '.Redis::get($redisKey));
         $clientReferenceId = trim($this->ask('Please provide the client reference id'));
 
-        // Parse transactionAmount: accept minor units (int) or decimal strings (e.g. "10.00")
-        $amount = $transactionDetail['transactionAmount'];
-        $currencyCode = $transactionDetail['transactionCurrencyCode'];
-        $transactionDetail['transactionAmount'] = $this->parseTransactionAmount($amount, $currencyCode);
-        $transactionDetail['clientReferenceId'] = $clientReferenceId;
-        $transactionDetail['settlementCurrencyCode'] = $settlementCurrencyCode;
-        $transactionDetail['quoteId'] = $quoteId ?: null;
+        [$senderVO, $recipientVO, $txnVO] = $this->buildPayoutValueObjects(
+            $senderDetail,
+            $recipientDetail,
+            $transactionDetail,
+            $clientReferenceId,
+            'USD',
+        );
 
-        $senderVO = IndividualSenderDetail::new($senderDetail);
-        $recipientVO = IndividualRecipientDetail::new($recipientDetail);
-        $txnVO = TransactionDetail::new($transactionDetail);
+        // file_put_contents(__DIR__.'/visa_vda_prod_payout_request_'.$clientReferenceId.'_'.date('Ymd_His').'.json', json_encode([$senderVO, $recipientVO, $txnVO], JSON_PRETTY_PRINT));
 
         try {
+            Redis::set($redisKey, $clientReferenceId);
             if ('validate_payout' === $mode) {
                 $response = $this->visaDirectAccountPayoutClient->validatePayoutV3(
                     $senderVO,
@@ -139,9 +145,8 @@ class VisaVDAProdUtil extends Command
                 return 0;
             }
 
-            $ledgerId = trim($this->ask('Please provide the owlpay cash ledgerId id', 'xxx'));
-            $this->info("Sending payout from ledger {$ledgerId}...");
-
+            $ledgerId = '2'; // 飛天牛在production上面的cash ledger id
+            $this->info("Sending payout from cash ledger id {$ledgerId}...");
             $response = $this->visaDirectAccountPayoutClient->sendPayoutV3(
                 ledgerId: $ledgerId,
                 senderDetail: $senderVO,
@@ -149,8 +154,14 @@ class VisaVDAProdUtil extends Command
                 transactionDetail: $txnVO,
             );
 
-            $this->info('============ transaction result ============');
-            $this->info(json_encode($response, JSON_PRETTY_PRINT));
+            $this->info('============ Transaction Result ============');
+            $this->info(
+                json_encode(
+                    $response->toArray(),
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                )
+            );
+            file_put_contents($this->baseDir.'/response/visa_vda_prod_payout_response_'.$clientReferenceId.'_'.date('Ymd_His').'.json', json_encode($response, JSON_PRETTY_PRINT));
 
             return 0;
         } catch (Throwable $e) {
@@ -161,6 +172,50 @@ class VisaVDAProdUtil extends Command
         }
     }
 
+    private function buildPayoutValueObjects(
+        array $senderDetail,
+        array $recipientDetail,
+        array $transactionDetail,
+        string $clientReferenceId,
+        string $settlementCurrencyCode,
+    ): array {
+        // Parse transactionAmount: accept minor units (int) or decimal strings (e.g. "10.00")
+        $amount = $transactionDetail['transactionAmount'];
+        $currencyCode = $transactionDetail['transactionCurrencyCode'];
+        $transactionDetail['transactionAmount'] = $this->parseTransactionAmount($amount, $currencyCode);
+        $transactionDetail['clientReferenceId'] = $clientReferenceId;
+        $transactionDetail['settlementCurrencyCode'] = $settlementCurrencyCode;
+
+        return [
+            IndividualSenderDetail::new($senderDetail),
+            IndividualRecipientDetail::new($recipientDetail),
+            TransactionDetail::new($transactionDetail),
+        ];
+    }
+
+    private function promptLedgerId(array $payload): string
+    {
+        $defaultLedger = isset($payload['ledgerId']) ? (string) $payload['ledgerId'] : 'xxx';
+
+        return trim($this->ask('Please provide the owlpay cash ledgerId id', $defaultLedger));
+    }
+
+    private function promptAndLoadPayload(): ?array
+    {
+        $fileMapping = $this->listExistingFiles();
+        $choice = trim($this->ask('Please select a file by index: 1'));
+
+        if (!isset($fileMapping[$choice])) {
+            $this->error('Invalid index.');
+
+            return [];
+        }
+
+        $selectedFile = $fileMapping[$choice];
+
+        return $this->loadPayloadFromFile($selectedFile);
+    }
+
     /**
      * Parse an amount and return a Money instance.
      * Supports minor units (integer or digit string) or decimal major-unit strings (e.g. "12.34").
@@ -169,19 +224,9 @@ class VisaVDAProdUtil extends Command
      *
      * @throws InvalidArgumentException
      */
-    private function parseTransactionAmount($amount, string $currencyCode): Money
+    private function parseTransactionAmount(float $amount, string $currencyCode): Money
     {
         $currencyCode = strtoupper(trim((string) ($currencyCode ?? '')));
-
-        // sanitize string amounts
-        if (is_string($amount)) {
-            $amount = str_replace(',', '', $amount);
-        }
-
-        // Minor units: integer or numeric string without decimals
-        if (is_int($amount) || (is_string($amount) && ctype_digit($amount))) {
-            return new Money((string) $amount, new Currency($currencyCode));
-        }
 
         // Decimal string or float provided: parse as major units using DecimalMoneyParser
         $parser = new DecimalMoneyParser(new ISOCurrencies());
@@ -196,31 +241,44 @@ class VisaVDAProdUtil extends Command
     {
         $baseDir = __DIR__.$path;
 
-        // 列出 visa_vda 底下所有 json 檔（顯示相對路徑）
         $allFiles = glob($baseDir.'/*/*.json');
+        $mapping = [];
         if (!empty($allFiles)) {
             $this->info('Available visa_vda payload files:');
             foreach ($allFiles as $i => $fullPath) {
+                $i = (int) $i + 1;
                 $rel = substr($fullPath, strlen($baseDir) + 1);
+
+                // filter response
+                if (str_contains($rel, 'response/')) {
+                    continue;
+                }
                 $this->info("  [{$i}] {$rel}");
+
+                $mapping[$i] = $rel;
             }
+
+            return $mapping;
         } else {
             $this->warn("No payload files found under: {$baseDir}");
         }
+
+        return null;
     }
 
-    protected function loadPayloadFromFile(string $file): ?array
+    protected function loadPayloadFromFile(string $file, string $path = self::PAYLOAD_RELATIVE_PATH): ?array
     {
-        $baseDir = __DIR__.self::PAYLOAD_RELATIVE_PATH;
+        $path = $this->baseDir;
 
-        if (!is_dir($baseDir)) {
-            $this->warn('Base directory not found: '.$baseDir);
+        $this->info('The file you selected is '.$file);
+        if (!is_dir($path)) {
+            $this->warn('Base directory not found: '.$path);
             $this->warn('Please create the directory structure for payload files.');
 
             return null;
         }
 
-        $matches = glob($baseDir."/*/$file");
+        $matches = glob($path."/$file");
 
         if (empty($matches)) {
             throw new RuntimeException("File not found: $file");

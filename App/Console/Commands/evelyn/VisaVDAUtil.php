@@ -14,6 +14,7 @@ use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Recipient\PayoutMetaDat
 use Infrastructure\VISA_VDA\ValueObjects\Requests\Payout\Sender\IndividualSenderDetail;
 use Infrastructure\VISA_VDA\ValueObjects\Requests\PostingCalendar\PostingCalendarRequest;
 use Infrastructure\VISA_VDA\VisaDirectAccountPayoutClient;
+use InvalidArgumentException;
 use Money\Currencies\ISOCurrencies;
 use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
@@ -21,6 +22,7 @@ use Money\Money;
 use Money\Parser\DecimalMoneyParser;
 use ReflectionClass;
 use RuntimeException;
+use Throwable;
 
 class VisaVDAUtil extends Command
 {
@@ -462,34 +464,16 @@ class VisaVDAUtil extends Command
         return $decoded;
     }
 
-    /**
-     * Parse an amount and return a Money instance.
-     * Supports minor units (integer or digit string) or decimal major-unit strings (e.g. "12.34").
-     *
-     * @param mixed $amount
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function parseTransactionAmount($amount, string $currencyCode): Money
+    private function parseTransactionAmount(float $amount, string $currencyCode): Money
     {
         $currencyCode = strtoupper(trim((string) ($currencyCode ?? '')));
-
-        // sanitize string amounts
-        if (is_string($amount)) {
-            $amount = str_replace(',', '', $amount);
-        }
-
-        // Minor units: integer or numeric string without decimals
-        if (is_int($amount) || (is_string($amount) && ctype_digit($amount))) {
-            return new Money((string) $amount, new Currency($currencyCode));
-        }
 
         // Decimal string or float provided: parse as major units using DecimalMoneyParser
         $parser = new DecimalMoneyParser(new ISOCurrencies());
         try {
             return $parser->parse((string) $amount, $currencyCode);
-        } catch (\Throwable $e) {
-            throw new \InvalidArgumentException('Unable to parse amount for currency '.$currencyCode.': '.$e->getMessage(), 0, $e);
+        } catch (Throwable $e) {
+            throw new InvalidArgumentException('Unable to parse amount for currency '.$currencyCode.': '.$e->getMessage(), 0, $e);
         }
     }
 }
