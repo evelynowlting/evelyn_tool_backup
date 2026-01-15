@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-20260106-sgd-0001",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "1000",
+        "currency": "SGD"
+    },
+    "destinationCurrencyCode": "SGD",
+    "payoutId": "281474990048973",
+    "settlementAmount": {
+        "amount": "784",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "1000",
+        "currency": "SGD"
+    },
+    "transactionCurrencyCode": "SGD",
+    "transactionDateTime": "2026-01-06T11:32:50.048648673Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-08",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

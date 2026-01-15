@@ -1,0 +1,22 @@
+{
+    "transactionType": "Push",
+    "amount": 500,
+    "accountNumber": "310959120034",
+    "originator": {
+        "accountNumber": "310959120034"
+    },
+    "receiver": {
+        "routingNumber": "325070760",
+        "accountNumber": "126862300",
+        "accountType": "Checking",
+        "accountName": "Ying Lu"
+    },
+    "secCode": "WEB",
+    "description": "ach push5m",
+    "serviceType": "SameDay",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach push testing with standard service type",
+    "clientIdentifier": "TC-PROD-ACH-PUSH-010-sameday-0003"
+}

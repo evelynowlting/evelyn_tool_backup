@@ -1,0 +1,314 @@
+<?php
+
+namespace App\Console\Commands\PayoutChannel;
+
+// $ composer require web-token/jwt-framework
+// https://web-token.spomky-labs.com/
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
+use Jose\Component\Core\AlgorithmManager;
+use Jose\Component\Encryption\Algorithm\ContentEncryption\A128GCM;
+use Jose\Component\Encryption\Algorithm\KeyEncryption\RSAOAEP256;
+use Jose\Component\Encryption\Compression\CompressionMethodManager;
+use Jose\Component\Encryption\Compression\Deflate;
+use Jose\Component\Encryption\JWEBuilder;
+use Jose\Component\Encryption\JWEDecrypter;
+use Jose\Component\Encryption\JWELoader;
+use Jose\Component\Encryption\Serializer\CompactSerializer;
+use Jose\Component\Encryption\Serializer\JWESerializerManager;
+use Jose\Component\KeyManagement\JWKFactory;
+
+class VisaMleTest extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'visa:mle';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description;
+
+    protected $username;
+    protected $password;
+
+    protected $client_cert;
+    protected $private_key;
+
+    protected $mleClientPrivateKeyPath;
+    protected $mleClientPublicCertificatePath;
+    protected $mleServerPublicCertificatePath;
+
+    protected $keyId;
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        // $clientReferenceId = now()->format('YmdHis');
+
+        $this->username = config('payoutchannel.visa_vda.mutual_ssl.user_id');
+        $this->password = config('payoutchannel.visa_vda.mutual_ssl.user_password');
+
+        $this->client_cert = config('payoutchannel.visa_vda.mutual_ssl.cert_path');
+        $this->private_key = config('payoutchannel.visa_vda.mutual_ssl.private_key_path');
+
+        $this->mleClientPrivateKeyPath = config('payoutchannel.visa_vda.mle.client_private_key_path');
+        $this->mleClientPublicCertificatePath = config('payoutchannel.visa_vda.mle.client_public_key_path');
+        $this->mleServerPublicCertificatePath = config('payoutchannel.visa_vda.mle.server_public_key_path');
+
+        $this->keyId = config('payoutchannel.visa_vda.mle.key_id');
+
+        $url1 = 'https://sandbox.api.visa.com/visapayouts/v3/payouts/validate';
+        $payload1 = '        {
+            "recipientDetail": {
+                "lastName": "smith",
+                "firstName": "Jessica",
+                "bank": {
+                    "bankCode": "800554",
+                    "bankCodeType": "SORT_CODE",
+                    "accountNumberType": "DEFAULT",
+                    "accountName": "Money Market",
+                    "countryCode": "GBR",
+                    "bankName": "Barclays",
+                    "accountNumber": "6970093",
+                    "currencyCode": "GBP"
+                },
+                "address": {
+                    "country": "GBR",
+                    "city": "London",
+                    "postalCode": "675456",
+                    "addressLine1": "123 Main St",
+                    "state": "CF"
+                },
+                "type": "I"
+            },
+            "senderDetail": {
+                "address": {
+                    "country": "USA",
+                    "city": "Washington",
+                    "addressLine1": "addressline1"
+                },
+                "name": "Ben",
+                "type": "C",
+                "senderAccountNumber": "senderAccountNumber"
+            },
+            "payoutMethod": "B",
+            "transactionDetail": {
+                "initiatingPartyId": 1002,
+                "businessApplicationId": "FD",
+                "statementNarrative": "advancepayment",
+                "transactionAmount": 1.5,
+                "transactionCurrencyCode": "GBP",
+                "settlementCurrencyCode": "GBP",
+                "senderSourceOfFunds": "01"
+            }
+        }';
+        /* response:
+        {
+            "validationResultCode": "VALID",
+            "expectedPostingDate": "2022-11-28"
+        }
+        */
+
+        $url2 = 'https://sandbox.api.visa.com/visapayouts/v3/payouts';
+        $payload2 = '{
+            "recipientDetail": {
+                "lastName": "smith",
+                "firstName": "Jessica",
+                "bank": {
+                    "bankCode": "800554",
+                    "bankCodeType": "SORT_CODE",
+                    "accountNumberType": "DEFAULT",
+                    "accountName": "Money Market",
+                    "countryCode": "GBR",
+                    "bankName": "Barclays",
+                    "accountNumber": "6970093",
+                    "currencyCode": "GBP"
+                },
+                "address": {
+                    "country": "GBR",
+                    "city": "London",
+                    "postalCode": "675456",
+                    "addressLine1": "123 Main St",
+                    "state": "CF"
+                },
+                "type": "I"
+            },
+            "senderDetail": {
+                "address": {
+                    "country": "USA",
+                    "city": "Washington",
+                    "addressLine1": "addressline1"
+                },
+                "name": "Ben",
+                "type": "C",
+                "senderAccountNumber": "senderAccountNumber"
+            },
+            "payoutMethod": "B",
+            "transactionDetail": {
+                "initiatingPartyId": 1002,
+                "businessApplicationId": "FD",
+                "statementNarrative": "advancepayment",
+                "transactionAmount": 1.5,
+                "transactionCurrencyCode": "GBP",
+                "settlementCurrencyCode": "GBP",
+                "clientReferenceId": "20240626093301",
+                "senderSourceOfFunds": "01"
+            }
+        }';
+        /* repsonse
+        {
+            "transactionDetail": {
+                "clientReferenceId": "20240626093301",
+                "payoutSpeed": "STANDARD",
+                "expectedPostingDate": "2022-11-16",
+                "transactionAmount": 1.5,
+                "transactionCurrencyCode": "GBP",
+                "destinationAmount": 1557,
+                "destinationCurrencyCode": "GBP",
+                "fxConversionRate": 1,
+                "initiatingPartyId": 1002,
+                "payoutId": "171939444966333",
+                "settlementAmount": 1557,
+                "settlementCurrencyCode": "GBP",
+                "transactionDateTime": "2022-11-16T10:36:07.000Z",
+                "status": "PAYMENT_RECEIVED"
+            }
+        }
+        */
+
+        // $encryptedData = $this->encryptPayload($payload1);
+        $encryptedData = $this->encryptPayload($payload2);
+        $this->info('Encrypted Request Payload:');
+        $this->line(json_encode($encryptedData, JSON_PRETTY_PRINT));
+
+        // $body = $this->invokeAPI($url1, $encryptedData);
+        $body = $this->invokeAPI($url2, $encryptedData);
+
+        $responsePayload = $this->decryptJwe($body);
+        $this->info('Decrypted Response Payload:');
+        $this->line($responsePayload);
+
+        // $pushFundsResponse = json_decode($responsePayload, true);
+        // take values from $responsePayload['xxx']
+
+        return 0;
+    }
+
+    public function encryptPayload($payload)
+    {
+        $jweBuilder = new JWEBuilder(
+            new AlgorithmManager([new RSAOAEP256()]),      // RSA-OAEP-256
+            new AlgorithmManager([new A128GCM()]),         // A128GCM
+            new CompressionMethodManager([new Deflate()])  // DEF (Deflate)
+        );
+
+        $jwk = JWKFactory::createFromCertificateFile($this->mleServerPublicCertificatePath);
+
+        $milliseconds = round(microtime(true) * 1000);
+
+        $jwe = $jweBuilder
+            ->create()
+            ->withPayload($payload)
+            ->withSharedProtectedHeader([
+                'alg' => 'RSA-OAEP-256',    // Key Encryption Algorithm
+                'enc' => 'A128GCM',         // Content Encryption Algorithm
+                'iat' => $milliseconds,     // Current Time Stamp in milliseconds
+                'kid' => $this->keyId,
+            ])
+            ->addRecipient($jwk)            // shared (public) key
+            ->build();
+
+        $serializer = new CompactSerializer();
+        $token = $serializer->serialize($jwe, 0);
+        $encryptedPayload = ['encData' => $token];
+
+        return $encryptedPayload;
+    }
+
+    /**
+     * This method will decrypt the given JWE token.
+     *
+     * @param $encryptedPayload - JWE Token
+     * @param $mleClientPrivateKeyPath
+     *
+     * @return string|null
+     */
+    public function decryptJwe($encryptedPayload)
+    {
+        $jweDecrypter = new JWEDecrypter(
+            new AlgorithmManager([new RSAOAEP256()]),      // RSA-OAEP-256
+            new AlgorithmManager([new A128GCM()]),         // A128GCM
+            new CompressionMethodManager([new Deflate()])  // DEF (Deflate)
+        );
+
+        $jwk = JWKFactory::createFromKeyFile($this->mleClientPrivateKeyPath);
+
+        $encryptedPayload = json_decode($encryptedPayload, true);
+        $token = $encryptedPayload['encData'];
+
+        $serializerManager = new JWESerializerManager([new CompactSerializer()]);
+
+        $jwe = $serializerManager->unserialize($token);
+
+        $success = $jweDecrypter->decryptUsingKey($jwe, $jwk, 0);
+        if ($success) {
+            $jweLoader = new JWELoader(
+                $serializerManager,
+                $jweDecrypter,
+                null
+            );
+            $jwe = $jweLoader->loadAndDecryptWithKey($token, $jwk, $recipient);
+
+            return $jwe->getPayload();
+        } else {
+            throw new RuntimeException('Error Decrypting JWE');
+        }
+    }
+
+    public function invokeAPI($url, $payload)
+    {
+        $request = Http::withBasicAuth($this->username, $this->password)
+            ->withOptions([
+                'cert' => $this->client_cert,
+                'ssl_key' => $this->private_key,
+                'verify' => true,
+            ])
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'keyId' => $this->keyId,
+            ]);
+
+        $response = $request->post($url, $payload);
+
+        // $this->info('headers');
+        // $this->line(json_encode($response->headers(), JSON_PRETTY_PRINT));
+
+        $status = $response->status();
+        $this->info('HTTP Status');
+        $this->line($status);
+
+        return $response->body();
+    }
+}

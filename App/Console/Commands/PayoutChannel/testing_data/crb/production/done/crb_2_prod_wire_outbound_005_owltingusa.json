@@ -1,0 +1,21 @@
+{
+    "accountNumber": "399851645982",
+    "receiverRoutingNumber": "026013356",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "1099007801",
+        "name": "OWLTING USA INC"
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "399851645982",
+        "name": "OwTing USA Inc."
+    },
+    "amount": 1000,
+    "purpose": "testing wire transfer 10",
+    "originatorToBeneficiary1": "owlting",
+    "originatorToBeneficiary2": "usa",
+    "originatorToBeneficiary3": "wire",
+    "originatorToBeneficiary4": "outbound"
+}

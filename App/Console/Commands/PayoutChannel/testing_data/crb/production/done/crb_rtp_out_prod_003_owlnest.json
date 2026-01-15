@@ -1,0 +1,23 @@
+{
+    "accountNumber": "346387757286",
+    "amount": 1000,
+    "creditor": {
+        "routingNumber": "091311229",
+        "accountNumber": "202345293946",
+        "name": "OwlNest, Inc."
+    },
+    "debtor": {
+        "routingNumber": "011000138",
+        "accountNumber": "346387757286",
+        "name": "OwlNest Inc.",
+        "addressStreetName": "E Sheridan St",
+        "addressLine": "1513 E Sheridan St",
+        "addressBuildingNumber": "1513",
+        "addressCity": "Laramie",
+        "addressState": "WY",
+        "addressPostalCode": "82070",
+        "addressCountry": "US"
+    },
+    "remittanceData": "RTP outbound testing with $10 dollars",
+    "purpose": "rtp outbound testing"
+}

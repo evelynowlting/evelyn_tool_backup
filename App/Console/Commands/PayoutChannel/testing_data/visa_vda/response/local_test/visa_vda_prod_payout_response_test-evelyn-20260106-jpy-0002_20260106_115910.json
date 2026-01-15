@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-20260106-jpy-0002",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "10",
+        "currency": "JPY"
+    },
+    "destinationCurrencyCode": "JPY",
+    "payoutId": "281474990049098",
+    "settlementAmount": {
+        "amount": "6",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "10",
+        "currency": "JPY"
+    },
+    "transactionCurrencyCode": "JPY",
+    "transactionDateTime": "2026-01-06T11:59:09.967488288Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-07",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

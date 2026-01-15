@@ -1,0 +1,22 @@
+{
+    "transactionType": "Push",
+    "amount": 500,
+    "originator": {
+        "accountNumber": "338496141171"
+    },
+    "receiver": {
+        "routingNumber": "102301092",
+        "accountNumber": "8471349103",
+        "accountType": "Checking",
+        "accountName": "Carpenter, Andrew & Ke",
+        "identification": "Carpenter Andre"
+    },
+    "secCode": "WEB",
+    "description": "ach push5s",
+    "serviceType": "Standard",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach push testing with standard service type",
+    "clientIdentifier": "TC-PROD-ACH-PUSH-007-standard-0001"
+}

@@ -1,0 +1,47 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "bank": {
+      "accountName": "Orkhan Gasimov",
+      "accountNumber": "43109010560000000136902646",
+      "accountNumberType": "DEFAULT",
+      "bankName": "Santander Bank Polska S.A.",
+      "branchCode": "10901056",
+      "countryCode": "POL",
+      "currencyCode": "PLN"
+    },
+    "firstName": "Orkhan",
+    "lastName": "Gasimov",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-PLN-0004",
+    "initiatingPartyId": 10092698100,
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Orkhan Gasimov usd 10",
+    "transactionAmount": 36.18,
+    "transactionCurrencyCode": "PLN"
+  }
+}

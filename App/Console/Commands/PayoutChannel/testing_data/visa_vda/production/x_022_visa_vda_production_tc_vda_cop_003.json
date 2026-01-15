@@ -1,0 +1,62 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "Calle 42 #13-19, Chapinero",
+      "city": "Bogota",
+      "country": "COL"
+    },
+    "bank": {
+      "accountName": "Susana Martinez Roldán",
+      "accountNumber": "3052514518",
+      "accountNumberType": "DEFAULT",
+      "accountType": "2",
+      "bankCode": "150",
+      "bankName": "Nequi",
+      "countryCode": "COL",
+      "currencyCode": "COP"
+    },
+    "contactEmail": "susamr08@gmail.com",
+    "firstName": "Susana",
+    "identificationList": [
+      {
+        "idIssueCountry": "COL",
+        "idNumber": "1000536351",
+        "idType": "N"
+      }
+    ],
+    "lastName": "Martinez Roldán",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-COL-0003",
+    "initiatingPartyId": 10092698100,
+    "purposeOfPayment": "EPREMT",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Susana USD 10",
+    "transactionAmount": 37586.23,
+    "transactionCurrencyCode": "COP"
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "accountNumber": "310959120034",
+    "receiverRoutingNumber": "325070760",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "126862300",
+        "name": "Ying Lu"
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "310959120034",
+        "name": "Ying Lu"
+    },
+    "amount": 500,
+    "purpose": "testing wire transfer 5",
+    "originatorToBeneficiary1": "gina",
+    "originatorToBeneficiary2": "you",
+    "originatorToBeneficiary3": "are",
+    "originatorToBeneficiary4": "great"
+}

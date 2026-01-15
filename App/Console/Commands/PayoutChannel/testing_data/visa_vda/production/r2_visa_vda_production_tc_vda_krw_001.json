@@ -1,0 +1,59 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "346, Songdo-ro, Gwangsan-gu",
+      "city": "Gwangju",
+      "country": "KOR"
+    },
+    "bank": {
+      "accountName": "Hoya kim",
+      "accountNumber": "77680201078675",
+      "accountNumberType": "DEFAULT",
+      "bankCode": "004",
+      "bankCodeType": "DEFAULT",
+      "bankName": "kookmin bank",
+      "countryCode": "KOR",
+      "currencyCode": "KRW"
+    },
+    "cityOfBirth": "Gwangju",
+    "contactNumber": "+821051135960",
+    "contactNumberType": "MOBILE",
+    "countryOfBirth": "KOR",
+    "dateOfBirth": "1986-07-28",
+    "firstName": "ILHO",
+    "lastName": "KIM",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-KRW-0001",
+    "initiatingPartyId": 10092698100,
+    "purposeOfPayment": "ISOTHR",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Hoya kim usd 5",
+    "transactionAmount": 7391.55,
+    "transactionCurrencyCode": "KRW"
+  }
+}

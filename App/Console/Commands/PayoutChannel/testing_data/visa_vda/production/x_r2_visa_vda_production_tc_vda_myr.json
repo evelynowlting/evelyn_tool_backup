@@ -1,0 +1,75 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "Symphony Park, Jalan Lenggong",
+      "city": "Penang",
+      "country": "MYS"
+    },
+    "bank": {
+      "BIC": "CIBBMYKLSBL",
+      "accountName": "Sin Ying H'ng",
+      "accountNumber": "7055448029",
+      "accountNumberType": "DEFAULT",
+      "bankName": "CIMB Bank Berhad",
+      "countryCode": "MYS",
+      "currencyCode": "MYR"
+    },
+    "firstName": "Sin Ying",
+    "lastName": "H'ng",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-MYR-0003",
+    "initiatingPartyId": 10092698100,
+    "purposeOfPayment": "21201",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Sin Ying H'ng usd 5",
+    "transactionAmount": 20.28,
+    "transactionCurrencyCode": "MYR"
+  }
+}
+
+
+myr Sin Ying H'ng
+{
+  "validationResultCode": "INVALID",
+  "validationDetails": [
+    {
+      "details": {
+        "detailsList": [
+          {
+            "code": "100151",
+            "message": "Unable to validate this payout request because one or more of recipient bank information provided is missing or invalid.",
+            "location": "recipientDetail.bank.BIC"
+          }
+        ]
+      },
+      "reason": "invalidPayoutRequest",
+      "status": "400",
+      "message": null
+    }
+  ]
+}

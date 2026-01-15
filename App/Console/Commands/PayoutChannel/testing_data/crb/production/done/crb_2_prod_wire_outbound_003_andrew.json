@@ -1,0 +1,21 @@
+{
+    "accountNumber": "338496141171",
+    "receiverRoutingNumber": "121000248",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "8471349103",
+        "name": "Andrew and Kelly Carpenter"
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "338496141171",
+        "name": "Andrew Carpenter"
+    },
+    "amount": 500,
+    "purpose": "testing wire transfer 5",
+    "originatorToBeneficiary1": "wire",
+    "originatorToBeneficiary2": "outbound",
+    "originatorToBeneficiary3": "to",
+    "originatorToBeneficiary4": "andrew"
+}

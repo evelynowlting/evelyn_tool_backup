@@ -1,0 +1,27 @@
+{
+	"beneficiaryAccountNumber": "xxxxxxxxxxxxxxxxxx1600",
+	"beneficiaryBankName": "Deutsche Bank",
+	"beneficiaryName": "Eurocent International Logistics GMBH",
+	"billingAmount": "5290.63",
+	"billingCurrency": "HKD",
+	"clientHashId": "08f646bf-411e-4b38-8a93-c63e7e272763",
+	"customerHashId": "c49be6eb-a553-458c-8259-6bf69d0f016c",
+	"estimatedDeliveryTime": null,
+	"exchangeRate": "0.117641835",
+	"remitter": {
+		"dob": null,
+		"name": "Shipgo Logistics (Hong Kong) Ltd",
+		"address": "Unit 7, 10/F., Wang Lung Industrial Bldg.,,11 Lung Tak Street,",
+		"accountType": "CORPORATE",
+		"countryCode": "HK",
+		"contactNumber": "+852-91914852",
+		"identificationType": "BUSINESS REGISTRATION NUMBER",
+		"identificationNumber": "2620331"
+	},
+	"systemReferenceNumber": "RT0822499491",
+	"tags": [],
+	"template": "REMIT_TRANSACTION_INITIATED_WEBHOOK",
+	"transactionAmount": "622.40",
+	"transactionCurrency": "EUR",
+	"walletHashId": "0dcbdbe9-ef1c-40e5-a9f4-47e44d45a61d"
+}

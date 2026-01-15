@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-myr-20260106-0001",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "500",
+        "currency": "MYR"
+    },
+    "destinationCurrencyCode": "MYR",
+    "payoutId": "281474990048958",
+    "settlementAmount": {
+        "amount": "124",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "500",
+        "currency": "MYR"
+    },
+    "transactionCurrencyCode": "MYR",
+    "transactionDateTime": "2026-01-06T11:04:52.632Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-07",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

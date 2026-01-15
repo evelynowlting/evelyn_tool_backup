@@ -1,0 +1,813 @@
+<?php
+
+namespace App\Console\Commands\PayoutChannel;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Throwable;
+
+class CrossRiverBankDataMigrationTool extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'crb-data-migration
+                {--table= : Required. Which table to insert (users|user_profiles|user_settings)}
+                {--dry-run}
+            ';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Cross River Bank data migration tool.';
+
+    protected $crbClient;
+
+    private const TABLE_CRB_CUSTOMERS = 'crb_customers';
+    private const TABLE_CRB_SUBLEDGERS = 'crb_subledgers';
+    private const TABLE_CRB_TRANSACTIONS = 'crb_transactions';
+    private const TABLE_CRB_ACH_TRANSACTIONS = 'crb_ach_transactions';
+    private const TABLE_CRB_WIRE_TRANSACTIONS = 'crb_wire_transactions';
+    private const TABLE_CRB_WEBHOOK_EVENTS = 'crb_webhook_events';
+
+    private const ALLOWED_TABLES = [
+        self::TABLE_CRB_SUBLEDGERS,
+        self::TABLE_CRB_TRANSACTIONS,
+        self::TABLE_CRB_WIRE_TRANSACTIONS,
+        self::TABLE_CRB_ACH_TRANSACTIONS,
+        self::TABLE_CRB_WEBHOOK_EVENTS,
+        self::TABLE_CRB_CUSTOMERS,
+    ];
+
+    public function handle(): int
+    {
+        $env = app()->environment();
+        $table = $this->option('table');
+
+        if (!$table) {
+            $this->error('--table name is required');
+
+            return self::FAILURE;
+        }
+
+        if (!in_array($table, self::ALLOWED_TABLES, true)) {
+            $this->error(
+                    'Invalid --table value. Allowed values: '.implode('|', self::ALLOWED_TABLES)
+                );
+
+            return self::FAILURE;
+        }
+
+        if ('production' === $env) {
+            $this->warn('DATA MIGRATION running in PRODUCTION');
+            $this->line("Target tables: {$table}"
+            );
+
+            if (!$this->confirm('Confirm DATA MIGRATION execution?', false)) {
+                $this->warn('Aborted.');
+
+                return self::SUCCESS;
+            }
+        }
+
+        if ($this->option('dry-run')) {
+            $this->info('[DRY RUN] Data migration skipped.');
+            $this->printPlan();
+
+            return self::SUCCESS;
+        }
+
+        DB::beginTransaction();
+        try {
+            switch ($table) {
+                case self::TABLE_CRB_CUSTOMERS:
+                    $this->insertCrbCustomers();
+                    break;
+                case self::TABLE_CRB_SUBLEDGERS:
+                    $this->insertCrbSubledgers();
+                    break;
+                case self::TABLE_CRB_TRANSACTIONS:
+                    $this->insertCrbTransactions();
+                    break;
+                case self::TABLE_CRB_WIRE_TRANSACTIONS:
+                    $this->insertCrbWireTransactions();
+                    break;
+                case self::TABLE_CRB_ACH_TRANSACTIONS:
+                    $this->insertCrbAchTransactions();
+                    break;
+                case self::TABLE_CRB_WEBHOOK_EVENTS:
+                    $this->insertCrbWebhookEvents();
+                    break;
+            }
+            DB::commit();
+            $this->info("DATA MIGRATION in table {$table} completed successfully.");
+
+            return self::SUCCESS;
+        } catch (Throwable $e) {
+            DB::rollBack();
+            $this->error('Insert failed: '.$e->getMessage());
+
+            return self::FAILURE;
+        }
+    }
+
+    /**
+     * ===== crb_customers table =====.
+     */
+    private function insertCrbCustomers(): void
+    {
+        //  INSERT INTO `crb_customers` (`customer_id`, `classification`, `name`, `status`, `pepscan_status`, `ofac_status`, `internal_list_status`, `client_identifier`, `partner_id`, `primary_address_ids`, `primary_phone_ids`, `primary_email_ids`, `primary_identification_ids`, `created_at`, `updated_at`, `deleted_at`) VALUES
+        // 	('7d19b0a2-a031-4d88-9337-b39a002bd266', 'Personal', '{\"fullName\": \"Andrew Carpenter\", \"lastName\": \"Carpenter\", \"firstName\": \"Andrew\"}', 'Active', 'Pending', 'Pending', 'Pending', 'test-individual-customer-20251119-0001', '4680f245-8aad-4551-a5c2-b3080143f293', '[\"6fd6fc75-7342-45dc-ace6-b39a002bd266\"]', '[\"cb33e39a-28d6-431a-ab32-b39a002bd266\"]', '[\"d0a4147e-d5fa-47c1-877c-b39a002bd266\"]', '[\"bc4a144a-6013-4176-aa01-b39a002bd266\"]', '2025-11-19 02:39:33', '2025-11-19 02:39:33', NULL),
+        // 	('3c4bf738-25c8-4bfd-8e17-b39a002f01fa', 'Personal', '{\"fullName\": \"Ying Lu\", \"lastName\": \"Lu\", \"firstName\": \"Ying\"}', 'Active', 'Pending', 'Pending', 'Pending', 'TC-PROD-CM-002', '4680f245-8aad-4551-a5c2-b3080143f293', '[\"8e81becc-d6ff-448a-a0c8-b39a002f01fa\"]', '[\"fa19691e-dfa5-4f1b-a7eb-b39a002f01fa\"]', '[\"c5a17f02-19fa-4975-a623-b39a002f01fa\"]', '[\"a411dcc8-7bfd-4f7d-b7b9-b39a002f01fa\"]', '2025-11-19 02:51:09', '2025-11-19 02:51:09', NULL),
+        // 	('ec54b77a-b573-43d0-92d1-b39a00309651', 'Business', '{\"fullName\": \"OwlNest Inc.\", \"entityName\": \"OwlNest Inc.\"}', 'Active', 'Pending', 'Pending', 'Pending', 'TC-PROD-CM-004', '4680f245-8aad-4551-a5c2-b3080143f293', '[\"83a0fc80-aaee-4a24-8da3-b39a00309651\"]', '[\"440947e0-396a-44b2-bb4a-b39a00309655\"]', '[\"2d74a2a4-1950-431d-b8f7-b39a00309655\"]', NULL, '2025-11-19 02:56:54', '2025-11-19 02:56:54', NULL);
+
+        DB::table(self::TABLE_CRB_CUSTOMERS)->insert([
+            [
+                'customer_id' => '7d19b0a2-a031-4d88-9337-b39a002bd266',
+                'classification' => 'Personal',
+                'name' => '{\"fullName\": \"Andrew Carpenter\", \"lastName\": \"Carpenter\", \"firstName\": \"Andrew\"}',
+                'status' => 'Active',
+                'pepscan_status' => 'Pending',
+                'ofac_status' => 'Pending',
+                'internal_list_status' => 'Pending',
+                'client_identifier' => 'test-individual-customer-20251119-0001',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'primary_address_ids' => '[\"6fd6fc75-7342-45dc-ace6-b39a002bd266\"]',
+                'primary_phone_ids' => '[\"cb33e39a-28d6-431a-ab32-b39a002bd266\"]',
+                'primary_email_ids' => '[\"d0a4147e-d5fa-47c1-877c-b39a002bd266\"]',
+                'primary_identification_ids' => '[\"bc4a144a-6013-4176-aa01-b39a002bd266\"]',
+                'created_at' => '2025-11-19 02:39:33',
+                'updated_at' => '2025-11-19 02:39:33',
+                'deleted_at' => null,
+            ],
+            [
+                'customer_id' => '3c4bf738-25c8-4bfd-8e17-b39a002f01fa',
+                'classification' => 'Personal',
+                'name' => '{\"fullName\": \"Ying Lu\", \"lastName\": \"Lu\", \"firstName\": \"Ying\"}',
+                'status' => 'Active',
+                'pepscan_status' => 'Pending',
+                'ofac_status' => 'Pending',
+                'internal_list_status' => 'Pending',
+                'client_identifier' => 'TC-PROD-CM-002',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'primary_address_ids' => '[\"8e81becc-d6ff-448a-a0c8-b39a002f01fa\"]',
+                'primary_phone_ids' => '[\"fa19691e-dfa5-4f1b-a7eb-b39a002f01fa\"]',
+                'primary_email_ids' => '[\"c5a17f02-19fa-4975-a623-b39a002f01fa\"]',
+                'primary_identification_ids' => '[\"a411dcc8-7bfd-4f7d-b7b9-b39a002f01fa\"]',
+                'created_at' => '2025-11-19 02:51:09',
+                'updated_at' => '2025-11-19 02:51:09',
+                'deleted_at' => null,
+            ],
+            [
+                'customer_id' => 'ec54b77a-b573-43d0-92d1-b39a00309651',
+                'classification' => 'Business',
+                'name' => '{\"fullName\": \"OwlNest Inc.\", \"entityName\": \"OwlNest Inc.\"}',
+                'status' => 'Active',
+                'pepscan_status' => 'Pending',
+                'ofac_status' => 'Pending',
+                'internal_list_status' => 'Pending',
+                'client_identifier' => 'TC-PROD-CM-004',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'primary_address_ids' => '[\"83a0fc80-aaee-4a24-8da3-b39a00309651\"]',
+                'primary_phone_ids' => '[\"440947e0-396a-44b2-bb4a-b39a00309655\"]',
+                'primary_email_ids' => '[\"2d74a2a4-1950-431d-b8f7-b39a00309655\"]',
+                'primary_identification_ids' => null,
+                'created_at' => '2025-11-19 02:56:54',
+                'updated_at' => '2025-11-19 02:56:54',
+                'deleted_at' => null,
+            ],
+        ]);
+    }
+
+    /*
+     * ===== crb_subledgers table =====
+     */
+    // private function insertCrbSubledgers(): void
+    // {
+    //     //  INSERT INTO `crb_subledgers` ( `master_account_number`, `account_number`, `account_type`, `status`, `title`, `currency`, `current_balance`, `available_balance`, `hold_amount`, `owlting_hold_amount`, `transaction_count`, `credit_limit`, `opened_at`, `ledger_type`, `product_type`, `beneficiary`, `customer_id`, `partner_id`, `product_id`, `client_identifier`, `last_maintenance_at`, `last_modified_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
+    //     // 	('151190090879', '338496141171', 'Direct', 'Active', 'Andrew Carpenter', 'USD', 350, 350, 0, 4000, 12, 0, '2025-11-18T23:27:27.753-05:00', 'Direct', 'Checking', '{\"city\": \"Laramie\", \"state\": \"WY\", \"lastName\": \"Carpenter\", \"firstName\": \"Andrew\", \"countryCode\": \"US\", \"streetAddress1\": \"1513 E Sheridan St., Laramie\"}', '7d19b0a2-a031-4d88-9337-b39a002bd266', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', '-1', '2025-11-18T23:27:27.753-05:00', '12/10/2025 02:23:04', '2025-11-19 04:27:32', '2025-12-10 07:23:52', NULL),
+    //     // 	('151190090879', '310959120034', 'Direct', 'Active', 'Ying Lu', 'USD', 150, 150, 0, 4000, 15, 0, '2025-11-18T23:34:50.42-05:00', 'Direct', 'Checking', '{\"city\": \"Falls Church\", \"state\": \"VA\", \"lastName\": \"Lu\", \"firstName\": \"Ying\", \"countryCode\": \"US\", \"streetAddress1\": \"2133 Tysons Ridgeline Rd, Falls Church\"}', '3c4bf738-25c8-4bfd-8e17-b39a002f01fa', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'TC-PROD-SM-002-API', '2025-11-18T23:34:50.42-05:00', '12/09/2025 23:51:34', '2025-11-19 04:35:03', '2025-12-10 04:53:18', NULL),
+    //     // 	('151190090879', '399851645982', 'Direct', 'Active', 'OwTing USA Inc.', 'USD', 2000, 2000, 0, 10000, 5, 0, '2025-11-18T23:38:13.947-05:00', 'Direct', 'Checking', '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"postalCode\": \"22203\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive, Suite 600\"}', 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'TC-PROD-SM-003-API', '2025-11-19T04:42:49.957-05:00', '12/08/2025 05:39:05', '2025-11-19 04:38:33', '2025-12-08 10:40:07', NULL),
+    //     // 	('151190090879', '346387757286', 'Direct', 'Active', 'OwlNest Inc.', 'USD', 0, 0, 0, 6000, 5, 0, '2025-11-18T23:54:26.38-05:00', 'Direct', 'Checking', '{\"city\": \"Laramie\", \"state\": \"WY\", \"entityName\": \"OwlNest Inc.\", \"postalCode\": \"82070\", \"countryCode\": \"US\", \"streetAddress1\": \"1513 E Sheridan St., Laramie\"}', 'ec54b77a-b573-43d0-92d1-b39a00309651', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'TC-PROD-SM-004-API', '2025-11-19T03:32:03.8-05:00', '12/08/2025 05:37:34', '2025-11-19 04:54:34', '2025-12-08 10:40:07', NULL),
+    //     // 	('151190090879', '354941648165', 'Direct', 'Active', 'OwlPay Cash Hold Account', 'USD', 0, 0, 0, 0, 0, 0, '2025-12-10T03:23:04.99-05:00', 'Direct', 'Checking', '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive Suite 600 Arlington\"}', 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'owlpay-cash-hold-account', '2025-12-10T03:23:04.99-05:00', '2025-12-10T03:23:04.9889875-05:00', '2025-12-10 08:23:24', '2025-12-10 08:23:24', NULL),
+    //     // 	('151190090879', '310446487582', 'Direct', 'Active', 'OwlPay Cash Released Account', 'USD', 0, 0, 0, 0, 0, 0, '2025-12-10T03:23:39.273-05:00', 'Direct', 'Checking', '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive Suite 600 Arlington\"}', 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'owlpay-cash-released-account', '2025-12-10T03:23:39.273-05:00', '2025-12-10T03:23:39.2723532-05:00', '2025-12-10 08:23:54', '2025-12-10 08:23:54', NULL),
+    //     // 	('151190090879', '338969080849', 'Direct', 'Active', 'OwlPay Cash Fee Account', 'USD', 0, 0, 0, 0, 0, 0, '2025-12-10T03:24:22.753-05:00', 'Direct', 'Checking', '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive Suite 600 Arlington\"}', 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'owlpay-cash-fee-account', '2025-12-10T03:24:22.753-05:00', '2025-12-10T03:24:22.7530069-05:00', '2025-12-10 08:24:24', '2025-12-10 08:24:24', NULL);
+
+    //     DB::table(self::TABLE_CRB_SUBLEDGERS)->insert([
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '338496141171',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'Andrew Carpenter',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 350,
+    //                 'available_balance' => 350,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 4000,
+    //                 'transaction_count' => 12,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-11-18T23:27:27.753-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Laramie\", \"state\": \"WY\", \"lastName\": \"Carpenter\", \"firstName\": \"Andrew\", \"countryCode\": \"US\", \"streetAddress1\": \"1513 E Sheridan St., Laramie\"}',
+    //                 'customer_id' => '7d19b0a2-a031-4d88-9337-b39a002bd266',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => '-1',
+    //                 'last_maintenance_at' => '2025-11-18T23:27:27.753-05:00',
+    //                 'last_modified_at' => '12/10/2025 02:23:04',
+    //                 'created_at' => '2025-11-19 04:27:32',
+    //                 'updated_at' => '2025-12-10 07:23:52',
+    //                 'deleted_at' => null,
+    //             ],
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '310959120034',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'Ying Lu',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 150,
+    //                 'available_balance' => 150,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 4000,
+    //                 'transaction_count' => 15,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-11-18T23:34:50.42-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Falls Church\", \"state\": \"VA\", \"lastName\": \"Lu\", \"firstName\": \"Ying\", \"countryCode\": \"US\", \"streetAddress1\": \"2133 Tysons Ridgeline Rd, Falls Church\"}',
+    //                 'customer_id' => '3c4bf738-25c8-4bfd-8e17-b39a002f01fa',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => 'TC-PROD-SM-002-API',
+    //                 'last_maintenance_at' => '2025-11-18T23:34:50.42-05:00',
+    //                 'last_modified_at' => '12/09/2025 23:51:34',
+    //                 'created_at' => '2025-11-19 04:35:03',
+    //                 'updated_at' => '2025-12-10 04:53:18',
+    //                 'deleted_at' => null,
+    //             ],
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '399851645982',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'OwTing USA Inc.',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 2000,
+    //                 'available_balance' => 2000,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 10000,
+    //                 'transaction_count' => 5,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-11-18T23:38:13.947-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"postalCode\": \"22203\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive, Suite 600\"}',
+    //                 'customer_id' => 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => 'TC-PROD-SM-003-API',
+    //                 'last_maintenance_at' => '2025-11-19T04:42:49.957-05:00',
+    //                 'last_modified_at' => '12/08/2025 05:39:05',
+    //                 'created_at' => '2025-11-19 04:38:33',
+    //                 'updated_at' => '2025-12-08 10:40:07',
+    //                 'deleted_at' => null,
+    //             ],
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '346387757286',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'OwlNest Inc.',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 0,
+    //                 'available_balance' => 0,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 6000,
+    //                 'transaction_count' => 5,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-11-18T23:54:26.38-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Laramie\", \"state\": \"WY\", \"entityName\": \"OwlNest Inc.\", \"postalCode\": \"82070\", \"countryCode\": \"US\", \"streetAddress1\": \"1513 E Sheridan St., Laramie\"}',
+    //                 'customer_id' => 'ec54b77a-b573-43d0-92d1-b39a00309651',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => 'TC-PROD-SM-004-API',
+    //                 'last_maintenance_at' => '2025-11-19T03:32:03.8-05:00',
+    //                 'last_modified_at' => '12/08/2025 05:37:34',
+    //                 'created_at' => '2025-11-19 04:54:34',
+    //                 'updated_at' => '2025-12-08 10:40:07',
+    //                 'deleted_at' => null,
+    //             ],
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '354941648165',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'OwlPay Cash Hold Account',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 0,
+    //                 'available_balance' => 0,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 0,
+    //                 'transaction_count' => 0,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-12-10T03:23:04.99-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive Suite 600 Arlington\"}',
+    //                 'customer_id' => 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => 'owlpay-cash-hold-account',
+    //                 'last_maintenance_at' => '2025-12-10T03:23:04.99-05:00',
+    //                 'last_modified_at' => '2025-12-10T03:23:04.9889875-05:00',
+    //                 'created_at' => '2025-12-10 08:23:24',
+    //                 'updated_at' => '2025-12-10 08:23:24',
+    //                 'deleted_at' => null,
+    //             ],
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '310446487582',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'OwlPay Cash Released Account',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 0,
+    //                 'available_balance' => 0,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 0,
+    //                 'transaction_count' => 0,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-12-10T03:23:39.273-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive Suite 600 Arlington\"}',
+    //                 'customer_id' => 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => 'owlpay-cash-released-account',
+    //                 'last_maintenance_at' => '2025-12-10T03:23:39.273-05:00',
+    //                 'last_modified_at' => '2025-12-10T03:23:39.2723532-05:00',
+    //                 'created_at' => '2025-12-10 08:23:54',
+    //                 'updated_at' => '2025-12-10 08:23:54',
+    //                 'deleted_at' => null,
+    //             ],
+    //             [
+    //                 'master_account_number' => '151190090879',
+    //                 'account_number' => '338969080849',
+    //                 'account_type' => 'Direct',
+    //                 'status' => 'Active',
+    //                 'title' => 'OwlPay Cash Fee Account',
+    //                 'currency' => 'USD',
+    //                 'current_balance' => 0,
+    //                 'available_balance' => 0,
+    //                 'hold_amount' => 0,
+    //                 'owlting_hold_amount' => 0,
+    //                 'transaction_count' => 0,
+    //                 'credit_limit' => 0,
+    //                 'opened_at' => '2025-12-10T03:24:22.753-05:00',
+    //                 'ledger_type' => 'Direct',
+    //                 'product_type' => 'Checking',
+    //                 'beneficiary' => '{\"city\": \"Arlington\", \"state\": \"VA\", \"entityName\": \"OwlTing USA Inc.\", \"countryCode\": \"US\", \"streetAddress1\": \"4250 North Fairfax Drive Suite 600 Arlington\"}',
+    //                 'customer_id' => 'cfa1a3e5-0018-4a6c-ac39-b3080169eee0',
+    //                 'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+    //                 'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+    //                 'client_identifier' => 'owlpay-cash-fee-account',
+    //                 'last_maintenance_at' => '2025-12-10T03:24:22.753-05:00',
+    //                 'last_modified_at' => '2025-12-10T03:24:22.7530069-05:00',
+    //                 'created_at' => '2025-12-10 08:24:24',
+    //                 'updated_at' => '2025-12-10 08:24:24',
+    //                 'deleted_at' => null,
+    //             ],
+    //     ]);
+    // }
+
+    /*
+     * ===== crb_transactions table =====
+     */
+    private function insertCrbTransactions(): void
+    {
+        //  INSERT INTO `crb_transactions` (`crb_subledger_id`, `crb_core_transaction_id`, `rail`, `rail_payment_id`, `account_number`, `currency`, `amount`, `payment_type`, `reference_id`, `direction`, `status`, `partner_id`, `product_id`, `source`, `last_modified_at`, `purpose`, `client_identifier`, `created_at`, `updated_at`, `deleted_at`) VALUES
+        // v	('10', '6e45d2e1-5a1e-4369-a1ff-b3a1004aa595', NULL, 'e4eb8c05-679b-4042-b007-b3a1004aa595', '338496141171', 'USD', 1000, 'Transfer', '705418001X5', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-25T23:31:46.8733779-05:00', 'testing wire transfer 10', 'TC-PROD-WIRE-006', '2025-11-26 04:31:47', '2025-11-26 04:31:47', NULL),
+        // v	('10', '4314bdb3-d843-4c62-a9dc-b3ad00ae380e', NULL, 'b3c5169e-9096-4318-92d5-b3ad00ae380e', '338496141171', 'USD', 500, 'Transfer', '2U405S9VL11', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-08T05:34:18.7103441-05:00', 'testing wire transfer 5', 'TC-PROD-WIRE-OUTBOUND-003', '2025-12-08 10:34:18', '2025-12-08 10:34:18', NULL),
+        // v	('10', NULL, NULL, '96e0ee19-fb49-4cf2-9575-b3a1007d5527', '338496141171', 'USD', 500, 'Origination', 'A3300GC23IDV', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-26T02:36:19.3284026-05:00', 'ach pull testing with standard service type', 'TC-PROD-ACH-PULL-001-standard-001', '2025-11-26 07:36:19', '2025-11-26 07:36:19', NULL),
+        // 	('10', NULL, NULL, 'bfd56faf-3d12-43c8-a0ec-b3a1007e6a16', '338496141171', 'USD', 500, 'Origination', 'A3304T2V2XZO', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-26T02:40:15.6454518-05:00', 'ach pull testing with sameday service type', 'TC-PROD-ACH-PULL-002-sameday-001', '2025-11-26 07:40:15', '2025-11-26 07:40:15', NULL),
+        // 	('10', NULL, NULL, '8d1ff5f4-e472-4301-bbf4-b3a700809807', '338496141171', 'USD', 500, 'Origination', 'A3361T4162LV', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-02T02:48:11.754856-05:00', 'ach push testing with standard service type', 'TC-PROD-ACH-PUSH-007-standard-0001', '2025-12-02 07:48:10', '2025-12-02 07:48:10', NULL),
+        // 	('10', NULL, NULL, '2d036d5d-5f59-4ff4-83bc-b3a70080e500', '338496141171', 'USD', 500, 'Origination', 'A33639I24T6J', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-02T02:49:17.4382025-05:00', 'ach push testing with sameday service type', 'TC-PROD-ACH-PUSH-008-sameday-0001', '2025-12-02 07:49:15', '2025-12-02 07:49:15', NULL),
+        // 	('10', NULL, NULL, '279ba3d2-b6ce-4cc3-b658-b3aa007b9d8e', '338496141171', 'USD', 500, 'Origination', 'A33991FOE9BJ', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-05T02:30:04.2045796-05:00', 'ach push testing with standard service type', 'TC-PROD-ACH-PUSH-007-standard-0002', '2025-12-05 07:30:04', '2025-12-05 07:30:04', NULL),
+        // 	('10', NULL, NULL, '513df164-96d5-458f-a54f-b3aa007c91d1', '338496141171', 'USD', 500, 'Origination', 'A3395S7Z2SH1', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-05T02:33:32.6420189-05:00', 'ach push testing with sameday service type', 'TC-PROD-ACH-PUSH-008-sameday-0002', '2025-12-05 07:33:32', '2025-12-05 07:33:32', NULL),
+
+        // 	('12', '13da5649-5828-4f8b-9000-b39b009ba565', NULL, 'f7a8c82d-ad5a-4e65-851a-b39b009ba565', '310959120034', 'USD', 1000, 'Transfer', '3B80AQH7BA5', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-20T04:26:41.4013753-05:00', 'testing wire transfer 10', 'TC-PROD-WIRE-007', '2025-11-20 09:26:41', '2025-11-20 09:26:41', NULL),
+        // 	('12', NULL, NULL, 'fa2d9dcf-ca6d-4179-bd31-b3a1004fe7e1', '310959120034', 'USD', 500, 'Origination', 'A329865VZW9C', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-25T23:50:55.684739-05:00', 'ach pull testing with standard service type', 'TC-PROD-ACH-PULL-003-standard-0003', '2025-11-26 04:50:55', '2025-11-26 04:50:55', NULL),
+        // 	('12', NULL, NULL, '8134c4f3-c561-4796-9111-b3a1005256e2', '310959120034', 'USD', 500, 'Origination', 'A329L14I8P15', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-25T23:59:47.3136995-05:00', 'ach pull testing with sameday service type', 'TC-PROD-ACH-PULL-004-sameday-0003', '2025-11-26 04:59:47', '2025-11-26 04:59:47', NULL),
+        // 	('12', NULL, NULL, '4b3b77a3-80e2-4ca3-b788-b3a100844f4f', '310959120034', 'USD', 500, 'Origination', 'A3304F0MR01Z', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-26T03:01:43.5160112-05:00', 'ach push testing with standard service type', 'TC-PROD-ACH-PUSH-009-standard-0003', '2025-11-26 08:01:43', '2025-11-26 08:01:43', NULL),
+        // 	('12', NULL, NULL, 'b48fef21-d4c1-4957-aa59-b3a10084ba44', '310959120034', 'USD', 500, 'Origination', 'A330H0JVO90N', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-26T03:03:14.784916-05:00', 'ach push testing with standard service type', 'TC-PROD-ACH-PUSH-010-sameday-0003', '2025-11-26 08:03:14', '2025-11-26 08:03:14', NULL),
+        // 	('12', '8bfd9192-dcd0-4273-90e1-b3ad00ab9fde', NULL, '707091e1-61d5-4721-a66b-b3ad00ab9fde', '310959120034', 'USD', 500, 'Transfer', 'PKLML17BT4P', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-08T05:24:51.9365252-05:00', 'testing wire transfer 5', 'TC-PROD-WIRE-OUTBOUND-002', '2025-12-08 10:24:52', '2025-12-08 10:24:52', NULL),
+
+        // 	('14', '00d897cd-82c4-4975-a92f-b3ad00af7660', NULL, '49d046bc-d275-407f-8308-b3ad00af7660', '399851645982', 'USD', 1000, 'Transfer', 'W25W0B810Z1', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-08T05:38:50.3453752-05:00', 'testing wire transfer 10', 'TC-PROD-WIRE-OUTBOUND-005', '2025-12-08 10:38:50', '2025-12-08 10:38:50', NULL);
+        // 	('14', 'fdea40ec-21f4-46a7-a796-b3a000cfb714', NULL, '498dbd38-0dd3-4e84-99c4-b3a000cfb714', '399851645982', 'USD', 2000, 'Transfer', '0674S4KH5T8', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-25T07:36:16.0623506-05:00', 'testing wire transfer 20', 'test-wire-prod-008-20251125-001', '2025-11-25 12:36:16', '2025-11-25 12:36:16', NULL),
+        // 	('14', NULL, NULL, '01908327-188b-4fbe-98a8-b3a200afcd80', '399851645982', 'USD', 1000, 'Origination', 'A331M01AFD59', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-27T05:40:04.6895058-05:00', 'ach push testing with standard service type', 'TC-PROD-ACH-PUSH-011-001', '2025-11-27 10:40:05', '2025-11-27 10:40:05', NULL),
+
+        // 	('16', 'f4527d4d-14ad-41a3-aeb9-b3a000d1981d', NULL, '4e6e38e4-79c2-49e4-95b5-b3a000d1981d', '346387757286', 'USD', 2000, 'Transfer', 'H371001KGR9', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-25T07:43:06.5478929-05:00', 'testing wire transfer 20', 'TC-PROD-WIRE-009', '2025-11-25 12:43:06', '2025-11-25 12:43:06', NULL),
+        // 	('16', NULL, NULL, '5b394cc8-828a-4dba-80e1-b3a200b0b137', '346387757286', 'USD', 1000, 'Origination', 'A331GAT700XT', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-11-27T05:43:19.0077327-05:00', 'ach push testing with standard service type', 'TC-PROD-ACH-PUSH-012-001', '2025-11-27 10:43:19', '2025-11-27 10:43:19', NULL),
+        // 	('16', 'cae1690f-f1dd-4f38-ad23-b3ad00aef78b', NULL, 'c2d1c653-8931-484e-9c3b-b3ad00aef78b', '346387757286', 'USD', 1000, 'Transfer', 'G7JJ0XGMAO8', 'Outbound', 'Created', '4680f245-8aad-4551-a5c2-b3080143f293', '857e2e79-abfe-4c43-98cc-b30801469fca', 'Api', '2025-12-08T05:37:02.1155755-05:00', 'testing wire transfer 10', 'TC-PROD-WIRE-OUTBOUND-004', '2025-12-08 10:37:02', '2025-12-08 10:37:02', NULL),
+
+        DB::table(self::TABLE_CRB_TRANSACTIONS)->insert(
+            [
+            [
+                'crb_subledger_id' => '12',
+                'crb_core_transaction_id' => '13da5649-5828-4f8b-9000-b39b009ba565',
+                'rail' => null,
+                'rail_payment_id' => 'f7a8c82d-ad5a-4e65-851a-b39b009ba565',
+                'account_number' => '310959120034',
+                'currency' => 'USD',
+                'amount' => 1000,
+                'payment_type' => 'Transfer',
+                'reference_id' => '3B80AQH7BA5',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-20T04:26:41.4013753-05:00',
+                'purpose' => 'testing wire transfer 10',
+                'client_identifier' => 'TC-PROD-WIRE-007',
+                'created_at' => '2025-11-20 09:26:41',
+                'updated_at' => '2025-11-20 09:26:41',
+                'deleted_at' => null,
+            ],
+            [
+                'crb_subledger_id' => '14',
+                'crb_core_transaction_id' => 'fdea40ec-21f4-46a7-a796-b3a000cfb714',
+                'rail' => null,
+                'rail_payment_id' => '498dbd38-0dd3-4e84-99c4-b3a000cfb714',
+                'account_number' => '399851645982',
+                'currency' => 'USD',
+                'amount' => 2000,
+                'payment_type' => 'Transfer',
+                'reference_id' => '0674S4KH5T8',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-25T07:36:16.0623506-05:00',
+                'purpose' => 'testing wire transfer 20',
+                'client_identifier' => 'test-wire-prod-008-20251125-001',
+                'created_at' => '2025-11-25 12:36:16',
+                'updated_at' => '2025-11-25 12:36:16',
+                'deleted_at' => null,
+            ],
+            [
+                'crb_subledger_id' => '16',
+                'crb_core_transaction_id' => 'f4527d4d-14ad-41a3-aeb9-b3a000d1981d',
+                'rail' => null,
+                'rail_payment_id' => '4e6e38e4-79c2-49e4-95b5-b3a000d1981d',
+                'account_number' => '346387757286',
+                'currency' => 'USD',
+                'amount' => 2000,
+                'payment_type' => 'Transfer',
+                'reference_id' => 'H371001KGR9',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-25T07:43:06.5478929-05:00',
+                'purpose' => 'testing wire transfer 20',
+                'client_identifier' => 'TC-PROD-WIRE-009',
+                'created_at' => '2025-11-25 12:43:06',
+                'updated_at' => '2025-11-25 12:43:06',
+                'deleted_at' => null,
+            ], ,
+            [
+                'crb_subledger_id' => '12',
+                'crb_core_transaction_id' => null,
+                'rail' => null,
+                'rail_payment_id' => 'fa2d9dcf-ca6d-4179-bd31-b3a1004fe7e1',
+                'account_number' => '310959120034',
+                'currency' => 'USD',
+                'amount' => 500,
+                'payment_type' => 'Origination',
+                'reference_id' => 'A329865VZW9C',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-25T23:50:55.684739-05:00',
+                'purpose' => 'ach pull testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PULL-003-standard-0003',
+                'created_at' => '2025-11-26 04:50:55',
+                'updated_at' => '2025-11-26 04:50:55',
+                'deleted_at' => null,
+            ],
+            [
+                'crb_subledger_id' => '12',
+                'crb_core_transaction_id' => null,
+                'rail' => null,
+                'rail_payment_id' => '8134c4f3-c561-4796-9111-b3a1005256e2',
+                'account_number' => '310959120034',
+                'currency' => 'USD',
+                'amount' => 500,
+                'payment_type' => 'Origination',
+                'reference_id' => 'A329L14I8P15',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-25T23:59:47.3136995-05:00',
+                'purpose' => 'ach pull testing with sameday service type',
+                'client_identifier' => 'TC-PROD-ACH-PULL-004-sameday-0003',
+                'created_at' => '2025-11-26 04:59:47',
+                'updated_at' => '2025-11-26 04:59:47',
+                'deleted_at' => null,
+            ],
+            [
+                'crb_subledger_id' => '12',
+                'crb_core_transaction_id' => null,
+                'rail' => null,
+                'rail_payment_id' => '4b3b77a3-80e2-4ca3-b788-b3a100844f4f',
+                'account_number' => '310959120034',
+                'currency' => 'USD',
+                'amount' => 500,
+                'payment_type' => 'Origination',
+                'reference_id' => 'A3304F0MR01Z',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-26T03:01:43.5160112-05:00',
+                'purpose' => 'ach push testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-009-standard-0003',
+                'created_at' => '2025-11-26 08:01:43',
+                'updated_at' => '2025-11-26 08:01:43',
+                'deleted_at' => null,
+            ],
+            [
+                'crb_subledger_id' => '12',
+                'crb_core_transaction_id' => null,
+                'rail' => null,
+                'rail_payment_id' => 'b48fef21-d4c1-4957-aa59-b3a10084ba44',
+                'account_number' => '310959120034',
+                'currency' => 'USD',
+                'amount' => 500,
+                'payment_type' => 'Origination',
+                'reference_id' => 'A330H0JVO90N',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'source' => 'Api',
+                'last_modified_at' => '2025-11-26T03:03:14.784916-05:00',
+                'purpose' => 'ach push testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-010-sameday-0003',
+                'created_at' => '2025-11-26 08:03:14',
+                'updated_at' => '2025-11-26 08:03:14',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '14',
+                'source_transaction_id' => null,
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '01908327-188b-4fbe-98a8-b3a200afcd80',
+                'account_number' => '399851645982',
+                'currency' => 'USD',
+                'amount' => 1000,
+                'transaction_type' => 'Origination',
+                'reference_id' => 'A331M01AFD59',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-11-27T05:40:04.6895058-05:00',
+                'description' => 'ach push testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-011-001',
+                'created_at' => '2025-11-27 10:40:05',
+                'updated_at' => '2025-11-27 10:40:05',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '16',
+                'source_transaction_id' => null,
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '5b394cc8-828a-4dba-80e1-b3a200b0b137',
+                'account_number' => '346387757286',
+                'currency' => 'USD',
+                'amount' => 1000,
+                'transaction_type' => 'Origination',
+                'reference_id' => 'A331GAT700XT',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-11-27T05:43:19.0077327-05:00',
+                'description' => 'ach push testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-012-001',
+                'created_at' => '2025-11-27 10:43:19',
+                'updated_at' => '2025-11-27 10:43:19',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '10',
+                'source_transaction_id' => null,
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '8d1ff5f4-e472-4301-bbf4-b3a700809807',
+                'account_number' => '338496141171',
+                'currency' => 'USD',
+                'amount' => 500,
+                'transaction_type' => 'Origination',
+                'reference_id' => 'A3361T4162LV',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-02T02:48:11.754856-05:00',
+                'description' => 'ach push testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-007-standard-0001',
+                'created_at' => '2025-12-02 07:48:10',
+                'updated_at' => '2025-12-02 07:48:10',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '10',
+                'source_transaction_id' => null,
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '2d036d5d-5f59-4ff4-83bc-b3a70080e500',
+                'account_number' => '338496141171',
+                'currency' => 'USD',
+                'amount' => 500,
+                'transaction_type' => 'Origination',
+                'reference_id' => 'A33639I24T6J',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-02T02:49:17.4382025-05:00',
+                'description' => 'ach push testing with sameday service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-008-sameday-0001',
+                'created_at' => '2025-12-02 07:49:15',
+                'updated_at' => '2025-12-02 07:49:15',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '10',
+                'source_transaction_id' => null,
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '279ba3d2-b6ce-4cc3-b658-b3aa007b9d8e',
+                'account_number' => '338496141171',
+                'currency' => 'USD',
+                'amount' => 500,
+                'transaction_type' => 'Origination',
+                'reference_id' => 'A33991FOE9BJ',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-05T02:30:04.2045796-05:00',
+                'description' => 'ach push testing with standard service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-007-standard-0002',
+                'created_at' => '2025-12-05 07:30:04',
+                'updated_at' => '2025-12-05 07:30:04',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '10',
+                'source_transaction_id' => null,
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '513df164-96d5-458f-a54f-b3aa007c91d1',
+                'account_number' => '338496141171',
+                'currency' => 'USD',
+                'amount' => 500,
+                'transaction_type' => 'Origination',
+                'reference_id' => 'A3395S7Z2SH1',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-05T02:33:32.6420189-05:00',
+                'description' => 'ach push testing with sameday service type',
+                'client_identifier' => 'TC-PROD-ACH-PUSH-008-sameday-0002',
+                'created_at' => '2025-12-05 07:33:32',
+                'updated_at' => '2025-12-05 07:33:32',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '12',
+                'source_transaction_id' => '8bfd9192-dcd0-4273-90e1-b3ad00ab9fde',
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '707091e1-61d5-4721-a66b-b3ad00ab9fde',
+                'account_number' => '310959120034',
+                'currency' => 'USD',
+                'amount' => 500,
+                'transaction_type' => 'Transfer',
+                'reference_id' => 'PKLML17BT4P',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-08T05:24:51.9365252-05:00',
+                'description' => 'testing wire transfer 5',
+                'client_identifier' => 'TC-PROD-WIRE-OUTBOUND-002',
+                'created_at' => '2025-12-08 10:24:52',
+                'updated_at' => '2025-12-08 10:24:52',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '16',
+                'source_transaction_id' => 'cae1690f-f1dd-4f38-ad23-b3ad00aef78b',
+                'related_transaction_id' => null,
+                'internal_transaction_id' => 'c2d1c653-8931-484e-9c3b-b3ad00aef78b',
+                'account_number' => '346387757286',
+                'currency' => 'USD',
+                'amount' => 1000,
+                'transaction_type' => 'Transfer',
+                'reference_id' => 'G7JJ0XGMAO8',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-08T05:37:02.1155755-05:00',
+                'description' => 'testing wire transfer 10',
+                'client_identifier' => 'TC-PROD-WIRE-OUTBOUND-004',
+                'created_at' => '2025-12-08 10:37:02',
+                'updated_at' => '2025-12-08 10:37:02',
+                'deleted_at' => null,
+            ],
+            [
+                'account_id' => '14',
+                'source_transaction_id' => '00d897cd-82c4-4975-a92f-b3ad00af7660',
+                'related_transaction_id' => null,
+                'internal_transaction_id' => '49d046bc-d275-407f-8308-b3ad00af7660',
+                'account_number' => '399851645982',
+                'currency' => 'USD',
+                'amount' => 1000,
+                'transaction_type' => 'Transfer',
+                'reference_id' => 'W25W0B810Z1',
+                'direction' => 'Outbound',
+                'status' => 'Created',
+                'partner_id' => '4680f245-8aad-4551-a5c2-b3080143f293',
+                'product_id' => '857e2e79-abfe-4c43-98cc-b30801469fca',
+                'channel' => 'Api',
+                'initiated_at' => '2025-12-08T05:38:50.3453752-05:00',
+                'description' => 'testing wire transfer 10',
+                'client_identifier' => 'TC-PROD-WIRE-OUTBOUND-005',
+                'created_at' => '2025-12-08 10:38:50',
+                'updated_at' => '2025-12-08 10:38:50',
+                'deleted_at' => null,
+            ],
+        ]);
+    }
+
+    /*
+     * ===== crb_wire_transactions table =====.
+     */
+    INSERT INTO `crb_wire_transactions` (`crb_transaction_id`, `rail_payment_id`, `posting`, `posting_code`, `partner_authorization_1`, `partner_authorization_2`, `entered_by_id`, `business_function_code`, `type_code`, `sender_routing_number`, `sender_name`, `sender_reference`, `receiver_routing_number`, `receiver_name`, `originating_fi`, `originator`, `beneficiary`, `originator_to_beneficiary_1`, `originator_to_beneficiary_2`, `originator_to_beneficiary_3`, `originator_to_beneficiary_4`, `beneficiary_reference`, `was_reversed`, `is_international`, `wire_created_at`, `effective_date`, `original_payment_id`, `investigated`, `created_at`, `updated_at`, `deleted_at`, `beneficiary_fi`)
+    VALUES
+    ('24', 'f7a8c82d-ad5a-4e65-851a-b39b009ba565', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', '3B80AQH7BA5', '325070760', 'WASH MUT BANK', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"YING LU\", \"idCode\": \"D\", \"address1\": \"2133 TYSONS RIDGELINE RD, FALLS CHU\", \"address3\": \"FALLS CHURCH VA  US\", \"identifier\": \"310959120034\"}', '{\"name\": \"YING LU\", \"idCode\": \"D\", \"identifier\": \"126862300\"}', NULL, NULL, NULL, NULL, NULL, 0, 0, '2025-11-20 04:26:41', '2025-11-20T00:00:00-05:00', 'f7a8c82d-ad5a-4e65-851a-b39b009ba565', 0, '2025-11-20 09:26:41', '2025-11-20 09:26:41', NULL, '{\"name\": \"JPMORGAN CHASE BANK, NA\", \"idCode\": \"F\", \"address1\": \"SEATTLE, WA\", \"identifier\": \"325070760\"}'),
+    ('25', '498dbd38-0dd3-4e84-99c4-b3a000cfb714', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', '0674S4KH5T8', '026013356', 'METCOMMBK NY', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"OWTING USA\", \"idCode\": \"D\", \"address1\": \"4250 NORTH FAIRFAX DRIVE SUIT\", \"address3\": \"ARLINGTON VA  US\", \"identifier\": \"399851645982\"}', '{\"name\": \"OWLTING USA INC\", \"idCode\": \"D\", \"identifier\": \"1099007801\"}', NULL, NULL, NULL, NULL, NULL, 0, 0, '2025-11-25 07:36:16', '2025-11-25T00:00:00-05:00', '498dbd38-0dd3-4e84-99c4-b3a000cfb714', 0, '2025-11-25 12:36:16', '2025-11-25 12:36:16', NULL, '{\"name\": \"METROPOLITAN COMMERCIAL BANK\", \"idCode\": \"F\", \"address1\": \"NEW YORK, NY\", \"identifier\": \"026013356\"}'),
+    ('26', '4e6e38e4-79c2-49e4-95b5-b3a000d1981d', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', 'H371001KGR9', '091311229', 'CHOICEFIN', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"OWLNEST INC\", \"idCode\": \"D\", \"address1\": \"1513 E SHERIDAN ST., LARAMIE\", \"address3\": \"LARAMIE WY  US\", \"identifier\": \"346387757286\"}', '{\"name\": \"OWLNEST, INC.\", \"idCode\": \"D\", \"identifier\": \"202345293946\"}', NULL, NULL, NULL, NULL, NULL, 0, 0, '2025-11-25 07:43:07', '2025-11-25T00:00:00-05:00', '4e6e38e4-79c2-49e4-95b5-b3a000d1981d', 0, '2025-11-25 12:43:06', '2025-11-25 12:43:06', NULL, '{\"name\": \"CHOICE FINANCIAL GROUP\", \"idCode\": \"F\", \"address1\": \"FARGO, ND\", \"identifier\": \"091311229\"}'),
+    ('27', 'e4eb8c05-679b-4042-b007-b3a1004aa595', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', '705418001X5', '121000248', 'WELLS FARGO NA', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"ANDREW CARPENTER\", \"idCode\": \"D\", \"address1\": \"1513 E SHERIDAN ST., LARAMIE\", \"address3\": \"LARAMIE WY  US\", \"identifier\": \"338496141171\"}', '{\"name\": \"ANDREW AND KELLY CARPENTER\", \"idCode\": \"D\", \"identifier\": \"8471349103\"}', NULL, NULL, NULL, NULL, NULL, 0, 0, '2025-11-25 23:31:47', '2025-11-25T00:00:00-05:00', 'e4eb8c05-679b-4042-b007-b3a1004aa595', 0, '2025-11-26 04:31:47', '2025-11-26 04:31:47', NULL, '{\"name\": \"WELLS FARGO BANK, NA\", \"idCode\": \"F\", \"address1\": \"SAN FRANCISCO, CA\", \"identifier\": \"121000248\"}'),
+    ('40', '707091e1-61d5-4721-a66b-b3ad00ab9fde', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', 'PKLML17BT4P', '325070760', 'WASH MUT BANK', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"YING LU\", \"idCode\": \"D\", \"address1\": \"2133 TYSONS RIDGELINE RD, FALLS CHU\", \"address3\": \"FALLS CHURCH VA  US\", \"identifier\": \"310959120034\"}', '{\"name\": \"YING LU\", \"idCode\": \"D\", \"identifier\": \"126862300\"}', 'EE', 'TESTING', 'FOR', 'NARRATIVE', NULL, 0, 0, '2025-12-08 05:24:52', '2025-12-08T00:00:00-05:00', '707091e1-61d5-4721-a66b-b3ad00ab9fde', 0, '2025-12-08 10:24:52', '2025-12-08 10:24:52', NULL, '{\"name\": \"JPMORGAN CHASE BANK, NA\", \"idCode\": \"F\", \"address1\": \"SEATTLE, WA\", \"identifier\": \"325070760\"}'),
+    ('41', 'b3c5169e-9096-4318-92d5-b3ad00ae380e', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', '2U405S9VL11', '121000248', 'WELLS FARGO NA', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"ANDREW CARPENTER\", \"idCode\": \"D\", \"address1\": \"1513 E SHERIDAN ST., LARAMIE\", \"address3\": \"LARAMIE WY  US\", \"identifier\": \"338496141171\"}', '{\"name\": \"ANDREW AND KELLY CARPENTER\", \"idCode\": \"D\", \"identifier\": \"8471349103\"}', 'WIRE', 'OUTBOUND', 'TO', 'ANDREW', NULL, 0, 0, '2025-12-08 05:34:19', '2025-12-08T00:00:00-05:00', 'b3c5169e-9096-4318-92d5-b3ad00ae380e', 0, '2025-12-08 10:34:18', '2025-12-08 10:34:18', NULL, '{\"name\": \"WELLS FARGO BANK, NA\", \"idCode\": \"F\", \"address1\": \"SAN FRANCISCO, CA\", \"identifier\": \"121000248\"}'),
+    ('42', 'c2d1c653-8931-484e-9c3b-b3ad00aef78b', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', 'G7JJ0XGMAO8', '091311229', 'CHOICEFIN', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"OWLNEST INC\", \"idCode\": \"D\", \"address1\": \"1513 E SHERIDAN ST., LARAMIE\", \"address3\": \"LARAMIE WY  US\", \"identifier\": \"346387757286\"}', '{\"name\": \"OWLNEST, INC.\", \"idCode\": \"D\", \"identifier\": \"202345293946\"}', 'OWLNEST', 'WIRE', 'TRANSFER', 'OUTBOUND', NULL, 0, 0, '2025-12-08 05:37:02', '2025-12-08T00:00:00-05:00', 'c2d1c653-8931-484e-9c3b-b3ad00aef78b', 0, '2025-12-08 10:37:02', '2025-12-08 10:37:02', NULL, '{\"name\": \"CHOICE FINANCIAL GROUP\", \"idCode\": \"F\", \"address1\": \"FARGO, ND\", \"identifier\": \"091311229\"}'),
+    ('43', '49d046bc-d275-407f-8308-b3ad00af7660', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', 'W25W0B810Z1', '026013356', 'METCOMMBK NY', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"OWTING USA\", \"idCode\": \"D\", \"address1\": \"4250 NORTH FAIRFAX DRIVE SUIT\", \"address3\": \"ARLINGTON VA  US\", \"identifier\": \"399851645982\"}', '{\"name\": \"OWLTING USA INC\", \"idCode\": \"D\", \"identifier\": \"1099007801\"}', 'OWLTING', 'USA', 'WIRE', 'OUTBOUND', NULL, 0, 0, '2025-12-08 05:38:50', '2025-12-08T00:00:00-05:00', '49d046bc-d275-407f-8308-b3ad00af7660', 0, '2025-12-08 10:38:50', '2025-12-08 10:38:50', NULL, '{\"name\": \"METROPOLITAN COMMERCIAL BANK\", \"idCode\": \"F\", \"address1\": \"NEW YORK, NY\", \"identifier\": \"026013356\"}');
+	('44', '4c4efeb8-6d20-4be8-ba7a-b3b4008311d8', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', '508W3445888', '031302971', 'CUSTOMERS BANK', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"TEST OWLTING FBO OWLTINGS CUSTOME\", \"idCode\": \"D\", \"address1\": \"4250 NORTH FAIRFAX DRIVE\", \"address2\": \"SUITE 600\", \"address3\": \"ARLINGTON VA 22203 US\", \"identifier\": \"151190090879\"}', '{\"name\": \"CIRCLE INTERNET FINANCIAL LLC\", \"idCode\": \"D\", \"identifier\": \"5507479\"}', 'CIR24EEZR5', 'OWLTING USA INC', 'FBO TO', 'CIRCLE', NULL, 0, 0, '2025-12-15 02:57:13', '2025-12-15T00:00:00-05:00', '4c4efeb8-6d20-4be8-ba7a-b3b4008311d8', 0, '2025-12-15 09:48:41', '2025-12-15 09:48:41', NULL, '{\"name\": \"CUSTOMERS BANK\", \"idCode\": \"F\", \"address1\": \"WYOMISSING, PA\", \"identifier\": \"031302971\"}');
+	('45', '7882a862-c41c-4dca-837b-b3b400ad518f', 'Pending', 'OK', 'NotRequired', 'NotRequired', '31523df59b464086a18ca6aff5ccce7b', 'CTR', '1000', '021214891', 'CROSS RIVER BANK', 'CAJ9239JA6F', '031302971', 'CUSTOMERS BANK', '{\"name\": \"CROSS RIVER BANK\", \"idCode\": \"F\", \"address1\": \"885 TEANECK RD\", \"address2\": \"TEANECK NJ 07666\", \"address3\": \"US\", \"identifier\": \"021214891\"}', '{\"name\": \"\\\"TEST OWLTING FBO OWLTING\'S CUSTOME\", \"idCode\": \"D\", \"address1\": \"4250 NORTH FAIRFAX DRIVE\", \"address2\": \"SUITE 600\", \"address3\": \"ARLINGTON VA 22203 US\", \"identifier\": \"151190090879\"}', '{\"name\": \"CIRCLE INTERNET FINANCIAL LLC\", \"idCode\": \"D\", \"identifier\": \"5507479\"}', 'CIR24EEZR5', 'OWLTING USA INC', 'FBO TO', 'CIRCLE', NULL, 0, 0, '2025-12-15 05:31:02', '2025-12-15T00:00:00-05:00', '7882a862-c41c-4dca-837b-b3b400ad518f', 0, '2025-12-15 10:31:02', '2025-12-15 10:31:02', NULL, '{\"name\": \"CUSTOMERS BANK\", \"idCode\": \"F\", \"address1\": \"WYOMISSING, PA\", \"identifier\": \"031302971\"}');
+
+    private function insertCrbWireTransactions(): void
+    {
+        DB::table(self::TABLE_CRB_WIRE_TRANSACTIONS)->insert(
+            [
+            ],
+
+        );
+    }
+
+    /*
+     * ===== crb_webhook_events table =====.
+     */
+    private function insertCrbWebhookEvents(): void
+    {
+        DB::table(self::TABLE_CRB_WEBHOOK_EVENTS)->insert([
+        ]);
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-kor-20260114-002",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "7392",
+        "currency": "KRW"
+    },
+    "destinationCurrencyCode": "KRW",
+    "payoutId": "281474990058263",
+    "settlementAmount": {
+        "amount": "504",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "7392",
+        "currency": "KRW"
+    },
+    "transactionCurrencyCode": "KRW",
+    "transactionDateTime": "2026-01-14T07:19:08.189550918Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-14",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

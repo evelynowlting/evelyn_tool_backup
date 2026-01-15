@@ -1,0 +1,20 @@
+[
+    {
+        "id": "261d748f-e84c-43c1-96fd-b3b40024381d",
+        "eventName": "Core.Customer.Ofac.Changed",
+        "status": "Pending",
+        "partnerId": "5c6c5cf4-0e6f-44b1-893f-b01200fc8570",
+        "createdAt": "2025-12-14T21:11:52.183-05:00",
+        "resources": [
+            "core/v1/cm/customers/ea1321e0-c6e3-4b7a-9c7d-b3b400241539"
+        ],
+        "details": [
+            {
+                "customerId": "ea1321e0-c6e3-4b7a-9c7d-b3b400241539",
+                "ofacBefore": "Pending",
+                "ofacAfter": "Clear",
+                "clientIdentifier": "e3f70247-6628-4eef-b00f-6db91a09888a"
+            }
+        ]
+    }
+]

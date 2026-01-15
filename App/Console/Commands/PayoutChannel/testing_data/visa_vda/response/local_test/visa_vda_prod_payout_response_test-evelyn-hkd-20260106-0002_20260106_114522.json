@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-hkd-20260106-0002",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "500",
+        "currency": "HKD"
+    },
+    "destinationCurrencyCode": "HKD",
+    "payoutId": "281474990048990",
+    "settlementAmount": {
+        "amount": "64",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "500",
+        "currency": "HKD"
+    },
+    "transactionCurrencyCode": "HKD",
+    "transactionDateTime": "2026-01-06T11:45:22.526139908Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-06",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

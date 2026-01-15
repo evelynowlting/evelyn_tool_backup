@@ -1,0 +1,46 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "bank": {
+      "accountName": "Aneta Włodarczyk",
+      "accountNumber": "PL17194010766275958300000000",
+      "accountNumberType": "IBAN",
+      "bankName": "Credit Agricole",
+      "countryCode": "POL",
+      "currencyCode": "PLN"
+    },
+    "firstName": "Aneta",
+    "lastName": "Włodarczyk",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-PLN-0003",
+    "initiatingPartyId": 10092698100,
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Aneta Włodarczyk 5 usd",
+    "transactionAmount": 18.09,
+    "transactionCurrencyCode": "PLN"
+  }
+}

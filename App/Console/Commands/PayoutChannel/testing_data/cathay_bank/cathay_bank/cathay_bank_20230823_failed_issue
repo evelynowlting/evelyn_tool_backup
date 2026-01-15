@@ -1,0 +1,543 @@
+
+Result shows in debug xml.
+7000
+查無資料
+
+企業網路銀行上面登入之後
+出現一筆空的檔案
+裡面沒有任何付款項目
+應該是財務人員操作異常的關係
+
+
+        266 => SimpleXMLElement {#11872
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        267 => SimpleXMLElement {#11873
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        268 => SimpleXMLElement {#11874
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47732459"
+          +"RETURN_ID": "0004"
+          +"RETURN_MSG": "檔案已刪除"
+        }
+        269 => SimpleXMLElement {#11875
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        270 => SimpleXMLElement {#11876
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        271 => SimpleXMLElement {#11877
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47732459"
+          +"RETURN_ID": "0004"
+          +"RETURN_MSG": "檔案已刪除"
+        }
+        272 => SimpleXMLElement {#11878
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        273 => SimpleXMLElement {#11879
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        274 => SimpleXMLElement {#11880
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        275 => SimpleXMLElement {#11881
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        276 => SimpleXMLElement {#11882
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        277 => SimpleXMLElement {#11883
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        278 => SimpleXMLElement {#11884
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        279 => SimpleXMLElement {#11885
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        280 => SimpleXMLElement {#11886
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        281 => SimpleXMLElement {#11887
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        282 => SimpleXMLElement {#11888
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        283 => SimpleXMLElement {#11889
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        284 => SimpleXMLElement {#11890
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        285 => SimpleXMLElement {#11891
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        286 => SimpleXMLElement {#11892
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        287 => SimpleXMLElement {#11893
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        288 => SimpleXMLElement {#11894
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        289 => SimpleXMLElement {#11895
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        290 => SimpleXMLElement {#11896
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        291 => SimpleXMLElement {#11897
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        292 => SimpleXMLElement {#11898
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        293 => SimpleXMLElement {#11899
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        294 => SimpleXMLElement {#11900
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        295 => SimpleXMLElement {#11901
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        296 => SimpleXMLElement {#11902
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        297 => SimpleXMLElement {#11903
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        298 => SimpleXMLElement {#11904
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        299 => SimpleXMLElement {#11905
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        300 => SimpleXMLElement {#11906
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        301 => SimpleXMLElement {#11907
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        302 => SimpleXMLElement {#11908
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        303 => SimpleXMLElement {#11909
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        304 => SimpleXMLElement {#11910
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        305 => SimpleXMLElement {#11911
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        306 => SimpleXMLElement {#11912
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        307 => SimpleXMLElement {#11913
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        308 => SimpleXMLElement {#11914
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        309 => SimpleXMLElement {#11915
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        310 => SimpleXMLElement {#11916
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        311 => SimpleXMLElement {#11917
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        312 => SimpleXMLElement {#11918
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        313 => SimpleXMLElement {#11919
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        314 => SimpleXMLElement {#11920
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        315 => SimpleXMLElement {#11921
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        316 => SimpleXMLElement {#11922
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        317 => SimpleXMLElement {#11923
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        318 => SimpleXMLElement {#11924
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        319 => SimpleXMLElement {#11925
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        320 => SimpleXMLElement {#11926
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        321 => SimpleXMLElement {#11927
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        322 => SimpleXMLElement {#11928
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        323 => SimpleXMLElement {#11929
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        324 => SimpleXMLElement {#11930
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        325 => SimpleXMLElement {#11931
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        326 => SimpleXMLElement {#11932
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        327 => SimpleXMLElement {#11933
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        328 => SimpleXMLElement {#11934
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        329 => SimpleXMLElement {#11935
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        330 => SimpleXMLElement {#11936
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        331 => SimpleXMLElement {#11937
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        332 => SimpleXMLElement {#11938
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        333 => SimpleXMLElement {#11939
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        334 => SimpleXMLElement {#11940
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        335 => SimpleXMLElement {#11941
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        336 => SimpleXMLElement {#11942
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        337 => SimpleXMLElement {#11943
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        338 => SimpleXMLElement {#11944
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        339 => SimpleXMLElement {#11945
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        340 => SimpleXMLElement {#11946
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        341 => SimpleXMLElement {#11947
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        342 => SimpleXMLElement {#11948
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        343 => SimpleXMLElement {#11949
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        344 => SimpleXMLElement {#11950
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        345 => SimpleXMLElement {#11951
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        346 => SimpleXMLElement {#11952
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        347 => SimpleXMLElement {#11953
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        348 => SimpleXMLElement {#11954
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        349 => SimpleXMLElement {#11955
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        350 => SimpleXMLElement {#11956
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        351 => SimpleXMLElement {#11957
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        352 => SimpleXMLElement {#11958
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+        353 => SimpleXMLElement {#11959
+          +"UPLOAD_DATE": "20230815"
+          +"BATCH_NO": "47753439"
+          +"RETURN_ID": "0000"
+          +"RETURN_MSG": "檔案待建檔"
+        }
+      ]
+    }
+  }
+}

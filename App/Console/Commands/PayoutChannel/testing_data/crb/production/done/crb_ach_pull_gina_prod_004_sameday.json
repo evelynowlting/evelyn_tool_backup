@@ -1,0 +1,19 @@
+{
+    "transactionType": "Pull",
+    "amount": 500,
+    "accountNumber": "310959120034",
+    "receiver": {
+        "routingNumber": "325070760",
+        "accountNumber": "126862300",
+        "accountType": "Checking",
+        "accountName": "Ying Lu"
+    },
+    "secCode": "WEB",
+    "description": "ach pull5m",
+    "serviceType": "SameDay",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach pull testing with sameday service type",
+    "clientIdentifier": "TC-PROD-ACH-PULL-004-sameday"
+}

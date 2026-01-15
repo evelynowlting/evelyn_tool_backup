@@ -1,0 +1,68 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "bank": {
+      "accountName": "Paweł Żarski",
+      "accountNumber": "05109012900000000108494109",
+      "accountNumberType": "DEFAULT",
+      "bankName": "SANTANDER",
+      "branchCode": "10901014",
+      "countryCode": "POL",
+      "currencyCode": "PLN"
+    },
+    "firstName": "Paweł",
+    "lastName": "Żarski",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-PLN-0002",
+    "initiatingPartyId": 10092698100,
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Paweł Żarski 10",
+    "transactionAmount": 10,
+    "transactionCurrencyCode": "PLN"
+  }
+}
+
+pln Paweł Żarski
+{
+  "validationResultCode": "INVALID",
+  "validationDetails": [
+    {
+      "details": {
+        "detailsList": [
+          {
+            "code": "100318",
+            "message": "The bank branch code provided conflicts with the rest of the recipient bank information in the payout request.",
+            "location": "recipientDetail.bank.branchCode"
+          }
+        ]
+      },
+      "reason": "invalidPayoutRequest",
+      "status": "400",
+      "message": null
+    }
+  ]
+}

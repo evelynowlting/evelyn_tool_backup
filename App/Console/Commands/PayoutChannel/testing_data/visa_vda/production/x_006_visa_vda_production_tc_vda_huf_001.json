@@ -1,0 +1,52 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "Lengyel köz 1/F 1.a Dunaújváros 2400",
+      "city": "Dunaújváros",
+      "country": "HUN"
+    },
+    "bank": {
+      "BIC": "GIBAHUHB",
+      "accountName": "Gábor Homik",
+      "accountNumber": "HU95116000600000002032909160",
+      "accountNumberType": "IBAN",
+      "bankName": "Erstebank",
+      "countryCode": "HUN",
+      "currencyCode": "HUF"
+    },
+    "firstName": "Gábor",
+    "lastName": "Homik",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-HUF-0001",
+    "initiatingPartyId": 10092698100,
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Gábor Homik 5",
+    "transactionAmount": 5,
+    "transactionCurrencyCode": "HUF"
+  }
+}

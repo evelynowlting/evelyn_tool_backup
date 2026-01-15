@@ -1,0 +1,14 @@
+{
+    "masterAccountNumber": "151190090879",
+    "title": "OwlNest Inc",
+    "customerId": "ec54b77a-b573-43d0-92d1-b39a00309651",
+    "clientIdentifier": "TC-PROD-SM-004-API",
+    "beneficiary": {
+        "entityName": "OwlNest Inc",
+        "city": "Laramie",
+        "state": "WY",
+        "postalCode": "82070",
+        "countryCode": "US",
+        "streetAddress1": "1513 E Sheridan St., Laramie"
+    }
+}

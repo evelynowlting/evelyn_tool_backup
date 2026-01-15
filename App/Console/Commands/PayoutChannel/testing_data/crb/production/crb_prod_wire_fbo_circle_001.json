@@ -1,0 +1,21 @@
+{
+    "accountNumber": "151190090879",
+    "receiverRoutingNumber": "031302971",
+    "businessFunctionCode": "CTR",
+    "beneficiary": {
+        "idCode": "D",
+        "identifier": "5507479",
+        "name": "CIRCLE INTERNET FINANCIAL LLC"
+    },
+    "originator": {
+        "idCode": "D",
+        "identifier": "151190090879",
+        "name": "OwlTing USA Inc."
+    },
+    "amount": 100,
+    "purpose": "testing wire transfer 10",
+    "originatorToBeneficiary1": "CIR24EEZR5",
+    "originatorToBeneficiary2": "owlting usa inc",
+    "originatorToBeneficiary3": "fbo to",
+    "originatorToBeneficiary4": "circle"
+}

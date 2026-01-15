@@ -1,0 +1,95 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "B-20-10 Menara Simfoni, Balakong",
+      "city": "Seri Kembangan",
+      "country": "MYS"
+    },
+    "bank": {
+      "BIC": "CHASMYKXXXX",
+      "accountName": "Mohammad Esmail",
+      "accountNumber": "312123400674498",
+      "accountNumberType": "DEFAULT",
+      "bankName": "JPMorgan Chase Bank Berhad",
+      "countryCode": "MYS",
+      "currencyCode": "MYR"
+    },
+    "firstName": "Mohammad",
+    "lastName": "Esmail",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-MYR-0003",
+    "initiatingPartyId": 10092698100,
+    "purposeOfPayment": "21201",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Mohammad Esmail usd 10",
+    "transactionAmount": 40.56,
+    "transactionCurrencyCode": "MYR"
+  }
+}
+
+
+myr Mohammad Esmail
+{
+    "validationResultCode": "INVALID",
+    "validationDetails": [
+        {
+            "details": {
+                "detailsList": [
+                    {
+                        "code": "100151",
+                        "message": "Unable to validate this payout request because one or more of recipient bank information provided is missing or invalid.",
+                        "location": "recipientDetail.bank.BIC"
+                    }
+                ]
+            },
+            "reason": "invalidPayoutRequest",
+            "status": "400",
+            "message": null
+        }
+    ]
+}
+myr Mohammad Esmail
+{
+    "validationResultCode": "INVALID",
+    "validationDetails": [
+        {
+            "details": {
+                "detailsList": [
+                    {
+                        "code": "100151",
+                        "message": "Unable to validate this payout request because one or more of recipient bank information provided is missing or invalid.",
+                        "location": "recipientDetail.bank.BIC"
+                    }
+                ]
+            },
+            "reason": "invalidPayoutRequest",
+            "status": "400",
+            "message": null
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+    "name": {
+        "firstName": "Ying",
+        "lastName": "Lu"
+    },
+    "classification": "Personal",
+    "profile": {
+        "regO": false,
+        "citizenshipCountryCode": "US",
+        "politicallyExposedPerson": false,
+        "enableBackupWithholding": false,
+        "backupWithholdingPercent": 0,
+        "taxIdType": "Ssn",
+        "taxId": "844761247",
+        "birthDate": "1992-12-23",
+        "riskRating": "Medium",
+        "privacyOptOut": true
+    },
+    "clientIdentifier": "TC-PROD-CM-002",
+    "primaryAddress": {
+        "addressType": "Home",
+        "classification": "Residential",
+        "isPrimary": true,
+        "street1": "2133 Tysons Ridgeline Rd, Falls Church, VA 22043",
+        "state": "VA",
+        "postalCode": "22043",
+        "countryCode": "US"
+    },
+    "primaryPhone": {
+        "isPrimary": true,
+        "phoneType": "Mobile",
+        "phoneNumber": "2064321415"
+    },
+    "primaryEmail": {
+        "isPrimary": true,
+        "emailType": "Work",
+        "emailAddress": "gina_lu@owlting.com"
+    },
+    "primaryIdentification": {
+        "isPrimary": true,
+        "idNumber": "T27907339",
+        "idType": "DriversLicense",
+        "issuingAuthority": "VA DMV",
+        "issuingCountryCode": "US"
+    }
+}

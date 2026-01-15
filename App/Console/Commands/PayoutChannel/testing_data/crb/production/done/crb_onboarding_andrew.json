@@ -1,0 +1,47 @@
+{
+    "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+    "name": {
+        "firstName": "Andrew",
+        "lastName": "Carpenter"
+    },
+    "classification": "Personal",
+    "profile": {
+        "regO": false,
+        "citizenshipCountryCode": "US",
+        "politicallyExposedPerson": false,
+        "enableBackupWithholding": false,
+        "backupWithholdingPercent": 0,
+        "taxIdType": "Ssn",
+        "taxId": "520277556",
+        "birthDate": "1991-05-23",
+        "riskRating": "Medium",
+        "privacyOptOut": true
+    },
+    "clientIdentifier": "test-individual-customer-20251119-0001",
+    "primaryAddress": {
+        "addressType": "Home",
+        "classification": "Residential",
+        "isPrimary": true,
+        "street1": "1513 E Sheridan St., Laramie, WY 82070",
+        "state": "WY",
+        "postalCode": "82070",
+        "countryCode": "US"
+    },
+    "primaryPhone": {
+        "isPrimary": true,
+        "phoneType": "Mobile",
+        "phoneNumber": "3077609183"
+    },
+    "primaryEmail": {
+        "isPrimary": true,
+        "emailType": "Work",
+        "emailAddress": "andrew_carpenter@owlting.com"
+    },
+    "primaryIdentification": {
+        "isPrimary": true,
+        "idNumber": "108804-444",
+        "idType": "DriversLicense",
+        "issuingAuthority": "WY DMV",
+        "issuingCountryCode": "US"
+    }
+}

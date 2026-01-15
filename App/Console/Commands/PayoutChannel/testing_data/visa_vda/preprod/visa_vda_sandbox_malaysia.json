@@ -1,0 +1,43 @@
+{
+    "payoutMethod": "B",
+    "recipientDetail": {
+        "address": {
+            "addressLine1": "123 Main St Road Star One Road Test One",
+            "city": "London",
+            "country": "GBR"
+        },
+        "bank": {
+            "BIC": "MBBEMYKLXXX",
+            "accountName": "Money Market",
+            "accountNumber": "514011589754",
+            "accountNumberType": "DEFAULT",
+            "bankName": "Malayan Banking Berhad (Maybank)",
+            "countryCode": "MYS",
+            "currencyCode": "MYR"
+        },
+        "firstName": "Bin laden XYZ",
+        "lastName": "smith",
+        "type": "I"
+    },
+    "senderDetail": {
+        "address": {
+            "addressLine1": "Bin laden Road Star One Road Test One",
+            "city": "Washington",
+            "country": "USA"
+        },
+        "firstName": "Osama Bin laden",
+        "lastName": "Osama",
+        "senderAccountNumber": "senderAccountNumber",
+        "type": "I"
+    },
+    "transactionDetail": {
+        "businessApplicationId": "FD",
+        "clientReferenceId": "TESTMYR-005",
+        "initiatingPartyId": "100010",
+        "purposeOfPayment": "21201",
+        "settlementCurrencyCode": "USD",
+        "statementNarrative": "advancepayment",
+        "transactionAmount": 73.8,
+        "transactionCurrencyCode": "MYR"
+    }
+}

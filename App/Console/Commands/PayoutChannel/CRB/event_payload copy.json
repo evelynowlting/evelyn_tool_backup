@@ -1,0 +1,54 @@
+[
+    {
+        "id": "43a4df00-af19-4268-abcb-b34400926961",
+        "eventName": "Core.Customer.Onboarded",
+        "status": "Pending",
+        "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+        "createdAt": "",
+        "resources": [
+            "core/v1/cm/customers/b87305bf-b2e3-4034-a114-b38e00c413f6"
+        ],
+        "details": [
+            {
+                "customerId": "b87305bf-b2e3-4034-a114-b38e00c413f6",
+                "clientIdentifier": "65e34ca5-e32e-4f38-9217-29eaad85dae8"
+            }
+        ]
+    },
+    {
+        "id": "918c67d5-5f09-479d-b9f5-b34400926961",
+        "eventName": "Core.Customer.PepScan.Changed",
+        "status": "Pending",
+        "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+        "createdAt": "2025-11-07T11:41:53.883-05:00",
+        "resources": [
+            "core/v1/cm/customers/b87305bf-b2e3-4034-a114-b38e00c413f6"
+        ],
+        "details": [
+            {
+                "customerId": "b87305bf-b2e3-4034-a114-b38e00c413f6",
+                "pepScanBefore": "Pending",
+                "pepScanAfter": "Clear",
+                "clientIdentifier": "65e34ca5-e32e-4f38-9217-29eaad85dae8"
+            }
+        ]
+    },
+    {
+        "id": "78b4e505-ac2d-429a-9a6f-b34400926961",
+        "eventName": "Core.Customer.Ofac.Changed",
+        "status": "Pending",
+        "partnerId": "4680f245-8aad-4551-a5c2-b3080143f293",
+        "createdAt": "2025-11-07T11:41:53.883-05:00",
+        "resources": [
+            "core/v1/cm/customers/b87305bf-b2e3-4034-a114-b38e00c413f6"
+        ],
+        "details": [
+            {
+                "customerId": "b87305bf-b2e3-4034-a114-b38e00c413f6",
+                "ofacBefore": "Pending",
+                "ofacAfter": "Clear",
+                "clientIdentifier": "65e34ca5-e32e-4f38-9217-29eaad85dae8"
+            }
+        ]
+    }
+]

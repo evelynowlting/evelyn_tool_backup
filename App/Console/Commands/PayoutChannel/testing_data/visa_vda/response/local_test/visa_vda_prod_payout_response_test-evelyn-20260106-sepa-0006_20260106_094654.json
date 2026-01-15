@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-20260106-sepa-0006",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "500",
+        "currency": "EUR"
+    },
+    "destinationCurrencyCode": "EUR",
+    "payoutId": "281474990048883",
+    "settlementAmount": {
+        "amount": "587",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "500",
+        "currency": "EUR"
+    },
+    "transactionCurrencyCode": "EUR",
+    "transactionDateTime": "2026-01-06T09:46:54.486297669Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-06",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

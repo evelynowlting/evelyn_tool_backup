@@ -1,0 +1,13 @@
+{
+    "masterAccountNumber": "151190090879",
+    "title": "OwlPay Cash Released Account",
+    "customerId": "cfa1a3e5-0018-4a6c-ac39-b3080169eee0",
+    "clientIdentifier": "owlpay-cash-released-account",
+    "beneficiary": {
+        "entityName": "OwlTing USA Inc.",
+        "city": "Arlington",
+        "state": "VA",
+        "countryCode": "US",
+        "streetAddress1": "4250 North Fairfax Drive Suite 600 Arlington"
+    }
+}

@@ -1,0 +1,112 @@
+Customers
+company_name	customer_id	wallet_id
+OWLTING HK INC. LIMITED	11d33eea-3d53-4cd5-aa83-e4d24279f92d	9eaf1f02-637c-48d2-b68f-ca7c363ed6e1
+GOODS2BUY LIMITED	809082ec-0c6e-4957-b981-22cadff09283	52cf8bfa-5dca-46f9-8fc9-1f5128ff3c74
+陳文洲水果有限公司	80c51beb-33fb-44b1-86d9-9e52ea9ddd93	c0e86652-0024-4935-852b-0cc14e96640f
+Bee Culture Travel Limited	83927fee-35bc-4eb6-90ee-ab91a0243f2c	a3dc4b84-dd7f-4069-a114-f87621daddd7
+WCE MARKETING (HONG KONG) LIMITED	9cb936fd-1039-4d8e-835c-55e296c9cfe6	0639314e-4018-4f5c-bd19-71d554e91090
+SHIPGO LOGISTICS (HONG KONG)	c49be6eb-a553-458c-8259-6bf69d0f016c	0dcbdbe9-ef1c-40e5-a9f4-47e44d45a61d
+MyFood Limited	dd1434a9-c770-494b-ac82-17d933c4802f	56cbed30-f9e1-4350-b11e-18cefd0347cc
+
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId}}/wallet/{{walletHashId}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId}}/wallet/{{walletHashId}}/paymentId
+{
+    "currencyCode": "USD",
+    "bankName": "CFSB_US"
+}
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId}}/wallet/{{walletHashId}}/paymentId/tags
+{
+    "tags": [
+        {
+            "action": "MAINTAIN",
+            "key": "status",
+            "value": "active"
+        }
+    ],
+    "currencyCode": "USD",
+    "uniquePaymentId": ""
+}
+
+
+=========
+OwlTing HK
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_owlting_hk}}/wallet/{{walletHashId_owlting_hk}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_owlting_hk}}/wallet/{{walletHashId_owlting_hk}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_owlting_hk}}/wallet/{{walletHashId_owlting_hk}}/paymentId/tags
+
+=========
+GOODS2BUY
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_good2buy}}/wallet/{{walletHashId_hk_good2buy}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_good2buy}}/wallet/{{walletHashId_hk_good2buy}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_good2buy}}/wallet/{{walletHashId_hk_good2buy}}/paymentId/tags
+
+=========
+陳文洲
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_fruit_chen}}/wallet/{{walletHashId_hk_fruit_chen}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_fruit_chen}}/wallet/{{walletHashId_hk_fruit_chen}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_fruit_chen}}/wallet/{{walletHashId_hk_fruit_chen}}/paymentId/tags
+
+=========
+Bee
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_bee}}/wallet/{{walletHashId_hk_bee}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_bee}}/wallet/{{walletHashId_hk_bee}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_bee}}/wallet/{{walletHashId_hk_bee}}/paymentId/tags
+
+
+=========
+WCE MARKETING
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_wce}}/wallet/{{walletHashId_hk_wce}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_wce}}/wallet/{{walletHashId_hk_wce}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_wce}}/wallet/{{walletHashId_hk_wce}}/paymentId/tags
+
+=========
+SHIPGO
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_shipgo}}/wallet/{{walletHashId_hk_shipgo}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_shipgo}}/wallet/{{walletHashId_hk_shipgo}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_shipgo}}/wallet/{{walletHashId_hk_shipgo}}/paymentId/tags
+
+=========
+MyFood
+GET VAN details:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_myfood}}/wallet/{{walletHashId_hk_myfood}}/paymentIds
+
+POST Assign VAN:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_myfood}}/wallet/{{walletHashId_hk_myfood}}/paymentId
+
+POST  Manage VAN tag:
+{{base_url}}/api/v1/client/{{clientHashId}}/customer/{{customerHashId_hk_myfood}}/wallet/{{walletHashId_hk_myfood}}/paymentId/tags

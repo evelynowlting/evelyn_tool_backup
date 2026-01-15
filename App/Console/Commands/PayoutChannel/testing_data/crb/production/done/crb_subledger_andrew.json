@@ -1,0 +1,15 @@
+{
+    "masterAccountNumber": "151190090879",
+    "title": "Andrew Carpenter",
+    "customerId": "7d19b0a2-a031-4d88-9337-b39a002bd266",
+    "clientIdentifier": "TC-PROD-SM-001-API",
+    "beneficiary": {
+        "firstName": "Andrew",
+        "lastName": "Carpenter",
+        "city": "Laramie",
+        "state": "WY",
+        "postalCode": "82070",
+        "countryCode": "US",
+        "streetAddress1": "1513 E Sheridan St., Laramie"
+    }
+}

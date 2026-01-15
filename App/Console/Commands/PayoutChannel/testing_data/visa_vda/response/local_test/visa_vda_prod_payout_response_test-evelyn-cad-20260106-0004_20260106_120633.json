@@ -1,0 +1,26 @@
+{
+    "clientReferenceId": "test-evelyn-cad-20260106-0004",
+    "initiatingPartyId": 10092698100,
+    "status": "PAYMENT_RECEIVED",
+    "destinationAmount": {
+        "amount": "1000",
+        "currency": "CAD"
+    },
+    "destinationCurrencyCode": "CAD",
+    "payoutId": "281474990049104",
+    "settlementAmount": {
+        "amount": "729",
+        "currency": "USD"
+    },
+    "settlementCurrencyCode": "USD",
+    "transactionAmount": {
+        "amount": "1000",
+        "currency": "CAD"
+    },
+    "transactionCurrencyCode": "CAD",
+    "transactionDateTime": "2026-01-06T12:06:33.077755982Z",
+    "endToEndId": null,
+    "expectedPostingDate": "2026-01-06",
+    "fxConversionRate": {},
+    "payoutSpeed": "STANDARD"
+}

@@ -1,0 +1,21 @@
+{
+    "transactionType": "Push",
+    "amount": 1000,
+    "originator": {
+        "accountNumber": "346387757286"
+    },
+    "receiver": {
+        "routingNumber": "091311229",
+        "accountNumber": "202345293946",
+        "accountType": "Checking",
+        "accountName": "OwlNest, Inc."
+    },
+    "secCode": "WEB",
+    "description": "ach push10",
+    "serviceType": "Standard",
+    "extendedDetails": {
+        "paymentType": "S"
+    },
+    "purpose": "ach push testing with standard service type",
+    "clientIdentifier": "TC-PROD-ACH-PUSH-012-001"
+}

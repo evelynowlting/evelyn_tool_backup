@@ -1,0 +1,59 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "103-911, 14, Byeongjeomnoeul 1-ro",
+      "city": "Hwaseong-si",
+      "country": "KOR"
+    },
+    "bank": {
+      "accountName": "Jinyong Park",
+      "accountNumber": "110425017375",
+      "accountNumberType": "DEFAULT",
+      "bankCode": "088",
+      "bankCodeType": "DEFAULT",
+      "bankName": "Shinhan Bank",
+      "countryCode": "KOR",
+      "currencyCode": "KRW"
+    },
+    "cityOfBirth": "Hwaseong",
+    "contactNumber": "+821026780537",
+    "contactNumberType": "MOBILE",
+    "countryOfBirth": "KOR",
+    "dateOfBirth": "1995-12-07",
+    "firstName": "JINYONG",
+    "lastName": "PARK",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-KRW-0002",
+    "initiatingPartyId": 10092698100,
+    "purposeOfPayment": "ISOTHR",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "Hoya kim usd 10",
+    "transactionAmount": 14783.10,
+    "transactionCurrencyCode": "KRW"
+  }
+}

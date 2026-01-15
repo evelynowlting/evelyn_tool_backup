@@ -1,0 +1,53 @@
+{
+  "payoutMethod": "B",
+  "recipientDetail": {
+    "address": {
+      "addressLine1": "Jalan Stutong 18",
+      "city": "Kuching",
+      "country": "MYS"
+    },
+    "bank": {
+      "BIC": "MBBEMYKL",
+      "accountName": "JERRY LEE TIAN ZHI",
+      "accountNumber": "111289052244",
+      "accountNumberType": "DEFAULT",
+      "bankName": "Malayan Banking Berhad",
+      "countryCode": "MYS",
+      "currencyCode": "MYR"
+    },
+    "firstName": "Jerry",
+    "lastName": "Lee Tian Zhi",
+    "type": "I"
+  },
+  "senderDetail": {
+    "address": {
+      "addressLine1": "Dean Court",
+      "city": "Minneapolis",
+      "country": "USA",
+      "state": "MN"
+    },
+    "contactEmail": "sam_flavin@owlting.com",
+    "countryOfBirth": "USA",
+    "firstName": "Samuel",
+    "identificationList": [
+      {
+        "idIssueCountry": "USA",
+        "idNumber": "680046743",
+        "idType": "P"
+      }
+    ],
+    "lastName": "Flavin",
+    "senderAccountNumber": "377210086254",
+    "type": "I"
+  },
+  "transactionDetail": {
+    "businessApplicationId": "PP",
+    "clientReferenceId": "VDA-PROD-MYR-0004",
+    "initiatingPartyId": 10092698100,
+    "purposeOfPayment": "21201",
+    "settlementCurrencyCode": "USD",
+    "statementNarrative": "JERRY LEE TIAN ZHI USD 5",
+    "transactionAmount": 20.18,
+    "transactionCurrencyCode": "MYR"
+  }
+}

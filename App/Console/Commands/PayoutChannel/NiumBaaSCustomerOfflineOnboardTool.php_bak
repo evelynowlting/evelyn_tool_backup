@@ -1,0 +1,583 @@
+<?php
+
+namespace App\Console\Commands\PayoutChannel;
+
+use App\Enums\BaseInformationTypeEnum;
+use App\Enums\ErrorEnum;
+use App\Enums\FeePayerEnum;
+use App\Enums\PayoutChannel\CrossBorderPayoutEnum;
+use App\Enums\PayoutChannel\NiumBaaSEnum;
+use App\Enums\PolicyTypeEnum;
+use App\Events\NiumBaaSOnBoardingSubmitEvent;
+use App\Events\Payout\PayoutGatewayFeeSyncEvent;
+use App\Exceptions\HttpException\NiumBaasOnboardException;
+use App\Services\AMLService;
+use App\Services\ApplicationService;
+use App\Services\BaseInformationService;
+use App\Services\Payout\NiumBaaSOnboardService;
+use App\Services\Payout\NiumBaaSPayoutService;
+use App\Services\PolicyService;
+use Illuminate\Console\Command;
+
+class NiumBaaSCustomerOfflineOnboardTool extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'nium_baas:offline-onboard
+            {--mode=}
+            {--application_uuid=}
+            {--nium_baas_customer_id=}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'This tool is used to complete the customer onboarding process for Nium BaaS offline.';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct(
+        private AmlService $amlService,
+        private ApplicationService $applicationService,
+        private BaseInformationService $baseInformationService,
+        private NiumBaaSOnboardService $niumBaaSOnboardService,
+        private NiumBaaSPayoutService $niumBaaSPayoutService,
+        private PolicyService $policyService,
+    ) {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $mode = trim($this->option('mode'));
+        $applicationUuid = trim($this->option('application_uuid'));
+        $niumBaasCustomerId = trim($this->option('nium_baas_customer_id'));
+
+        $modes = [
+            'complete_onboarding_process',
+        ];
+
+        if (!in_array($mode, $modes)) {
+            $this->error('Please input correct mode.');
+
+            $this->info('--mode');
+            $this->info('    complete_onboarding_process: Complete customer onboarding process for Nium BaaS.');
+            $this->info('==================================Parameters===================================');
+            $this->info('--application_uuid=app_rwBG48NVX5yevwnr45mFozx: Pass the OwlPay application uuid');
+            $this->info('--nium_baas_customer_id=1e1c9875-d7cf-4364-a614-f9cd58a8246e: Pass the Nium customer id');
+
+            return 0;
+        }
+
+        if ('complete_onboarding_process' == $mode) {
+            $application = $this->applicationService->getApplicationsByNameOrUUID($applicationUuid)->first();
+
+            $baseInformationService = $this->baseInformationService;
+
+            $amlService = $this->amlService;
+
+            $niumBaaSOnboardService = $this->niumBaaSOnboardService;
+
+            $country = $application->country_iso;
+
+            $region = $niumBaaSOnboardService->getRegionInConfig($country);
+
+            throw_if(is_null($region), new NiumBaasOnboardException('application onboard region not found in config', type: ErrorEnum::NIUM_ONBOARD_REGION_NOT_FOUND_IN_CONFIG, attributes: [
+                'application_name' => $application->name,
+                'application_uuid' => $application->uuid,
+                'application_country' => $country,
+            ]));
+
+            $niumBaasClientInfo = $niumBaaSOnboardService->getNiumBaaSClientInfoByRegion($region);
+
+            $isApplicationOnboardNiumBaas = $baseInformationService->isApplicationOnboardGateway($application, gateway: CrossBorderPayoutEnum::NIUM_BAAS);
+
+            throw_if(!$isApplicationOnboardNiumBaas, new NiumBaasOnboardException('nium baas extension not found'));
+
+            $baseInformation = $baseInformationService->getBaseInformationByModel(
+                $application,
+                BaseInformationTypeEnum::COMPANY,
+                payout_gateway: CrossBorderPayoutEnum::NIUM_BAAS,
+            );
+
+            $amlService->setApplication($application);
+            // $userAmlDatasFromAML = $amlService->postUserInfo(
+            //     queryIds: [$baseInformation->aml_uuid],
+            //     idType: 'paymentMethod'
+            // );
+
+            $userAmlDatasFromAML = [
+                [
+                  "payment_method_id" => 5756,
+                  "applicant" => "company",
+                  "channel" => "niumBaaS",
+                  "credit_debit" => "debit",
+                  "register_country" => "TW",
+                  "target_country" => "TW",
+                  "external_id" => "ven_MrZJyGQazsWXfkOq8NVikyY",
+                  "integrated_status" => 3,
+                  "is_basic_finished" => true,
+                  "basic_status" => 3,
+                  "custom_meta" => "",
+                  "user_company" => [
+                    "company_name" => "TW240718",
+                    "address_city" => "cc",
+                    "address_township" => "cc",
+                    "address" => "cc",
+                    "postcode" => "",
+                    "company_region" => "",
+                    "company_incorporation_date" => null,
+                    "company_id_type" => "",
+                    "company_id_number" => "53092632164",
+                    "company_email" => "cypress+TWUSD@owlting.com",
+                    "phone_code" => "TW",
+                    "phone_number" => "09000000000",
+                    "tax_number" => "53092632164",
+                    "company_type" => "",
+                    "business_name" => "TWUSD",
+                    "company_registration_number" => "",
+                    "register_address_1" => "",
+                    "register_address_2" => "",
+                    "register_address_3" => "",
+                    "register_address_4" => "",
+                    "register_address_zip_code" => "",
+                    "business_address_1" => "cc",
+                    "business_address_2" => "cc",
+                    "business_address_3" => "cc",
+                    "business_address_4" => "",
+                    "business_country" => "",
+                    "total_employees" => "",
+                    "annual_turnover" => "",
+                    "industry_sector" => "",
+                    "country_of_operation" => [],
+                    "transaction_countries" => [],
+                    "intended_use_of_account" => "",
+                    "relationship_description" => "",
+                    "company_description" => "",
+                    "association_name" => "",
+                    "association_number" => "",
+                    "association_chairperson" => "",
+                    "listed_exchange" => "",
+                    "stock_symbol" => "",
+                    "unregulated_trust_type" => "",
+                    "status" => 3,
+                  ],
+                  "user_meta" => [],
+                  "user_company_equity" => [],
+                  "user_company_applicant" => [],
+                  "user_company_business_partner" => [],
+                  "user_extra_data" => [
+                    [
+                      "id" => 1464,
+                      "target_country" => "TW",
+                      "currency" => "USD",
+                      "custom_name" => "TW240718",
+                      "bank_code" => "",
+                      "bank_name" => "HSBC BANK (TAIWAN) LIMITED",
+                      "branch_code" => "",
+                      "account" => "1234561640729",
+                      "account_type" => "",
+                      "account_name" => "undefined2407180729",
+                      "swift_code" => "HSBCTWTP164",
+                      "ach_code" => "",
+                      "iban_code" => "",
+                      "sort_code" => "",
+                      "ifsc_code" => "",
+                      "bsb_code" => "",
+                      "zip_code" => "",
+                      "bank_region" => "",
+                      "status" => 3,
+                    ],
+                  ],
+                ],
+                [
+                  "payment_method_id" => 5758,
+                  "applicant" => "company",
+                  "channel" => "niumBaaS",
+                  "credit_debit" => "debit",
+                  "register_country" => "TW",
+                  "target_country" => "TW",
+                  "external_id" => "ven_MrZJyGQazsWXfkOq8NVikyY",
+                  "integrated_status" => 3,
+                  "is_basic_finished" => true,
+                  "basic_status" => 3,
+                  "custom_meta" => "",
+                  "user_company" => [
+                    "company_name" => "TW240718",
+                    "address_city" => "cc",
+                    "address_township" => "cc",
+                    "address" => "cc",
+                    "postcode" => "",
+                    "company_region" => "",
+                    "company_incorporation_date" => null,
+                    "company_id_type" => "",
+                    "company_id_number" => "53092632033",
+                    "company_email" => "cypress+TWEUR@owlting.com",
+                    "phone_code" => "TW",
+                    "phone_number" => "09000000000",
+                    "tax_number" => "53092632033",
+                    "company_type" => "",
+                    "business_name" => "TWEUR",
+                    "company_registration_number" => "",
+                    "register_address_1" => "",
+                    "register_address_2" => "",
+                    "register_address_3" => "",
+                    "register_address_4" => "",
+                    "register_address_zip_code" => "",
+                    "business_address_1" => "cc",
+                    "business_address_2" => "cc",
+                    "business_address_3" => "cc",
+                    "business_address_4" => "",
+                    "business_country" => "",
+                    "total_employees" => "",
+                    "annual_turnover" => "",
+                    "industry_sector" => "",
+                    "country_of_operation" => [],
+                    "transaction_countries" => [],
+                    "intended_use_of_account" => "",
+                    "relationship_description" => "",
+                    "company_description" => "",
+                    "association_name" => "",
+                    "association_number" => "",
+                    "association_chairperson" => "",
+                    "listed_exchange" => "",
+                    "stock_symbol" => "",
+                    "unregulated_trust_type" => "",
+                    "status" => 3,
+                  ],
+                  "user_meta" => [],
+                  "user_company_equity" => [],
+                  "user_company_applicant" => [],
+                  "user_company_business_partner" => [],
+                  "user_extra_data" => [
+                    [
+                      "id" => 1448,
+                      "target_country" => "TW",
+                      "currency" => "EUR",
+                      "custom_name" => "TW240718",
+                      "bank_code" => "",
+                      "bank_name" => "HSBC BANK (TAIWAN) LIMITED",
+                      "branch_code" => "",
+                      "account" => "123456033",
+                      "account_type" => "",
+                      "account_name" => "undefined240718",
+                      "swift_code" => "HSBCTWTP033",
+                      "ach_code" => "",
+                      "iban_code" => "",
+                      "sort_code" => "",
+                      "ifsc_code" => "",
+                      "bsb_code" => "",
+                      "zip_code" => "",
+                      "bank_region" => "",
+                      "status" => 3,
+                    ],
+                  ],
+                ],
+                [
+                    "payment_method_id" => 5759,
+                    "applicant" => "company",
+                    "channel" => "niumBaaS",
+                    "credit_debit" => "debit",
+                    "register_country" => "TW",
+                    "target_country" => "TW",
+                    "external_id" => "ven_MrZJyGQazsWXfkOq8NVikyY",
+                    "integrated_status" => 3,
+                    "is_basic_finished" => true,
+                    "basic_status" => 3,
+                    "custom_meta" => "",
+                    "user_company" => [
+                        "company_name" => "TW240718",
+                        "address_city" => "cc",
+                        "address_township" => "cc",
+                        "address" => "cc",
+                        "postcode" => "",
+                        "company_region" => "",
+                        "company_incorporation_date" => null,
+                        "company_id_type" => "",
+                        "company_id_number" => "53092632921",
+                        "company_email" => "cypress+TWSGD@owlting.com",
+                        "phone_code" => "TW",
+                        "phone_number" => "09000000000",
+                        "tax_number" => "53092632921",
+                        "company_type" => "",
+                        "business_name" => "TWSGD",
+                        "company_registration_number" => "",
+                        "register_address_1" => "",
+                        "register_address_2" => "",
+                        "register_address_3" => "",
+                        "register_address_4" => "",
+                        "register_address_zip_code" => "",
+                        "business_address_1" => "cc",
+                        "business_address_2" => "cc",
+                        "business_address_3" => "cc",
+                        "business_address_4" => "",
+                        "business_country" => "",
+                        "total_employees" => "",
+                        "annual_turnover" => "",
+                        "industry_sector" => "",
+                        "country_of_operation" => [],
+                        "transaction_countries" => [],
+                        "intended_use_of_account" => "",
+                        "relationship_description" => "",
+                        "company_description" => "",
+                        "association_name" => "",
+                        "association_number" => "",
+                        "association_chairperson" => "",
+                        "listed_exchange" => "",
+                        "stock_symbol" => "",
+                        "unregulated_trust_type" => "",
+                        "status" => 3,
+                        ],
+                        "user_meta" => [],
+                            "bank_region" => "",
+                            "status" => 3,
+                    ],
+                ];
+
+            $applicationCustomerOnboardInfo = $niumBaaSOnboardService->getApplicationCustomerInfo($application);
+
+            $policy = $this->policyService->getPolicyByType($application, type: PolicyTypeEnum::NIUM_BAAS_ONBOARD_POLICY);
+
+            foreach ($userAmlDatasFromAML as $userAmlDataFromAML) {
+                // $kybData = $niumBaaSOnboardService->mapNiumBaaSOnboardCustomerFromOwlTingAML($userAmlDataFromAML, $application);
+                $kybData = [
+                    'region' => 'SG',
+                    'riskAssessmentInfo' => [
+                          'totalEmployees' => 'EM001',
+                          'annualTurnover' => 'SG001',
+                          'industrySector' => 'IS001',
+                          'countryOfOperation' => [
+                             'SG',
+                          ],
+                          'transactionCountries' => [
+                                'HK',
+                             ],
+                          'intendedUseOfAccount' => 'IU002',
+                       ],
+                    'businessDetails' => [
+                                   'businessName' => 'SG Company Trust 003', // 不能重覆
+                                   'businessRegistrationNumber' => 'F3234260003', // 不能重覆
+                                   'tradeName' => 'Trust260',
+                                   'businessType' => 'TRUST',
+                                   'description' => null,
+                                   'stockSymbol' => null,
+                                   'associationDetails' => [
+                                      'associationName' => null,
+                                      'associationNumber' => null,
+                                      'associationChairPerson' => null,
+                                   ],
+                                   'legalDetails' => [
+                                         'registeredDate' => '1990-01-01',
+                                         'registeredCountry' => 'SG',
+                                      ],
+                                   'addresses' => [
+                                            'registeredAddress' => [
+                                               'addressLine1' => '中華路weqwe',
+                                               'addressLine2' => '123123',
+                                               'city' => '樹林區',
+                                               'state' => '新北市',
+                                               'country' => 'SG',
+                                               'postcode' => '238',
+                                            ],
+                                            'businessAddress' => [
+                                                  'addressLine1' => '中華路weqwe',
+                                                  'addressLine2' => '123123',
+                                                  'city' => '樹林區',
+                                                  'state' => '新北市',
+                                                  'country' => 'SG',
+                                                  'postcode' => '238',
+                                               ],
+                                         ],
+                                   'regulatoryDetails' => [
+                                                     'unregulatedTrustType' => [
+                                                        'TT002',
+                                                     ],
+                                                  ],
+                                   'documentDetails' => [
+                                            [
+                                                'documentType' => 'TRUST_DEED',
+                                                'document' => [
+                                                    [
+                                                    'fileName' => '2016_833.png',
+                                                    'fileType' => 'image/png',
+                                                    'document' => '{{base64_doc}}',
+                                                    ],
+                                                    [
+                                                        'fileName' => '2016_834.png',
+                                                        'fileType' => 'image/png',
+                                                        'document' => '{{base64_doc}}',
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                   'stakeholders' => [
+                                        [
+                                            'stakeholderDetails' => [
+                                            'kycMode' => 'MANUAL_KYC',
+                                            'firstName' => 'C',
+                                            'lastName' => 'CC',
+                                            'nationality' => 'SG',
+                                            'dateOfBirth' => '2000-01-01',
+                                            'countryOfResidence' => 'SG',
+                                            'address' => [
+                                                'addressLine1' => 'Tucson',
+                                                'addressLine2' => 'AZ 85721',
+                                                'city' => null,
+                                                'state' => '00000',
+                                                'country' => 'SG',
+                                                'postcode' => '11111',
+                                            ],
+                                            'professionalDetails' => [
+                                                    [
+                                                        'position' => 'SETTLOR',
+                                                    ],
+                                                ],
+                                            'documentDetails' => [
+                                                        [
+                                                            'documentType' => 'NATIONAL_ID',
+                                                            'documentNumber' => 'K0000000E',
+                                                            'documentIssuanceCountry' => 'SG',
+                                                            'documentExpiryDate' => null,
+                                                            'document' => [
+                                                                [
+                                                                    'fileName' => '2016_831.png',
+                                                                    'fileType' => 'image/png',
+                                                                    'document' => '{{base64_doc}}',
+                                                                ],
+                                                            ],
+                                                        ],
+                                                        ],
+                                            ],
+                                        ],
+                                    ],
+                                   'applicantDetails' => [
+                                        'kycMode' => 'MANUAL_KYC',
+                                        'firstName' => 'EEEEEE',
+                                        'lastName' => 'EE',
+                                        'nationality' => 'SG',
+                                        'dateOfBirth' => '2000-01-01',
+                                        'countryOfResidence' => 'SG',
+                                        'address' => [
+                                            'addressLine1' => 'singapore',
+                                            'addressLine2' => 'Staten Island',
+                                            'city' => 'SG',
+                                            'state' => '00000',
+                                            'country' => 'SG',
+                                            'postcode' => '12809',
+                                        ],
+                                        'contactDetails' => [
+                                                'email' => 'evelyn003@owlting.com', // 不能重覆
+                                                'countryCode' => 'SG',
+                                                'contactNo' => '2222233303', // 不能重覆
+                                            ],
+                                        'professionalDetails' => [
+                                                    [
+                                                    'position' => 'SETTLOR',
+                                                    ],
+                                                ],
+                                        'documentDetails' => [
+                                                        [
+                                                            'documentType' => 'NATIONAL_ID',
+                                                            'documentNumber' => 'K0000000E',
+                                                            'documentIssuanceCountry' => 'SG',
+                                                            'documentExpiryDate' => null,
+                                                            'document' => [
+                                                                [
+                                                                'fileName' => '2016_832.png',
+                                                                'fileType' => 'image/png',
+                                                                'document' => '{{base64_doc}}',
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                        ],
+                                ],
+                 ];
+
+                if (empty($applicationCustomerOnboardInfo)) {
+                    $niumBaasCustomerDetails = $this->niumBaaSPayoutService->fetchCustomerDetail($niumBaasClientInfo, $niumBaasCustomerId);
+
+                    if (isset($niumBaasCustomerDetails['customerHashId'])) {
+                        $this->info('[Nium BaaS] Customer can be found in Nium side.');
+                        $onboardData = $niumBaaSOnboardService->extractOnboardingInfoFromCustomerDetails($niumBaasCustomerDetails);
+                    } else {
+                        $this->info("[Nium BaaS] Customer does not exist on Nium's side.");
+                        $onboardData = $niumBaaSOnboardService->onboardCorporateCustomer(
+                            $niumBaasClientInfo,
+                            $application,
+                            kyb_data: $kybData
+                        );
+                    }
+
+                    $region = $kybData['region'];
+                    $onboardInfo = $niumBaaSOnboardService->addCustomerOnboardingInfo(
+                        $region,
+                        $onboardData,
+                    );
+
+                    _owlPayLog('nium_baas_add_onboard_info', [compact('region', 'onboardData')], 'nium_baas', 'info');
+
+                    $niumBaasCustomerInfo = $niumBaaSOnboardService->addCustomerInfo(
+                        $niumBaasClientInfo,
+                        $application,
+                        $onboardInfo['customer_id'],
+                        $onboardInfo['wallet_id'],
+                        swiftFeeType: $kybData['owlpayData']['swiftFeeType'] ?? FeePayerEnum::OUR,
+                        purposeCode: $kybData['owlpayData']['purposeCode'] ?? 'IR01811',
+                    );
+                    _owlPayLog('nium_baas_add_customer_info', [], 'nium_baas', 'info');
+                } else {
+                    $niumBaasCustomerInfo = $applicationCustomerOnboardInfo;
+                }
+
+                // Ths implementation is duplicated with niumBaaSPayoutService->fetchCustomerDetail, but don't want to change the logic in NiumBaaSPayoutB2B, so leave it as is now and will refine it if needed in the future.
+                $niumCustomer = $niumBaaSOnboardService->fetchCustomerById(nium_baas_client_info: $niumBaasCustomerInfo->nium_baas_client_info, customer_id: $niumBaasCustomerInfo->customer_id);
+
+                // if (NiumBaaSEnum::CUSTOMER_STATUS_CLEAR != $niumCustomer['status'] &&
+                //     NiumBaaSEnum::CPL_STATUS_COMPLETED != $niumCustomer['complianceStatus']
+                // ) {
+                //     $this->info('[Nium BaaS] Upload corporate customer document.');
+                //     $niumBaaSOnboardService->uploadCorporateCustomerDocument($niumCustomer, $niumBaasCustomerInfo, $kybData);
+                // }
+
+                if (!empty($policy)) {
+                    $niumBaaSOnboardService->acceptTermsAndCondition($niumBaasClientInfo, $niumBaasCustomerInfo, application: $application, name: $policy->source_policy_name, versionId: $policy->version);
+                    _owlPayLog('nium_baas_accept_tnc', [], 'nium_baas', 'info');
+                }
+
+                if (!$baseInformation->is_gateway_valid &&
+                    NiumBaaSEnum::CUSTOMER_STATUS_CLEAR == $niumCustomer['status'] &&
+                    NiumBaaSEnum::CPL_STATUS_COMPLETED == $niumCustomer['complianceStatus']
+                ) {
+                    $this->info("[Nium BaaS] Update is_gateway_valid for application $application->id.");
+                    $this->baseInformationService->updateApplicationIsGatewayValid(
+                        applicationId: $application->id,
+                        type: BaseInformationTypeEnum::COMPANY,
+                        payoutGateway: $this->getPayoutGateway(),
+                        isGatewayValid: true,
+                    );
+
+                    event(new NiumBaaSOnBoardingSubmitEvent($application, $niumBaasCustomerInfo, $region));
+                    $this->info('[Nium BaaS] NiumBaaSOnBoardingSubmitEvent is sent.');
+                }
+            }
+
+            event(new PayoutGatewayFeeSyncEvent($application, CrossBorderPayoutEnum::NIUM_BAAS));
+            $this->info('[Nium BaaS] PayoutGatewayFeeSyncEvent is sent.');
+        }
+
+        return 0;
+    }
+}
