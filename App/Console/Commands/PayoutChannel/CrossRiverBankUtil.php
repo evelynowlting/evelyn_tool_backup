@@ -640,10 +640,11 @@ class CrossRiverBankUtil extends Command
             $jsonData = $this->promptAndLoadPayload();
             $clientIdentifier = $this->setClientIdentifier($action);
             Redis::set($this->redisKey, $clientIdentifier);
-            $amount = trim($this->ask('Given the amount'));
+            $amount = trim($this->ask('Please provide the amount'));
 
             $originatorUuid = $this->setOriginatorUuid($action);
             $externalUuid = $this->setExternalUuid($action);
+            $purpose = trim($this->ask('Please provide the purpose. For example, ach pull $5'));
 
             $originatorInfo = ACHOriginatorInfo::new([
                 'accountNumber' => $jsonData['accountNumber'], // 315861163337
@@ -666,7 +667,7 @@ class CrossRiverBankUtil extends Command
                 'description' => $jsonData['description'],
                 'serviceType' => $jsonData['serviceType'],
                 'clientIdentifier' => $jsonData['clientIdentifier'] ?? $clientIdentifier,
-                'purpose' => $jsonData['purpose'],
+                'purpose' => $jsonData['purpose'] ?? $purpose,
             ]);
 
             $list = $this->crbClient->createAchPull($originatorInfo, $payoutDetails, $externalAccountInfo);
@@ -677,9 +678,8 @@ class CrossRiverBankUtil extends Command
             $jsonData = $this->promptAndLoadPayload();
             $clientIdentifier = $this->setClientIdentifier($action);
             Redis::set($this->redisKey, $clientIdentifier);
-            $amount = trim($this->ask('Given the amount'));
-
-            // $purpose = trim($this->ask('Given the purpose. same idp key.'));
+            $amount = trim($this->ask('Please provide the amount'));
+            $purpose = trim($this->ask('Please provide the purpose. For example, ach push $5'));
 
             // $accountNumber = trim($this->ask('Given the account number.329870033282'));
             // $debtorName = trim($this->ask('Given the debtor name. R5User911Au OwlPayCash'));
@@ -710,7 +710,7 @@ class CrossRiverBankUtil extends Command
                 'description' => $jsonData['description'],
                 'serviceType' => $jsonData['serviceType'],
                 'clientIdentifier' => $jsonData['clientIdentifier'] ?? $clientIdentifier,
-                'purpose' => $jsonData['purpose'],
+                'purpose' => $jsonData['purpose'] ?? $purpose,
             ]);
 
             $list = $this->crbClient->createAchPush($originatorInfo, $payoutDetails, $externalAccountInfo);
@@ -747,11 +747,11 @@ class CrossRiverBankUtil extends Command
             $jsonData = $this->promptAndLoadPayload();
             $clientIdentifier = $this->setClientIdentifier($action);
             Redis::set($this->redisKey, $clientIdentifier);
-            $amount = trim($this->ask('Given the amount'));
+            $amount = trim($this->ask('Please provide the amount'));
             $originatorUuid = $this->setOriginatorUuid($action);
 
             // $accountNumber = trim($this->ask('Given the account number.329870033282', '329870033282'));
-            // $purpose = trim($this->ask('Given the purpose. same idp key.', 'evelyn testing'));
+            $purpose = trim($this->ask('Please provide the purpose. For example, wire outbound $5'));
             // $debtorName = trim($this->ask('Given the debtor name. R5User911Au OwlPayCash', 'R5User911Au OwlPayCash'));
 
             // remitter
@@ -814,7 +814,7 @@ class CrossRiverBankUtil extends Command
                 [
                     'totalAmount' => new Money($amount, new Currency('USD')),
                     'clientIdentifier' => $jsonData['clientIdentifier'] ?? $clientIdentifier,
-                    'purpose' => $jsonData['purpose'],
+                    'purpose' => $jsonData['purpose'] ?? $purpose,
                 ]
             );
 
@@ -956,14 +956,14 @@ class CrossRiverBankUtil extends Command
             $jsonData = $this->promptAndLoadPayload();
             $clientIdentifier = $this->setClientIdentifier($action);
             Redis::set($this->redisKey, $clientIdentifier);
-            $amount = trim($this->ask('Given the amount'));
+            $amount = trim($this->ask('Please provide the amount'));
             $externalUuid = $this->setExternalUuid($action);
 
             // $accountNumber = trim($this->ask('Given the account number.329870033282', '329870033282'));
-            // $purpose = trim($this->ask('Given the purpose. same idp key.', 'evelyn testing'));
+            $purpose = trim($this->ask('Please provide the purpose. For example, rtp outbound $5'));
 
             // $debtorName = trim($this->ask('Given the debtor name. R5User911Au OwlPayCash', 'R5User911Au OwlPayCash'));
-            // $amount = $this->ask('Given the amount', '1000');
+            // $amount = $this->ask('Please provide the amount', '1000');
 
             $remitter = RTPRemitterInfo::new(remitterInfo: [
                 'debtor' => [
@@ -999,6 +999,7 @@ class CrossRiverBankUtil extends Command
                 'totalAmount' => new Money($amount, new Currency('USD')),  // new Money(300100, new Currency('USD')),
                 'remittanceData' => $jsonData['remittanceData'] ?? null,
                 'clientIdentifier' => $jsonData['clientIdentifier'] ?? $clientIdentifier,
+                'purpose' => $jsonData['purpose'] ?? $purpose,
             ]);
 
             $rst = $this->crbClient->createInstantPayment($remitter, $beneficiaryInfo, $owlPayCashPayoutInfo);
@@ -1010,7 +1011,7 @@ class CrossRiverBankUtil extends Command
             $jsonData = $this->promptAndLoadPayload();
             $clientIdentifier = $this->setClientIdentifier($action);
             Redis::set($this->redisKey, $clientIdentifier);
-            $amount = trim($this->ask('Given the amount'));
+            $amount = trim($this->ask('Please provide the amount'));
             // $remitter = RTPRemitterInfo::new([
             //     'debtor' => [
             //         'accountNumber' => '2418720054', // 不要亂改
@@ -1272,8 +1273,7 @@ class CrossRiverBankUtil extends Command
         $actionSlug = str_replace('_', '-', $action);
         $defaultOriginatorUuid = sprintf('org-r5-%s-%s-0001', $actionSlug, date('Ymd'));
 
-
-        return trim($this->ask('Please provide the originator user uuid',$defaultOriginatorUuid));
+        return trim($this->ask('Please provide the originator user uuid', $defaultOriginatorUuid));
     }
 
     private function setExternalUuid(string $action)
@@ -1281,7 +1281,7 @@ class CrossRiverBankUtil extends Command
         $actionSlug = str_replace('_', '-', $action);
         $defaultExternalUuid = sprintf('ext-ben-r5-%s-%s-0001', $actionSlug, date('Ymd'));
 
-        return trim($this->ask('Please provide the external user uuid',$defaultExternalUuid));
+        return trim($this->ask('Please provide the external user uuid', $defaultExternalUuid));
     }
 
     private function promptAndLoadPayload(): ?array
